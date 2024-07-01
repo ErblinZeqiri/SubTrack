@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { User } from "../../interfaces/user_interface";
-import {DataService} from '../services/data.service'
+import { DataService } from "../services/data.service";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-sub-list",
@@ -8,14 +9,15 @@ import {DataService} from '../services/data.service'
   imports: [],
   templateUrl: "./sub-list.component.html",
   styleUrl: "./sub-list.component.css",
-  providers: [DataService]
+  providers: [DataService],
 })
 export class SubListComponent implements OnInit {
-  constructor(private readonly _service: DataService){}
+  user?: User;
 
-  user: User | null = null;
-  
+  constructor(private readonly route: ActivatedRoute) {}
+
   ngOnInit(): void {
-    console.log(this._service)
+    this.user = this.route.snapshot.data["userData"];
+    console.log("User data:", this.user); 
   }
 }

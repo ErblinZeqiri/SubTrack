@@ -1,45 +1,61 @@
 {
-    "userID": "userID123",
-    "email": "user@example.com",
-    "fullName": "John Doe",
-    "phoneNumber": "+1234567890",
-    "address": "123 Main St, City, Country",
-    "subscriptions": {
-        "subscriptionID1": {
-            "name": "Netflix",
-            "amount": 15.99,
-            "nextBillingDate": "2024-07-15T08:00:00.000Z",
-            "status": "active",
-            "paymentHistory": [
-                {"date": "2024-06-15T08:00:00.000Z", "amount": 15.99, "status": "completed"},
-                {"date": "2024-05-15T08:00:00.000Z", "amount": 15.99, "status": "completed"}
-            ]
+  "userID": "userID123",
+  "email": "user@example.com",
+  "fullName": "John Doe",
+  "phoneNumber": "+1234567890",
+  "address": "123 Main St, City, Country",
+  "subscriptions": {
+    "subscriptionID1": {
+      "name": "Netflix",
+      "amount": 15.99,
+      "nextBillingDate": "2024-07-15T08:00:00.000Z",
+      "status": "active",
+      "paymentHistory": [
+        {
+          "date": "2024-06-15T08:00:00.000Z",
+          "amount": 15.99,
+          "status": "completed"
         },
-        "subscriptionID2": {
-            "name": "Spotify",
-            "amount": 9.99,
-            "nextBillingDate": "2024-07-25T08:00:00.000Z",
-            "status": "pending",
-            "paymentHistory": [
-                {"date": "2024-06-25T08:00:00.000Z", "amount": 9.99, "status": "completed"},
-                {"date": "2024-05-25T08:00:00.000Z", "amount": 9.99, "status": "completed"}
-            ]
+        {
+          "date": "2024-05-15T08:00:00.000Z",
+          "amount": 15.99,
+          "status": "completed"
         }
+      ]
     },
-    "spendingHistory": [
-        {"date": "2024-06-15T08:00:00.000Z", "amount": 45.99},
-        {"date": "2024-07-01T08:00:00.000Z", "amount": 25.50}
-    ],
-    "notificationPreferences": [
-        {"type": "email", "enabled": true},
-        {"type": "SMS", "enabled": false}
-    ],
-    "securitySettings": {
-        "twoFactorAuth": true,
-        "sessionManagement": "function to manage sessions"
-    },
-    "displayPreferences": {
-        "theme": "dark",
-        "language": "fr"
+    "subscriptionID2": {
+      "name": "Spotify",
+      "amount": 9.99,
+      "nextBillingDate": "2024-07-25T08:00:00.000Z",
+      "status": "pending",
+      "paymentHistory": [
+        {
+          "date": "2024-06-25T08:00:00.000Z",
+          "amount": 9.99,
+          "status": "completed"
+        },
+        {
+          "date": "2024-05-25T08:00:00.000Z",
+          "amount": 9.99,
+          "status": "completed"
+        }
+      ]
     }
+  },
+  "spendingHistory": [
+    { "date": "2024-06-15T08:00:00.000Z", "amount": 45.99 },
+    { "date": "2024-07-01T08:00:00.000Z", "amount": 25.5 }
+  ],
+  "notificationPreferences": [
+    { "type": "email", "enabled": true },
+    { "type": "SMS", "enabled": false }
+  ],
+  "securitySettings": {
+    "twoFactorAuth": true,
+    "sessionManagement": "function to manage sessions"
+  },
+  "displayPreferences": {
+    "theme": "dark",
+    "language": "fr"
+  }
 }

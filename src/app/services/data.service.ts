@@ -7,18 +7,22 @@ import { firstValueFrom } from "rxjs";
   providedIn: "root",
 })
 export class DataService {
-  data?: User;
+  userData?: User;
 
   constructor(private readonly _http: HttpClient) {}
 
-  async getUserData() {
-    if (this.data) {
-      const url = '../../assets/user_data.json';
-      const request = this._http.get<{ data: User }>(url);
-      const value = await firstValueFrom(request);
-      this.data = value.data;
-      console.log(this.data);
+  async getUserData(): Promise<User> {
+    try {
+      if (!this.userData) {
+        const url = "assets/user_data.json";
+        const request = this._http.get<User>(url);
+        const value = await firstValueFrom(request);
+        this.userData = value;
+      }
+      return this.userData;
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      throw error;
     }
-    return this.data;
   }
 }

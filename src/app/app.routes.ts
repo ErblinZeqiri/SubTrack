@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AccueilComponent } from './accueil/accueil.component';
+import { userDataResolver } from './resolvers/user-data.resolver';
 
 export const routes: Routes = [
   {
@@ -7,7 +8,10 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: AccueilComponent
+        component: AccueilComponent,
+        resolve: {
+          userData: userDataResolver
+        }
       },
     ],
   },
