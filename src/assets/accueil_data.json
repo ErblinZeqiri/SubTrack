@@ -1,0 +1,105 @@
+{
+  "Accueil": {
+      "Composants_clés": [
+          {
+              "composant": "Liste des abonnements",
+              "données": {
+                  "id": "string",
+                  "name": "string",
+                  "amount": "number",
+                  "nextBillingDate": "Date",
+                  "status": "string"
+              },
+              "exemple_Firebase": {
+                  "subscriptions": {
+                      "subscriptionID1": {
+                          "name": "Netflix",
+                          "amount": 15.99,
+                          "nextBillingDate": "2024-07-15T08:00:00.000Z",
+                          "status": "active"
+                      },
+                      "subscriptionID2": {
+                          "name": "Spotify",
+                          "amount": 9.99,
+                          "nextBillingDate": "2024-07-25T08:00:00.000Z",
+                          "status": "pending"
+                      }
+                  }
+              }
+          },
+          {
+              "composant": "Résumé des dépenses",
+              "données": {
+                  "totalSpent": "number",
+                  "upcomingBills": "number"
+              },
+              "exemple_Firebase": {
+                  "users": {
+                      "userID123": {
+                          "totalSpent": 100.50,
+                          "upcomingBills": 25.98
+                      }
+                  }
+              }
+          },
+          {
+              "composant": "Graphique des dépenses",
+              "données": {
+                  "data": [
+                      {"date": "Date", "amount": "number"}
+                  ]
+              },
+              "exemple_Firebase": {
+                  "users": {
+                      "userID123": {
+                          "spendingHistory": [
+                              {"date": "2024-06-15T08:00:00.000Z", "amount": 45.99},
+                              {"date": "2024-07-01T08:00:00.000Z", "amount": 25.50}
+                          ]
+                      }
+                  }
+              }
+          },
+          {
+              "composant": "Notifications récentes",
+              "données": {
+                  "id": "string",
+                  "title": "string",
+                  "message": "string",
+                  "date": "Date",
+                  "read": "boolean"
+              },
+              "exemple_Firebase": {
+                  "users": {
+                      "userID123": {
+                          "notifications": {
+                              "notificationID1": {
+                                  "title": "Renouvellement d'abonnement",
+                                  "message": "Votre abonnement Netflix se renouvellera le 15 juillet 2024.",
+                                  "date": "2024-07-10T08:00:00.000Z",
+                                  "read": false
+                              }
+                          }
+                      }
+                  }
+              }
+          },
+          {
+              "composant": "Barre de navigation",
+              "données": {
+                  "menuItems": [
+                      {"name": "string", "route": "string"}
+                  ]
+              },
+              "exemple_Firebase": {
+                  "menuItems": [
+                      {"name": "Accueil", "route": "/"},
+                      {"name": "Abonnements", "route": "/subscriptions"},
+                      {"name": "Notifications", "route": "/notifications"},
+                      {"name": "Paramètres", "route": "/settings"}
+                  ]
+              }
+          }
+      ]
+  }
+}
