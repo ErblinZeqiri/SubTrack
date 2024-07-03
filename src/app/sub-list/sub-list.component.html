@@ -4,7 +4,7 @@
     @for (sub of subscriptions; track trackById) {
     <li>
       <div><strong>Nom:</strong> {{ sub.name }}</div>
-      <div><strong>Montant:</strong> {{ sub.amount }}</div>
+      <div><strong>Montant:</strong> {{ sub.amount | currency: 'CHF'}}</div>
       <div>
         <strong>Date de facturation suivante:</strong>
         {{ sub.nextBillingDate | date : "d.M.yyyy" }}
@@ -18,6 +18,8 @@
 <div>
   <h2>Liste des dépenses</h2>
   <h3>Pour le mois actuel</h3>
-  {{currentExpensesMonth()}}
-  <h3>Pour l'année actuel</h3>
+  {{monthlyExpenses | currency: 'CHF'}}
+  <h3>Pour l'année actuel</h3>  
+  {{yearlyExpenses | currency: 'CHF'}}
+
 </div>

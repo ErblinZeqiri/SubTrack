@@ -8,9 +8,14 @@
     "subscriptionID1": {
       "name": "Netflix",
       "amount": 15.99,
-      "nextBillingDate": "2024-07-15T08:00:00.000Z",
+      "nextBillingDate": "2024-08-15T08:00:00.000Z",
       "status": "active",
       "paymentHistory": [
+        {
+          "date": "2024-07-15T08:00:00.000Z",
+          "amount": 15.99,
+          "status": "completed"
+        },
         {
           "date": "2024-06-15T08:00:00.000Z",
           "amount": 15.99,
@@ -20,15 +25,40 @@
           "date": "2024-05-15T08:00:00.000Z",
           "amount": 15.99,
           "status": "completed"
+        },
+        {
+          "date": "2024-04-15T08:00:00.000Z",
+          "amount": 15.99,
+          "status": "completed"
+        },
+        {
+          "date": "2024-03-15T08:00:00.000Z",
+          "amount": 15.99,
+          "status": "completed"
+        },
+        {
+          "date": "2024-02-15T08:00:00.000Z",
+          "amount": 15.99,
+          "status": "completed"
+        },
+        {
+          "date": "2024-01-15T08:00:00.000Z",
+          "amount": 15.99,
+          "status": "completed"
         }
       ]
     },
     "subscriptionID2": {
       "name": "Spotify",
       "amount": 9.99,
-      "nextBillingDate": "2024-07-25T08:00:00.000Z",
+      "nextBillingDate": "2024-08-25T08:00:00.000Z",
       "status": "pending",
       "paymentHistory": [
+        {
+          "date": "2024-07-25T08:00:00.000Z",
+          "amount": 9.99,
+          "status": "completed"
+        },
         {
           "date": "2024-06-25T08:00:00.000Z",
           "amount": 9.99,
@@ -36,6 +66,26 @@
         },
         {
           "date": "2024-05-25T08:00:00.000Z",
+          "amount": 9.99,
+          "status": "completed"
+        },
+        {
+          "date": "2024-04-25T08:00:00.000Z",
+          "amount": 9.99,
+          "status": "completed"
+        },
+        {
+          "date": "2024-03-25T08:00:00.000Z",
+          "amount": 9.99,
+          "status": "completed"
+        },
+        {
+          "date": "2024-02-25T08:00:00.000Z",
+          "amount": 9.99,
+          "status": "completed"
+        },
+        {
+          "date": "2024-01-25T08:00:00.000Z",
           "amount": 9.99,
           "status": "completed"
         }

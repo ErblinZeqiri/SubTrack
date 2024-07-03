@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { User } from "../../interfaces/user_interface";
-import { DataService } from "../services/data.service";
+import { ExepensesService } from "../services/expenses/exepenses.service";
 import { ActivatedRoute } from "@angular/router";
 import { CommonModule } from "@angular/common";
 
@@ -10,15 +10,18 @@ import { CommonModule } from "@angular/common";
   imports: [CommonModule],
   templateUrl: "./sub-list.component.html",
   styleUrl: "./sub-list.component.css",
-  providers: [DataService],
+  providers: [ExepensesService],
 })
 export class SubListComponent implements OnInit {
   user?: User;
   subscriptions?: any;
-  expensesMonth: number = 0;
-  expensesYear: number = 0;
-  currentDate: Date = new Date();
-  constructor(private readonly route: ActivatedRoute) {}
+  monthlyExpenses: number = 0;
+  yearlyExpenses: number = 0;
+
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly expenses: ExepensesService
+  ) {}
 
   ngOnInit(): void {
     this.user = this.route.snapshot.data["userData"];
@@ -30,6 +33,8 @@ export class SubListComponent implements OnInit {
         ...value,
       })
     );
+    this.getMonthlyExpenses();
+    this.getYearlyExpenses();
   }
 
   // Utilisée pour optimiser le rendu en suivant les éléments par leur identifiant unique
@@ -37,37 +42,15 @@ export class SubListComponent implements OnInit {
     return item.id;
   }
 
-  //Calcule des dépenses total par mois et année
-  currentExpensesMonth() {
-    this.expensesMonth = 0;
-    this.expensesYear = 0;
-
-    if (!this.subscriptions || !Array.isArray(this.subscriptions)) {
-      console.log("Pas d'abonnements ou subscriptions n'est pas un tableau");
-      return 0;
-    }
-
-    const currentMonth = this.currentDate.getMonth();
-
-    for (const subscription of this.subscriptions) {
-      const paymentDate = new Date(subscription.paymentHistory[0].date);
-      console.log(paymentDate.getMonth(), currentMonth)
-      console.log(paymentDate)
-      if (
-        paymentDate.getMonth() === currentMonth &&
-        typeof subscription.amount === "number"
-      ) {
-        this.expensesMonth += subscription.amount;
-      }
-    }
-
-    this.expensesMonth = parseFloat(this.expensesMonth.toFixed(2));
-
-    console.log("Dépenses totales du mois :", this.expensesMonth);
-    return this.expensesMonth;
+  getMonthlyExpenses() {
+    this.monthlyExpenses = this.expenses.getCurrentExpensesMonth(
+      this.subscriptions
+    );
   }
 
-  currentExpensesYear() {}
-
-  expensesBySub() {}
+  getYearlyExpenses() {
+    this.yearlyExpenses = this.expenses.getCurrentExpensesYear(
+      this.subscriptions
+    );
+  }
 }
