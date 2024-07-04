@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { User } from "../../interfaces/user_interface";
 import { ExepensesService } from "../services/expenses/exepenses.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { CommonModule } from "@angular/common";
 
 @Component({
@@ -20,7 +20,8 @@ export class SubListComponent implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly expenses: ExepensesService
+    private readonly expenses: ExepensesService,
+    private readonly _router: Router
   ) {}
 
   ngOnInit(): void {
@@ -52,5 +53,10 @@ export class SubListComponent implements OnInit {
     this.yearlyExpenses = this.expenses.getCurrentExpensesYear(
       this.subscriptions
     );
+  }
+
+  handleClick(sub: any) {
+    this._router.navigate([`home/sub-details/`, sub.id]);
+    console.log(sub)
   }
 }

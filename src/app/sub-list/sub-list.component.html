@@ -10,6 +10,7 @@
         {{ sub.nextBillingDate | date : "d.M.yyyy" }}
       </div>
       <div><strong>Statut:</strong> {{ sub.status }}</div>
+      <button (click)="handleClick(sub)">Détails</button>
     </li>
     <br />
     }

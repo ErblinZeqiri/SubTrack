@@ -5,7 +5,7 @@
   "phoneNumber": "+1234567890",
   "address": "123 Main St, City, Country",
   "subscriptions": {
-    "subscriptionID1": {
+    "6464": {
       "name": "Netflix",
       "amount": 15.99,
       "nextBillingDate": "2024-08-15T08:00:00.000Z",
@@ -48,7 +48,7 @@
         }
       ]
     },
-    "subscriptionID2": {
+    "4563": {
       "name": "Spotify",
       "amount": 9.99,
       "nextBillingDate": "2024-08-25T08:00:00.000Z",
