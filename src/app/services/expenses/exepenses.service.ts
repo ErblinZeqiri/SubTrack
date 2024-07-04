@@ -10,7 +10,8 @@ export class ExepensesService {
   currentMonth: number = this.currentDate.getMonth() + 1;
   currentYear: number = this.currentDate.getFullYear();
   constructor() {}
-  //Calcule des dépenses total par mois et année
+
+  //Calcule des dépenses total par mois
   getCurrentExpensesMonth(subscriptions: any) {
     this.expensesMonth = 0;
 
@@ -37,6 +38,7 @@ export class ExepensesService {
     return this.expensesMonth;
   }
 
+  //Calcule des dépenses total par année
   getCurrentExpensesYear(subscriptions: any) {
     this.expensesYear = 0;
 
@@ -61,6 +63,4 @@ export class ExepensesService {
 
     return this.expensesYear;
   }
-
-  expensesBySub() {}
 }

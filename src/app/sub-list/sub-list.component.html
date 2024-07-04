@@ -4,12 +4,6 @@
     @for (sub of subscriptions; track trackById) {
     <li>
       <div><strong>Nom:</strong> {{ sub.name }}</div>
-      <div><strong>Montant:</strong> {{ sub.amount | currency: 'CHF'}}</div>
-      <div>
-        <strong>Date de facturation suivante:</strong>
-        {{ sub.nextBillingDate | date : "d.M.yyyy" }}
-      </div>
-      <div><strong>Statut:</strong> {{ sub.status }}</div>
       <button (click)="handleClick(sub)">Détails</button>
     </li>
     <br />

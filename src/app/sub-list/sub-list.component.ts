@@ -27,7 +27,6 @@ export class SubListComponent implements OnInit {
   ngOnInit(): void {
     this.user = this.route.snapshot.data["userData"];
     console.log("User data:", this.user);
-    // Convertit les abonnements d'un objet en un tableau d'objets avec leurs identifiants pour une itération facile
     this.subscriptions = Object.entries(this.user!.subscriptions).map(
       ([key, value]) => ({
         id: key,
@@ -56,7 +55,7 @@ export class SubListComponent implements OnInit {
   }
 
   handleClick(sub: any) {
-    this._router.navigate([`home/sub-details/`, sub.id]);
-    console.log(sub)
+    this._router.navigate(['/sub-details', sub.id]);
+    console.log(sub);
   }
 }
