@@ -10,10 +10,10 @@ export const routes: Routes = [
   {
     path: "home",
     component: AccueilComponent,
-    resolve: { userData: userDataResolver },
+    resolve: { data: userDataResolver },
   },
   {
-    path: "sub-details/:id",
+    path: "home/sub-details/:id",
     component: SubDetailsComponent,
     resolve: { userData: userDataResolver },
   },

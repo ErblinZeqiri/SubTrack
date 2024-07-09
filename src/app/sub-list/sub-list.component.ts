@@ -55,7 +55,7 @@ export class SubListComponent implements OnInit {
   }
 
   handleClick(sub: any) {
-    this._router.navigate(['/sub-details', sub.id]);
+    this._router.navigate(["/home/sub-details", sub.id]);
     console.log(sub);
   }
 }
