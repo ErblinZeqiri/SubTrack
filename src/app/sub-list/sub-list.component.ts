@@ -3,11 +3,12 @@ import { User } from "../../interfaces/user_interface";
 import { ExepensesService } from "../services/expenses/exepenses.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CommonModule } from "@angular/common";
+import { NgOptimizedImage } from '@angular/common'
 
 @Component({
   selector: "app-sub-list",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgOptimizedImage],
   templateUrl: "./sub-list.component.html",
   styleUrl: "./sub-list.component.css",
   providers: [ExepensesService],
@@ -25,7 +26,7 @@ export class SubListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.user = this.route.snapshot.data["userData"];
+    this.user = this.route.snapshot.data["data"];
     console.log("User data:", this.user);
     this.subscriptions = Object.entries(this.user!.subscriptions).map(
       ([key, value]) => ({

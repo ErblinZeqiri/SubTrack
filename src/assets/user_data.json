@@ -7,7 +7,10 @@
   "subscriptions": {
     "6464": {
       "name": "Netflix",
+      "logoImage": "https://images.ctfassets.net/y2ske730sjqp/5QQ9SVIdc1tmkqrtFnG9U1/de758bba0f65dcc1c6bc1f31f161003d/BrandAssets_Logos_02-NSymbol.jpg?w=940",
       "amount": 15.99,
+      "renewal": "monthly",
+      "category": "entertainment",
       "nextBillingDate": "2024-08-15T08:00:00.000Z",
       "status": "active",
       "paymentHistory": [
@@ -50,9 +53,12 @@
     },
     "4563": {
       "name": "Spotify",
+      "logoImage": "https://cdn.icon-icons.com/icons2/3041/PNG/512/spotify_logo_icon_189218.png",
       "amount": 9.99,
+      "renewal": "quarterly",
+      "category": "entertainment",
       "nextBillingDate": "2024-08-25T08:00:00.000Z",
-      "status": "pending",
+      "status": "active",
       "paymentHistory": [
         {
           "date": "2024-07-25T08:00:00.000Z",
@@ -91,21 +97,5 @@
         }
       ]
     }
-  },
-  "spendingHistory": [
-    { "date": "2024-06-15T08:00:00.000Z", "amount": 45.99 },
-    { "date": "2024-07-01T08:00:00.000Z", "amount": 25.5 }
-  ],
-  "notificationPreferences": [
-    { "type": "email", "enabled": true },
-    { "type": "SMS", "enabled": false }
-  ],
-  "securitySettings": {
-    "twoFactorAuth": true,
-    "sessionManagement": "function to manage sessions"
-  },
-  "displayPreferences": {
-    "theme": "dark",
-    "language": "fr"
   }
 }
