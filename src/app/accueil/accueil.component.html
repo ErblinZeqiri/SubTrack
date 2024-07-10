@@ -1,5 +1,22 @@
-<div>
-  <h1>Page d'Accueil</h1>
   <app-sub-list />
   <router-outlet />
-</div>
+
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="/">
+      <ion-icon name="home-outline"></ion-icon>
+    </ion-tab-button>
+    <ion-tab-button tab="search">
+      <ion-icon name="search"></ion-icon>
+    </ion-tab-button>
+    <ion-tab-button tab="add-outline">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-tab-button>
+    <ion-tab-button tab="notifications-outline">
+      <ion-icon name="notifications-outline"></ion-icon>
+    </ion-tab-button>
+    <ion-tab-button tab="person-outline">
+      <ion-icon name="person-outline"></ion-icon>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

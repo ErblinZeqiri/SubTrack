@@ -1,0 +1,25 @@
+.main-content {
+    padding: 5%;
+    text-align: center;
+}
+
+.sub-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.logo {
+    flex: 0 1 auto;
+    border-radius: 10%;
+    padding: 1%;
+    background-color: rgb(224, 224, 224);
+    background: #e0e0e0;
+    box-shadow:  -2px -2px 3px #bebebe,
+                 2px 2px 3px #ffffff;
+}
+
+.logo img {
+    display: block;
+    max-width: 100%;
+}

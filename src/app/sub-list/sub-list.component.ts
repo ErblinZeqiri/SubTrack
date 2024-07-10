@@ -1,14 +1,16 @@
 import { Component, OnInit } from "@angular/core";
 import { User } from "../../interfaces/user_interface";
 import { ExepensesService } from "../services/expenses/exepenses.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { NgOptimizedImage } from '@angular/common'
+import { IonicModule } from "@ionic/angular";
+import { addIcons } from "ionicons";
 
 @Component({
   selector: "app-sub-list",
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage],
+  imports: [CommonModule, NgOptimizedImage, IonicModule, RouterLink],
   templateUrl: "./sub-list.component.html",
   styleUrl: "./sub-list.component.css",
   providers: [ExepensesService],
@@ -23,7 +25,9 @@ export class SubListComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly expenses: ExepensesService,
     private readonly _router: Router
-  ) {}
+  ) {
+    addIcons({})
+  }
 
   ngOnInit(): void {
     this.user = this.route.snapshot.data["data"];
