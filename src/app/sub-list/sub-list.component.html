@@ -7,15 +7,21 @@
   <div class="main-content">
     <div class="sub-list">
       @for (sub of subscriptions; track trackById) {
-        <div class="logo">
-          <img [routerLink]="['/home/sub-details', sub.id]" ngSrc={{sub.logoImage}} width="100" height="100" priority>
-        </div>
+      <div class="logo">
+        <img
+          (click)="handleClick(sub)"
+          ngSrc="{{ sub.logoImage }}"
+          width="80"
+          height="80"
+          priority
+        />
+      </div>
       }
     </div>
-      <h2>Liste des dépenses</h2>
-      <h3>Pour le mois actuel</h3>
-      {{ monthlyExpenses | currency : "CHF" }}
-      <h3>Pour l'année actuel</h3>
-      {{ yearlyExpenses | currency : "CHF" }}
+    <h2>Liste des dépenses</h2>
+    <h3>Pour le mois actuel</h3>
+    {{ monthlyExpenses | currency : "CHF" }}
+    <h3>Pour l'année actuel</h3>
+    {{ yearlyExpenses | currency : "CHF" }}
   </div>
 </ion-content>
