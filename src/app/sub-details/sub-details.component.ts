@@ -1,12 +1,15 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { User } from "../../interfaces/user_interface";
 import { CommonModule } from "@angular/common";
+import { IonicModule } from "@ionic/angular";
+import { addIcons } from "ionicons";
+import { arrowBack } from "ionicons/icons";
 
 @Component({
   selector: "app-sub-details",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IonicModule],
   templateUrl: "./sub-details.component.html",
   styleUrl: "./sub-details.component.css",
 })
@@ -17,9 +20,12 @@ export class SubDetailsComponent implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private _route: ActivatedRoute,
-    private readonly _router: Router
-  ) {}
+    private _route: ActivatedRoute
+  ) {
+    addIcons({
+      arrowBack,
+    });
+  }
 
   ngOnInit(): void {
     this.user = this.route.snapshot.data["userData"];
@@ -31,9 +37,5 @@ export class SubDetailsComponent implements OnInit {
 
   trackByPaymentDate(index: number, payment: any): string {
     return payment.date;
-  }
-
-  goBack() {
-    this._router.navigate(["home"]);
   }
 }
