@@ -5,10 +5,11 @@
   "subscriptions": {
     "1": {
       "name": "Netflix",
+      "domain": "netflix.com",
       "amount": 15.99,
       "renewal": "monthly",
       "category": "entertainment",
-      "nextBillingDate": "2024-08-15T08:00:00.000Z",
+      "nextPaymentDate": "2024-08-15T08:00:00.000Z",
       "status": "active",
       "paymentHistory": [
         {
@@ -50,10 +51,11 @@
     },
     "2": {
       "name": "Spotify",
+      "domain": "spotify.com",
       "amount": 9.99,
       "renewal": "quarterly",
       "category": "entertainment",
-      "nextBillingDate": "2024-08-25T08:00:00.000Z",
+      "nextPaymentDate": "2024-08-25T08:00:00.000Z",
       "status": "active",
       "paymentHistory": [
         {
@@ -95,10 +97,11 @@
     },
     "3": {
       "name": "Amazon Prime",
+      "domain": "primevideo.com",
       "amount": 12.99,
       "renewal": "monthly",
       "category": "entertainment",
-      "nextBillingDate": "2024-08-15T08:00:00.000Z",
+      "nextPaymentDate": "2024-08-15T08:00:00.000Z",
       "status": "active",
       "paymentHistory": [
         {
@@ -140,10 +143,11 @@
     },
     "4": {
       "name": "Apple Music",
+      "domain": "music.apple.com",
       "amount": 9.99,
       "renewal": "monthly",
       "category": "entertainment",
-      "nextBillingDate": "2024-08-10T08:00:00.000Z",
+      "nextPaymentDate": "2024-08-10T08:00:00.000Z",
       "status": "active",
       "paymentHistory": [
         {
@@ -185,10 +189,11 @@
     },
     "5": {
       "name": "Hulu",
+      "domain": "hulu.com",
       "amount": 7.99,
       "renewal": "monthly",
       "category": "entertainment",
-      "nextBillingDate": "2024-08-20T08:00:00.000Z",
+      "nextPaymentDate": "2024-08-20T08:00:00.000Z",
       "status": "active",
       "paymentHistory": [
         {
@@ -230,10 +235,11 @@
     },
     "6": {
       "name": "Disney+",
+      "domain": "disneyplus.com",
       "amount": 6.99,
       "renewal": "monthly",
       "category": "entertainment",
-      "nextBillingDate": "2024-08-18T08:00:00.000Z",
+      "nextPaymentDate": "2024-08-18T08:00:00.000Z",
       "status": "active",
       "paymentHistory": [
         {

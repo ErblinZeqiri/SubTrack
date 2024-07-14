@@ -8,18 +8,11 @@
     <div class="sub-list">
       @for (sub of subscriptions; track trackById) {
       <div class="logo">
-        <!-- <img
-          (click)="handleClick(sub)"
-          ngSrc="{{ sub.logoImage }}"
-          width="80"
-          height="80"
-          priority
-        /> -->
         <img
           (click)="handleClick(sub)"
           ngSrc="https://img.logo.dev/{{
-            sub.name
-          }}.com?token=pk_B5BGYc7ARIOuH6WCYJ2ntQ"
+            sub.domain
+          }}?token=pk_B5BGYc7ARIOuH6WCYJ2ntQ"
           width="80"
           height="80"
           priority

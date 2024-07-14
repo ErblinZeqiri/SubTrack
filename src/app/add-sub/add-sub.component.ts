@@ -58,6 +58,7 @@ export class AddSubComponent {
 
   selectOption(option: Company) {
     this.inputModel = option.name;
+    console.log(option)
     this.filteredOptions = [];
   }
 
