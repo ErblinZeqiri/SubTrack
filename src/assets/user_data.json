@@ -1,13 +1,10 @@
 {
-  "userID": "userID123",
-  "email": "user@example.com",
+  "userID": "1",
   "fullName": "John Doe",
-  "phoneNumber": "+1234567890",
-  "address": "123 Main St, City, Country",
+  "email": "user@example.com",
   "subscriptions": {
-    "6464": {
+    "1": {
       "name": "Netflix",
-      "logoImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Netflix_2015_N_logo.svg/1128px-Netflix_2015_N_logo.svg.png",
       "amount": 15.99,
       "renewal": "monthly",
       "category": "entertainment",
@@ -51,9 +48,8 @@
         }
       ]
     },
-    "4563": {
+    "2": {
       "name": "Spotify",
-      "logoImage": "https://www.logo.wine/a/logo/Spotify/Spotify-Icon-Logo.wine.svg",
       "amount": 9.99,
       "renewal": "quarterly",
       "category": "entertainment",
@@ -97,9 +93,8 @@
         }
       ]
     },
-    "7890": {
+    "3": {
       "name": "Amazon Prime",
-      "logoImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Amazon_Prime_Logo.svg/2560px-Amazon_Prime_Logo.svg.png",
       "amount": 12.99,
       "renewal": "monthly",
       "category": "entertainment",
@@ -143,9 +138,8 @@
         }
       ]
     },
-    "1357": {
+    "4": {
       "name": "Apple Music",
-      "logoImage": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Apple_Music_icon.svg",
       "amount": 9.99,
       "renewal": "monthly",
       "category": "entertainment",
@@ -189,9 +183,8 @@
         }
       ]
     },
-    "2468": {
+    "5": {
       "name": "Hulu",
-      "logoImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Hulu_logo_%282014%29.svg/1200px-Hulu_logo_%282014%29.svg.png",
       "amount": 7.99,
       "renewal": "monthly",
       "category": "entertainment",
@@ -235,9 +228,8 @@
         }
       ]
     },
-    "9753": {
+    "6": {
       "name": "Disney+",
-      "logoImage": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg",
       "amount": 6.99,
       "renewal": "monthly",
       "category": "entertainment",
