@@ -1,26 +1,32 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { User } from "../../interfaces/user_interface";
-import { CommonModule } from "@angular/common";
-import { IonicModule } from "@ionic/angular";
-import { addIcons } from "ionicons";
-import { arrowBack } from "ionicons/icons";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { User } from '../../interfaces/interface';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { arrowBack } from 'ionicons/icons';
+import { Observable, Subscription } from 'rxjs';
+import { DataService } from '../services/data/data.service';
 
 @Component({
-  selector: "app-sub-details",
+  selector: 'app-sub-details',
   standalone: true,
   imports: [CommonModule, IonicModule],
-  templateUrl: "./sub-details.component.html",
-  styleUrl: "./sub-details.component.css",
+  templateUrl: './sub-details.component.html',
+  styleUrl: './sub-details.component.css',
 })
 export class SubDetailsComponent implements OnInit {
   user?: User;
-  subId!: string;
-  subscription?: any;
+  subId: string = this._route.snapshot.params['id'];
+  subscriptions?: Subscription[];
+  userSubData$: Observable<Subscription[]> = this.firestore.loadSubData(
+    this.subId
+  );
 
   constructor(
     private readonly route: ActivatedRoute,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private readonly firestore: DataService
   ) {
     addIcons({
       arrowBack,
@@ -28,11 +34,15 @@ export class SubDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.user = this.route.snapshot.data["userData"];
-    this.subId = this._route.snapshot.params["id"];
+    this.subId = this._route.snapshot.params['id'];
+    console.log(this.subId);
+    this.getUserSubscriptions();
+  }
 
-    this.subscription = this.user!.subscriptions[this.subId];
-    console.log(this.subscription);
+  getUserSubscriptions() {
+    this.userSubData$.subscribe((data) => {
+      this.subscriptions = data;
+    });
   }
 
   trackByPaymentDate(index: number, payment: any): string {

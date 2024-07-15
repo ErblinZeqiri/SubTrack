@@ -1,11 +1,12 @@
-import { Routes } from "@angular/router";
-import { userDataResolver } from "./resolvers/user-data.resolver";
-import { SubDetailsComponent } from "./sub-details/sub-details.component";
-import { NotificationsComponent } from "./notifications/notifications.component"
-import { SearchComponent } from "./search/search.component"
-import { AddSubComponent } from "./add-sub/add-sub.component"
-import { AccountComponent } from "./account/account.component"
-import { SubListComponent } from "./sub-list/sub-list.component";
+import { Routes } from '@angular/router';
+// import { userDataResolver } from "./resolvers/user-data.resolver";
+import { SubDetailsComponent } from './sub-details/sub-details.component';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { SearchComponent } from './search/search.component';
+import { AddSubComponent } from './add-sub/add-sub.component';
+import { AccountComponent } from './account/account.component';
+import { SubListComponent } from './sub-list/sub-list.component';
+import { subDataResolver } from './resolvers/subData/sub-data.resolver';
 
 export const routes: Routes = [
   {
@@ -14,29 +15,28 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: "home",
+    path: 'home',
     component: SubListComponent,
-    resolve: { data: userDataResolver },
   },
   {
-    path: "home/sub-details/:id",
+    path: 'home/sub-details/:id',
     component: SubDetailsComponent,
-    resolve: { userData: userDataResolver },
+    // resolve: { subData: subDataResolver },
   },
   {
-    path: "search",
-    component: SearchComponent
+    path: 'search',
+    component: SearchComponent,
   },
   {
-    path: "add",
-    component: AddSubComponent
+    path: 'add',
+    component: AddSubComponent,
   },
   {
-    path: "notifications",
-    component: NotificationsComponent
+    path: 'notifications',
+    component: NotificationsComponent,
   },
   {
-    path: "account",
-    component: AccountComponent
+    path: 'account',
+    component: AccountComponent,
   },
 ];

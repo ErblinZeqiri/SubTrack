@@ -1,13 +1,14 @@
 import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
-import { DataService } from "../services/data/data.service";
-import { User } from "../../interfaces/user_interface";
+import { DataService } from "../../services/data/data.service";
+import { User } from "../../../interfaces/interface";
 
 export const userDataResolver: ResolveFn<Promise<User>> = async (
   route,
   state
 ) => {
   const service = inject(DataService);
-  const result = await service.getUserData();
+  console
+  const result = await service.loadSubData();
   return result;
 };
