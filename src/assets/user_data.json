@@ -1,9 +1,20 @@
 {
-  "userID": "1",
-  "fullName": "John Doe",
-  "email": "user@example.com",
+  "users": [
+    {
+      "userID": "Nm9Nyy1KnHUqYcxU0ohXpjrCEoJ2",
+      "fullName": "John Doe",
+      "email": "user@example.com"
+    },
+    {
+      "userID": "2",
+      "fullName": "Mike Johnson",
+      "email": "Mike@example.com"
+    }
+  ],
   "subscriptions": {
     "1": {
+      "id": "1",
+      "userID": "Nm9Nyy1KnHUqYcxU0ohXpjrCEoJ2",
       "name": "Netflix",
       "domain": "netflix.com",
       "amount": 15.99,
@@ -50,6 +61,7 @@
       ]
     },
     "2": {
+      "id": "1",
       "name": "Spotify",
       "domain": "spotify.com",
       "amount": 9.99,

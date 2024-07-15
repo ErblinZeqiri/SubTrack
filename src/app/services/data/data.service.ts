@@ -15,12 +15,6 @@ export class DataService {
     try {
       if (!this.userData) {
         const url = '../../../assets/user_data.json';
-
-        console.log(
-          this._http.get(
-            'https://api.thecompaniesapi.com/v1/companies/by-name?name=amazonprime?token=subtrack'
-          )
-        );
         const request = this._http.get<User>(url);
         const value = await firstValueFrom(request);
         this.userData = value;
