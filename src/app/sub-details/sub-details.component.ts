@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { User } from '../../interfaces/interface';
+import { Subscription, User } from '../../interfaces/interface';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBack } from 'ionicons/icons';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 
 @Component({
@@ -34,8 +34,6 @@ export class SubDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subId = this._route.snapshot.params['id'];
-    console.log(this.subId);
     this.getUserSubscriptions();
   }
 

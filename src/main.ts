@@ -37,7 +37,7 @@ bootstrapApplication(AppComponent, {
         measurementId: 'G-GCQPPGHLW0',
       })
     ),
-    // provideAuth(() => getAuth()),
+    provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
   ],
 });
