@@ -58,7 +58,6 @@ export class AddSubComponent {
 
   selectOption(option: Company) {
     this.inputModel = option.name;
-    console.log(option)
     this.filteredOptions = [];
   }
 
@@ -69,8 +68,6 @@ export class AddSubComponent {
       category: this.selectedCategory,
       nextPaymentDate: this.nextPaymentDate,
     };
-
-    console.log('Données du formulaire soumises :', formData);
   }
 
   trackByFn(index: number, item: any) {

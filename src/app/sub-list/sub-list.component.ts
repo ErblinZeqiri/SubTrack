@@ -6,10 +6,10 @@ import { CommonModule } from '@angular/common';
 import { NgOptimizedImage } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { Firestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { LoginComponent } from '../login/login.component';
+import { AuthService } from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-sub-list',
@@ -30,34 +30,41 @@ export class SubListComponent implements OnInit {
   subscriptions?: Subscription[];
   monthlyExpenses: number = 0;
   yearlyExpenses: number = 0;
-  userToken: string = 'Nm9Nyy1KnHUqYcxU0ohXpjrCEoJ2';
-  userData$: Observable<User[]> = this.firestore.loadUserData(this.userToken);
-  userSubData$: Observable<Subscription[]> = this.firestore.loadSubData(
-    this.userToken
-  );
+  userToken: string = '';
+  userData$?: Observable<User[]>;
+  userSubData$?: Observable<Subscription[]>;
+  credentials: string | null = localStorage.getItem('user');
 
   constructor(
     private readonly expenses: ExepensesService,
     private readonly firestore: DataService,
     private readonly _router: Router,
-    private readonly _firestore: Firestore
+    private readonly _auth: AuthService
   ) {
     addIcons({});
   }
 
   ngOnInit(): void {
+    if (this._auth.isAuthenticated()) {
+      if (this.credentials !== null) {
+        const localStorageData: any = JSON.parse(this.credentials);
+        this.userToken = localStorageData.uid;
+        this.userData$ = this.firestore.loadUserData(localStorageData.uid);
+        this.userSubData$ = this.firestore.loadSubData(localStorageData.uid);
+      }
+    }
     this.getUserData();
     this.getUserSubscriptions();
   }
 
   getUserData() {
-    this.userData$.subscribe((data) => {
+    this.userData$?.subscribe((data) => {
       this.user = data[0];
     });
   }
 
   getUserSubscriptions() {
-    this.userSubData$.subscribe((data) => {
+    this.userSubData$?.subscribe((data) => {
       this.subscriptions = data;
       this.getMonthlyExpenses();
       this.getYearlyExpenses();

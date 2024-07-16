@@ -4,5 +4,10 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-button (click)="logout()" expand="full">Logout</ion-button>
+  <ion-button id="open-loading" (click)="logout()" expand="full">Logout</ion-button>
+  <ion-loading
+    trigger="open-loading"
+    message="Déconnexion..."
+    duration="3000"
+  ></ion-loading>
 </ion-content>
