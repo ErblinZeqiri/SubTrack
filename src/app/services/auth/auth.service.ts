@@ -16,7 +16,7 @@ export class AuthService {
     if (credential) {
       localStorage.setItem('user', JSON.stringify(credential.user));
       this.auth = true;
-      this._router.navigate(['/home']);
+      setTimeout(() => this._router.navigate(['/home']));
     }
   }
 
@@ -24,7 +24,7 @@ export class AuthService {
     await signOut(this._auth);
     this.auth = false;
     localStorage.removeItem('user');
-    this._router.navigate(['/login']);
+    setTimeout(() => this._router.navigate(['/login']), 3000);
   }
 
   isAuthenticated(): boolean {
