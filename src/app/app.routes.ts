@@ -6,7 +6,8 @@ import { SearchComponent } from './search/search.component';
 import { AddSubComponent } from './add-sub/add-sub.component';
 import { AccountComponent } from './account/account.component';
 import { SubListComponent } from './sub-list/sub-list.component';
-import { subDataResolver } from './resolvers/subData/sub-data.resolver';
+import { LoginComponent } from './login/login.component';
+import { authGuard } from './guard/auth/auth.guard';
 
 export const routes: Routes = [
   {
@@ -17,26 +18,35 @@ export const routes: Routes = [
   {
     path: 'home',
     component: SubListComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
   },
   {
     path: 'home/sub-details/:id',
     component: SubDetailsComponent,
-    // resolve: { subData: subDataResolver },
+    canActivate: [authGuard],
   },
   {
     path: 'search',
     component: SearchComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'add',
     component: AddSubComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'notifications',
     component: NotificationsComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'account',
     component: AccountComponent,
+    canActivate: [authGuard],
   },
 ];

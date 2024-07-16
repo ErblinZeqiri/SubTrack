@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../services/auth/auth.service';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
-  selector: 'app-account',
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
   standalone: true,
   imports: [IonicModule],
-  templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss'],
 })
-export class AccountComponent implements OnInit {
+export class LoginComponent implements OnInit {
   constructor(private readonly authService: AuthService) {}
 
   ngOnInit() {}
 
-  logout() {
-    this.authService.logout();
+  async signin() {
+    this.authService.login();
   }
 }

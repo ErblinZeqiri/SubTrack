@@ -9,11 +9,18 @@ import { addIcons } from 'ionicons';
 import { Firestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { DataService } from '../services/data/data.service';
+import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'app-sub-list',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage, IonicModule, RouterLink],
+  imports: [
+    CommonModule,
+    NgOptimizedImage,
+    IonicModule,
+    RouterLink,
+    LoginComponent,
+  ],
   templateUrl: './sub-list.component.html',
   styleUrls: ['./sub-list.component.css'],
   providers: [ExepensesService],
