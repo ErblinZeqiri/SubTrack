@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth/auth.service';
 import { IonicModule } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-login',
@@ -10,11 +11,28 @@ import { IonicModule } from '@ionic/angular';
   imports: [IonicModule],
 })
 export class LoginComponent implements OnInit {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private loadingCtrl: LoadingController,
+    private navCtrl: NavController
+  ) {}
 
   ngOnInit() {}
 
   async signin() {
-    this.authService.login();
+    const loading = await this.loadingCtrl.create({
+      message: 'Connexion...',
+    });
+
+    await loading.present();
+
+    try {
+      await this.authService.login();
+      this.navCtrl.navigateRoot('/home');
+    } catch (error) {
+      console.error('Login failed', error);
+    } finally {
+      await loading.dismiss();
+    }
   }
 }

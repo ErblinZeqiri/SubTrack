@@ -4,6 +4,16 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-button id="open-loading" (click)="logout()" expand="full">Logout</ion-button>
-  <ion-loading trigger="open-loading" message="Déconnexion..." duration="3000"></ion-loading>
+  <ion-button expand="full" id="present-alert">Logout</ion-button>
+  <ion-alert
+    trigger="present-alert"
+    header="Êtes-vous sur de vouloir vous déconnecter ?"
+    [buttons]="alertButtons"
+  ></ion-alert>
+  <ion-loading
+    trigger="open-loading"
+    message="Loading..."
+    [duration]="3000"
+    spinner="circles"
+  ></ion-loading>
 </ion-content>
