@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 include ':app'
+=======
+include ':subtrack'
+>>>>>>> ccbe8df2738eff373637b687dfb398380413ab48
 include ':capacitor-cordova-android-plugins'
 project(':capacitor-cordova-android-plugins').projectDir = new File('./capacitor-cordova-android-plugins/')
 

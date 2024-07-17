@@ -8,7 +8,11 @@ import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { Observable } from 'rxjs';
 import { DataService } from '../services/data/data.service';
+<<<<<<< HEAD
 // import { LoginComponent } from '../login/login.component';
+=======
+import { LoginComponent } from '../login/login.component';
+>>>>>>> ccbe8df2738eff373637b687dfb398380413ab48
 import { AuthService } from '../services/auth/auth.service';
 
 @Component({
@@ -19,6 +23,10 @@ import { AuthService } from '../services/auth/auth.service';
     NgOptimizedImage,
     IonicModule,
     RouterLink,
+<<<<<<< HEAD
+=======
+    LoginComponent,
+>>>>>>> ccbe8df2738eff373637b687dfb398380413ab48
   ],
   templateUrl: './sub-list.component.html',
   styleUrls: ['./sub-list.component.css'],

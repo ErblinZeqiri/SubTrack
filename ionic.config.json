@@ -3,5 +3,9 @@
   "integrations": {
     "capacitor": {}
   },
+<<<<<<< HEAD
   "type": "angular-standalone"
+=======
+  "type": "angular"
+>>>>>>> ccbe8df2738eff373637b687dfb398380413ab48
 }

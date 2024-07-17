@@ -1,10 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
+<<<<<<< HEAD
     namespace "com.zeqiri.subtrack"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.zeqiri.subtrack"
+=======
+    namespace "io.ionic.subtrack"
+    compileSdk rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "io.ionic.subtrack"
+>>>>>>> ccbe8df2738eff373637b687dfb398380413ab48
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
