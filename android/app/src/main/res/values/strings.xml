@@ -2,11 +2,6 @@
 <resources>
     <string name="app_name">SubTrack</string>
     <string name="title_activity_main">SubTrack</string>
-<<<<<<< HEAD
-    <string name="package_name">com.zeqiri.subtrack</string>
-    <string name="custom_url_scheme">com.zeqiri.subtrack</string>
-=======
     <string name="package_name">io.ionic.subtrack</string>
     <string name="custom_url_scheme">io.ionic.subtrack</string>
->>>>>>> ccbe8df2738eff373637b687dfb398380413ab48
 </resources>
