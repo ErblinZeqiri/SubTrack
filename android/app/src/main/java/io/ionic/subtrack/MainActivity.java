@@ -1,4 +1,4 @@
-package io.ionic.subtrack;
+package com.zeqiri.subtrack;
 
 import com.getcapacitor.BridgeActivity;
 
