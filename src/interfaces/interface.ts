@@ -11,6 +11,7 @@ export interface Subscription {
   userID: string;
   name: string;
   domain: string;
+  logo: string;
   amount: number;
   category: string;
   renewal: string;

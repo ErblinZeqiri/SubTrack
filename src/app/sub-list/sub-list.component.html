@@ -10,9 +10,7 @@
       <div class="logo">
         <img
           (click)="handleClick(sub)"
-          ngSrc="https://img.logo.dev/{{
-            sub.domain
-          }}?token=pk_B5BGYc7ARIOuH6WCYJ2ntQ"
+          ngSrc={{sub.logo}}
           width="80"
           height="80"
           priority

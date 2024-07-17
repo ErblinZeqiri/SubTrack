@@ -16,7 +16,7 @@
         ></ion-input>
       </ion-item>
       @if (filteredOptions.length > 0) {
-        @for (option of filteredOptions; track trackByFn) {
+        @for (option of filteredOptions; track option) {
           <ion-item (click)="selectOption(option)">
             <ion-avatar slot="start">
               <img [src]="option.logo" alt="{{ option.name }} logo" />

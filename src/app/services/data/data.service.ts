@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { User, Subscription } from '../../../interfaces/interface';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
   collection,
@@ -20,12 +19,8 @@ export class DataService {
   subscriptions?: Subscription[];
   monthlyExpenses: number = 0;
   yearlyExpenses: number = 0;
-  userToken: string = 'Nm9Nyy1KnHUqYcxU0ohXpjrCEoJ2';
-  userData$: Observable<User[]> = this.loadUserData(this.userToken);
-  userSubData$: Observable<Subscription[]> = this.loadSubData(this.userToken);
 
   constructor(
-    private readonly _http: HttpClient,
     private readonly _firestore: Firestore
   ) {}
 

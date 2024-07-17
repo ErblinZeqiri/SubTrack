@@ -7,6 +7,8 @@ import {
   CompanySuggestionsService,
 } from '../services/companySuggestions/company-suggestions.service';
 import { CommonModule } from '@angular/common';
+import { collection, doc, getFirestore, setDoc } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-sub',
@@ -18,12 +20,13 @@ import { CommonModule } from '@angular/common';
 export class AddSubComponent {
   @ViewChild('ionInputEl', { static: true }) ionInputEl!: IonInput;
   inputModel = '';
+  logo = '';
+  domain = '';
   filteredOptions: Company[] = [];
   selectedOption: Company | null = null;
   price: number | undefined;
   selectedCategory: string | undefined;
   nextPaymentDate: string | undefined;
-
   subscriptionCategories: string[] = [
     'Indispensable',
     'Streaming',
@@ -38,7 +41,10 @@ export class AddSubComponent {
     'Voyage',
   ];
 
-  constructor(private companySuggestionsService: CompanySuggestionsService) {}
+  constructor(
+    private companySuggestionsService: CompanySuggestionsService,
+    private readonly _router: Router
+  ) {}
 
   onInput(ev: any) {
     const value = ev.target.value;
@@ -58,19 +64,38 @@ export class AddSubComponent {
 
   selectOption(option: Company) {
     this.inputModel = option.name;
+    this.logo = option.logo;
+    this.domain = option.domain;
     this.filteredOptions = [];
   }
 
-  onSubmit() {
-    const formData = {
-      companyName: this.inputModel,
-      price: this.price,
-      category: this.selectedCategory,
-      nextPaymentDate: this.nextPaymentDate,
-    };
+  async onSubmit() {
+    try {
+      const user: any = localStorage.getItem('user');
+      const localStorageData: any = JSON.parse(user);
+
+      if (!localStorageData || !localStorageData.uid) {
+        throw new Error('User ID not found in localStorage');
+      }
+      const formData = {
+        companyName: this.inputModel,
+        logo: this.logo,
+        domain: this.domain,
+        price: this.price,
+        category: this.selectedCategory,
+        nextPaymentDate: this.nextPaymentDate,
+        paymentHistory: [],
+        userID: localStorageData.uid,
+      };
+      const db = getFirestore();
+      await setDoc(doc(collection(db, 'subscriptions')), formData);
+      this._router.navigate(['/home']);
+    } catch (error) {
+      console.error('Error writing document: ', error);
+    }
   }
 
-  trackByFn(index: number, item: any) {
-    return item.name;
-  }
+  // trackByFn(index: number, item: any) {
+  //   return item.name;
+  // }
 }

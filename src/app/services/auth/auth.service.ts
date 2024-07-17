@@ -12,6 +12,9 @@ export class AuthService {
 
   async login() {
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+      prompt: 'select_account',
+    });
     const credential = await signInWithPopup(this._auth, provider);
     if (credential) {
       localStorage.setItem('user', JSON.stringify(credential.user));

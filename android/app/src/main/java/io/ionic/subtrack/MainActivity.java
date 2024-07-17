@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package io.ionic.subtrack;
 
 import com.getcapacitor.BridgeActivity;
 
