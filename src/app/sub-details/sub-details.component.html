@@ -1,0 +1,38 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-tab-button tab="home">
+      <ion-icon name="arrow-back"></ion-icon>
+    </ion-tab-button>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <h2>Détails de l'Abonnement {{ subscription.name }}</h2>
+  <ul>
+    <li>
+      <div>
+        <strong>Montant:</strong> {{ subscription.amount | currency : "CHF" }}
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Date de facturation suivante:</strong>
+        {{ subscription.nextBillingDate | date : "d.M.yyyy" }}
+      </div>
+    </li>
+    <li>
+      <div><strong>Statut:</strong> {{ subscription.status }}</div>
+    </li>
+    <li>Paiements précedants :</li>
+    <ul>
+      @for (sub of subscription.paymentHistory; track trackByPaymentDate ) {
+      <li>
+        <div>{{ sub.date | date : "d.MM.yyyy" }}</div>
+        <ul>
+          <li>prix : {{ sub.amount }}</li>
+          <li>Status du paiement : {{ sub.status }}</li>
+        </ul>
+      </li>
+      }
+    </ul>
+  </ul>
+</ion-content> -->

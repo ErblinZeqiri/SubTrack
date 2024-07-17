@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Accueil</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="main-content">
+    <div class="sub-list">
+      @for (sub of userSubData$ | async; track sub) {
+      <div class="logo">
+        <img
+          (click)="handleClick(sub)"
+          ngSrc={{sub.logo}}
+          width="80"
+          height="80"
+          priority
+        />
+      </div>
+      }
+    </div>
+    <h2>Liste des dépenses</h2>
+    <h3>Pour le mois actuel</h3>
+    {{ monthlyExpenses | currency : "CHF" }}
+    <h3>Pour l'année actuel</h3>
+    {{ yearlyExpenses | currency : "CHF" }}
+  </div>
+</ion-content>
