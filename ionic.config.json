@@ -1,7 +1,7 @@
 {
-  "name": "New Ionic App",
+  "name": "SubTrack",
   "integrations": {
     "capacitor": {}
   },
-  "type": "angular"
+  "type": "angular-standalone"
 }
