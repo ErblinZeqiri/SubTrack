@@ -28,7 +28,7 @@
     {{ yearlyExpenses | currency : "CHF" }}
     }
     <div class="card flex justify-content-center">
-      <p-chart type="pie" [data]="data" [options]="options" />
+      <p-chart type="doughnut" [data]="data" [options]="options" />
     </div>
   </div>
 </ion-content>

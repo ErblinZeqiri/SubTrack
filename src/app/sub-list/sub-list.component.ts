@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription, User } from '../../interfaces/interface';
 import { ExepensesService } from '../services/expenses/exepenses.service';
 import { Router, RouterLink } from '@angular/router';
@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { NgOptimizedImage } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { elementAt, map, Observable, switchMap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { AuthService } from '../services/auth/auth.service';
 import { ChartModule } from 'primeng/chart';
@@ -68,44 +68,42 @@ export class SubListComponent implements OnInit {
         let labels: string[] = [];
         let data: number[] = [];
 
-        this.userSubData$.forEach((outerElement) => {
-          outerElement.forEach((innerElement) => {
-            labels.push(innerElement.companyName);
-            data.push(innerElement.amount);
+        this.userSubData$.subscribe((subscriptions) => {
+          subscriptions.forEach((sub) => {
+            labels.push(sub.companyName);
+            data.push(sub.amount);
           });
-        });
 
-        this.data = {
-          labels: labels,
-          datasets: [
-            {
-              data: data,
-              backgroundColor: [
-                documentStyle.getPropertyValue('--blue-500') || '#FF6384',
-                documentStyle.getPropertyValue('--yellow-500') || '#36A2EB',
-                documentStyle.getPropertyValue('--green-500') || '#FFCE56',
-              ],
-              hoverBackgroundColor: [
-                documentStyle.getPropertyValue('--blue-400') || '#FF6384',
-                documentStyle.getPropertyValue('--yellow-400') || '#36A2EB',
-                documentStyle.getPropertyValue('--green-400') || '#FFCE56',
-              ],
-            },
-          ],
-        };
+          this.data = {
+            labels: labels,
+            datasets: [
+              {
+                data: data,
+                backgroundColor: [
+                  documentStyle.getPropertyValue('--blue-500') || '#FF6384',
+                  documentStyle.getPropertyValue('--yellow-500') || '#36A2EB',
+                  documentStyle.getPropertyValue('--green-500') || '#FFCE56',
+                ],
+                hoverBackgroundColor: [
+                  documentStyle.getPropertyValue('--blue-400') || '#FF6384',
+                  documentStyle.getPropertyValue('--yellow-400') || '#36A2EB',
+                  documentStyle.getPropertyValue('--green-400') || '#FFCE56',
+                ],
+              },
+            ],
+          };
 
-        this.options = {
-          plugins: {
-            legend: {
-              labels: {
-                usePointStyle: true,
-                color: textColor,
+          this.options = {
+            plugins: {
+              legend: {
+                labels: {
+                  usePointStyle: true,
+                  color: textColor,
+                },
               },
             },
-          },
-        };
-
-        console.log(this.data)
+          };
+        });
       }
     }
   }
