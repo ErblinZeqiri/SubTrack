@@ -9,7 +9,7 @@ export interface User {
 export interface Subscription {
   id: string;
   userID: string;
-  name: string;
+  companyName: string;
   domain: string;
   logo: string;
   amount: number;

@@ -21,11 +21,14 @@
     <h2>Liste des dépenses</h2>
     <h3>Pour le mois actuel</h3>
     @if (monthlyExpenses$ | async; as monthlyExpenses) {
-      {{ monthlyExpenses | currency : "CHF" }}
+    {{ monthlyExpenses | currency : "CHF" }}
     }
     <h3>Pour l'année actuel</h3>
     @if (yearlyExpenses$ | async; as yearlyExpenses) {
-      {{ yearlyExpenses | currency : "CHF" }}
+    {{ yearlyExpenses | currency : "CHF" }}
     }
+    <div class="card flex justify-content-center">
+      <p-chart type="pie" [data]="data" [options]="options" />
+    </div>
   </div>
 </ion-content>
