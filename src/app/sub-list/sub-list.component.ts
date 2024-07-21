@@ -6,19 +6,14 @@ import { CommonModule } from '@angular/common';
 import { NgOptimizedImage } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { Observable } from 'rxjs';
+import { map, Observable, switchMap } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { AuthService } from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-sub-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    NgOptimizedImage,
-    IonicModule,
-    RouterLink,
-  ],
+  imports: [CommonModule, NgOptimizedImage, IonicModule, RouterLink],
   templateUrl: './sub-list.component.html',
   styleUrls: ['./sub-list.component.css'],
   providers: [ExepensesService],
@@ -26,11 +21,11 @@ import { AuthService } from '../services/auth/auth.service';
 export class SubListComponent implements OnInit {
   user?: User;
   subscriptions?: Subscription[];
-  monthlyExpenses: number = 0;
-  yearlyExpenses: number = 0;
+  monthlyExpenses$!: Observable<number>;
+  yearlyExpenses$!: Observable<number>;
   userToken: string = '';
-  userData$?: Observable<User[]>;
-  userSubData$?: Observable<Subscription[]>;
+  userData$!: Observable<User[]>;
+  userSubData$!: Observable<Subscription[]>;
   credentials: string | null = localStorage.getItem('user');
 
   constructor(
@@ -49,39 +44,17 @@ export class SubListComponent implements OnInit {
         this.userToken = localStorageData.uid;
         this.userData$ = this.firestore.loadUserData(localStorageData.uid);
         this.userSubData$ = this.firestore.loadSubData(localStorageData.uid);
+        this.monthlyExpenses$ = this.userSubData$.pipe(
+          map((userSubData) =>
+            this.expenses.getCurrentExpensesMonth(userSubData)
+          )
+        );
+        this.yearlyExpenses$ = this.userSubData$.pipe(
+          map((userSubData) =>
+            this.expenses.getCurrentExpensesYear(userSubData)
+          )
+        );
       }
-    }
-    this.getUserData();
-    this.getUserSubscriptions();
-  }
-
-  getUserData() {
-    this.userData$?.subscribe((data) => {
-      this.user = data[0];
-    });
-  }
-
-  getUserSubscriptions() {
-    this.userSubData$?.subscribe((data) => {
-      this.subscriptions = data;
-      this.getMonthlyExpenses();
-      this.getYearlyExpenses();
-    });
-  }
-
-  getMonthlyExpenses() {
-    if (this.subscriptions) {
-      this.monthlyExpenses = this.expenses.getCurrentExpensesMonth(
-        this.subscriptions
-      );
-    }
-  }
-
-  getYearlyExpenses() {
-    if (this.subscriptions) {
-      this.yearlyExpenses = this.expenses.getCurrentExpensesYear(
-        this.subscriptions
-      );
     }
   }
 

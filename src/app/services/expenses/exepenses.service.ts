@@ -75,7 +75,9 @@ export class ExepensesService {
 
     for (const subscription of subscriptions) {
       const paymentHistory = Object.values(subscription.paymentHistory);
-
+      if (paymentHistory.length === 0) {
+        subscription.amount = 0
+      }
       paymentHistory.forEach((element: any) => {
         const paymentHistoryYear = new Date(
           element.date.seconds * 1000

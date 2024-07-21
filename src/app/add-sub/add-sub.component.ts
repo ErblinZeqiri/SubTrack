@@ -12,30 +12,31 @@ import {
   Company,
   CompanySuggestionsService,
 } from '../services/companySuggestions/company-suggestions.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe, formatDate, registerLocaleData } from '@angular/common';
 import { collection, doc, getFirestore, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular/standalone';
+import { Observable } from 'rxjs';
+import localeFrCh from '@angular/common/locales/fr-CH';
+
+registerLocaleData(localeFrCh, 'fr-CH');
 
 @Component({
   selector: 'app-add-sub',
   standalone: true,
   imports: [CommonModule, IonicModule, FormsModule, ReactiveFormsModule],
+  providers: [DatePipe],
   templateUrl: './add-sub.component.html',
   styleUrls: ['./add-sub.component.scss'],
 })
 export class AddSubComponent {
   @ViewChild('ionInputEl', { static: true }) ionInputEl!: IonInput;
   @ViewChild('datetime', { static: false }) datetime!: IonDatetime;
-  companySelected = '';
   logo = '';
   domain = '';
-  filteredOptions: Company[] = [];
+  filteredOptions$!: Observable<Company[]>;
+  toggleDropdown: boolean = false;
   selectedOption: Company | null = null;
-  price: number | undefined;
-  selectedCategory: string | undefined;
-  selectedRenewal: string | undefined;
-  nextPaymentDate: Date | undefined;
   subscriptionCategories: string[] = [
     'Divertissement',
     'Indispensable',
@@ -57,68 +58,75 @@ export class AddSubComponent {
     'Semestriel',
     'Annuel',
   ];
-  today = new Date();
-  selectedDate: Date | undefined = this.today;
+  today = formatDate(new Date().toISOString(), 'YYYY-MM-dd', 'fr-CH');
+  selectedDate: string | null = this.today;
 
-  public signinForm!: FormGroup;
+  signinForm!: FormGroup;
+  companySelected = new FormControl(
+    '',
+    Validators.compose([Validators.required])
+  );
+  amount = new FormControl('', Validators.compose([Validators.required]));
+  selectedCategory = new FormControl(
+    '',
+    Validators.compose([Validators.required])
+  );
+  selectedRenewal = new FormControl(
+    '',
+    Validators.compose([Validators.required])
+  );
+  nextPaymentDate = new FormControl(
+    this.today,
+    Validators.compose([Validators.required])
+  );
 
   constructor(
     private companySuggestionsService: CompanySuggestionsService,
     private readonly _router: Router,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private datePipe: DatePipe
   ) {
     this.signinForm = new FormGroup({
-      companySelected: new FormControl(
-        '',
-        Validators.compose([Validators.required])
-      ),
-      price: new FormControl('', Validators.compose([Validators.required])),
-      selectedCategory: new FormControl(
-        '',
-        Validators.compose([Validators.required])
-      ),
-      selectedRenewal: new FormControl(
-        '',
-        Validators.compose([Validators.required])
-      ),
-      nextPaymentDate: new FormControl(
-        '',
-        Validators.compose([Validators.required])
-      ),
+      companySelected: this.companySelected,
+      amount: this.amount,
+      selectedCategory: this.selectedCategory,
+      selectedRenewal: this.selectedRenewal,
+      nextPaymentDate: this.nextPaymentDate,
     });
   }
 
   selectDate() {
     this.datetime.confirm();
-    this.selectedDate = this.nextPaymentDate;
+    if (this.nextPaymentDate.value) {
+      this.selectedDate = this.nextPaymentDate.value;
+    }
   }
 
   resetDateTime() {
     this.datetime.reset();
-    this.selectedDate = this.today;
+    this.nextPaymentDate.setValue(this.today);
+    if (this.nextPaymentDate.value) {
+      this.selectedDate = this.nextPaymentDate.value;
+    }
+    this.resetForm();
   }
 
   onInput(ev: any) {
     const value = ev.target.value;
     const filteredValue = value.replace(/[^a-zA-Z0-9 ]+/g, '');
-    this.companySelected = filteredValue;
 
     if (filteredValue.length > 1) {
-      this.companySuggestionsService
-        .fetchCompanySuggestions(filteredValue)
-        .subscribe((data) => {
-          this.filteredOptions = data;
-        });
-    } else {
-      this.filteredOptions = [];
+      this.filteredOptions$ =
+        this.companySuggestionsService.fetchCompanySuggestions(filteredValue);
+      this.toggleDropdown = true;
     }
   }
 
   selectOption(option: Company) {
-    this.companySelected = option.name;
+    this.companySelected.setValue(option.name);
     this.logo = option.logo;
     this.domain = option.domain;
-    this.filteredOptions = [];
+    this.toggleDropdown = false;
   }
 
   resetForm() {
@@ -136,10 +144,9 @@ export class AddSubComponent {
     }
 
     if (this.signinForm.valid) {
-      const loading = await this.loadingCtrl.create({
-        message: 'Connexion...',
-      });
-      console.log(this.signinForm.valid);
+      // const loading = await this.loadingCtrl.create({
+      //   message: 'Connexion...',
+      // });
 
       const formData = {
         ...this.signinForm.value,
@@ -149,11 +156,14 @@ export class AddSubComponent {
         userID: localStorageData.uid,
       };
 
-      const db = getFirestore();
-      await setDoc(doc(collection(db, 'subscriptions')), formData);
+      console.log(this.signinForm.valid)
+      console.log(formData)
+
+      // const db = getFirestore();
+      // await setDoc(doc(collection(db, 'subscriptions')), formData);
 
       this.resetForm();
-      this._router.navigate(['/home']);
+      // this._router.navigate(['/home']);
     }
   }
 }

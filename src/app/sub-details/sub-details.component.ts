@@ -19,9 +19,7 @@ export class SubDetailsComponent implements OnInit {
   user?: User;
   subId: string = this._route.snapshot.params['id'];
   subscriptions?: Subscription[];
-  userSubData$: Observable<Subscription[]> = this.firestore.loadSubData(
-    this.subId
-  );
+  userSubData$!: Observable<Subscription[]> ;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -34,13 +32,9 @@ export class SubDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getUserSubscriptions();
-  }
-
-  getUserSubscriptions() {
-    this.userSubData$.subscribe((data) => {
-      this.subscriptions = data;
-    });
+    this.userSubData$ =  this.firestore.loadSubData(
+      this.subId
+    );
   }
 
   trackByPaymentDate(index: number, payment: any): string {

@@ -17,8 +17,6 @@ import {
 export class DataService {
   user?: User;
   subscriptions?: Subscription[];
-  monthlyExpenses: number = 0;
-  yearlyExpenses: number = 0;
 
   constructor(
     private readonly _firestore: Firestore

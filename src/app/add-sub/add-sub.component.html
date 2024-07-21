@@ -10,48 +10,55 @@
         <ion-input
           labelPlacement="floating"
           label="Rechercher une marque :"
-          [(ngModel)]="companySelected"
           (ionInput)="onInput($event)"
           #ionInputEl
           placeholder="Min 2 caractères"
           formControlName="companySelected"
+          [formControl]="companySelected"
           name="companySelected"
           id="companySelected"
         >
-          <div
-            [hidden]="!signinForm.get('companySelected')?.hasError('required')"
-          >
-            Ce champ est obligatoire.
-          </div>
         </ion-input>
+        <ion-text color="danger"
+          [hidden]="
+            companySelected.valid ||
+            (!companySelected.touched && !companySelected.valid)
+          "
+        >
+          Ce champ est obligatoire.
+        </ion-text>
       </ion-item>
-      @if (filteredOptions.length > 0) { @for (option of filteredOptions; track
-      option) {
+      @if (filteredOptions$ | async; as filteredOptions) { @if (toggleDropdown)
+      { @for (option of filteredOptions; track option) {
       <ion-item (click)="selectOption(option)">
         <ion-avatar slot="start">
           <img [src]="option.logo" alt="{{ option.name }} logo" />
         </ion-avatar>
         <ion-label>{{ option.name }}</ion-label>
       </ion-item>
-      } }
+
+      } } }
       <ion-item>
         <ion-input
           labelPlacement="floating"
           label="Prix :"
           type="number"
           placeholder=""
-          [(ngModel)]="price"
-          name="price"
-          formControlName="price"
+          name="amount"
+          formControlName="amount"
+          [formControl]="amount"
         ></ion-input>
+        <ion-text color="danger" [hidden]="amount.valid || (!amount.touched && !amount.valid)">
+          Ce champ est obligatoire.
+        </ion-text>
       </ion-item>
       <ion-item>
         <ion-select
           labelPlacement="floating"
           label="Catégorie :"
-          [(ngModel)]="selectedCategory"
           name="selectedCategory"
           formControlName="selectedCategory"
+          [formControl]="selectedCategory"
         >
           @for (category of subscriptionCategories; track category) {
           <ion-select-option value="{{ category }}">{{
@@ -59,14 +66,23 @@
           }}</ion-select-option>
           }
         </ion-select>
+        
+        <ion-text color="danger"
+        [hidden]="
+          selectedCategory.valid ||
+          (!selectedCategory.touched && !selectedCategory.valid)
+        "
+      >
+        Ce champ est obligatoire.
+      </ion-text>
       </ion-item>
       <ion-item>
         <ion-select
           labelPlacement="floating"
           label="Férquence :"
-          [(ngModel)]="selectedRenewal"
           name="selectedRenewal"
           formControlName="selectedRenewal"
+          [formControl]="selectedRenewal"
         >
           @for (renewal of subscriptionRenewal; track renewal) {
           <ion-select-option value="{{ renewal }}">{{
@@ -74,13 +90,20 @@
           }}</ion-select-option>
           }
         </ion-select>
+        <ion-text color="danger"
+          [hidden]="
+            selectedRenewal.valid ||
+            (!selectedRenewal.touched && !selectedRenewal.valid)
+          "
+        >
+          Ce champ est obligatoire.
+        </ion-text>
       </ion-item>
       <ion-item>
         <ion-input
           labelPlacement="floating"
           label="Prochain paiement"
           type="text"
-          placeholder="{{ selectedDate | date : 'dd.MM.YYYY' }}"
           value="{{ selectedDate | date : 'dd.MM.YYYY' }}"
           readonly
         ></ion-input>
@@ -89,10 +112,10 @@
         <ion-datetime
           #datetime
           presentation="date"
-          min="{{ today | date : 'YYYY-MM-dd' }}"
+          min="{{ today }}"
           max="2099-12-09"
-          [(ngModel)]="nextPaymentDate"
           name="nextPaymentDate"
+          [formControl]="nextPaymentDate"
           formControlName="nextPaymentDate"
         >
           <ion-buttons slot="buttons">
@@ -107,11 +130,7 @@
     <ion-grid>
       <ion-row>
         <ion-col size="6">
-          <ion-button
-            color="medium"
-            expand="block"
-            type="reset"
-            (click)="resetDateTime()"
+          <ion-button color="medium" expand="block" (click)="resetDateTime()"
             >Effacer</ion-button
           >
         </ion-col>

@@ -8,6 +8,7 @@ import {
 import {
   provideIonicAngular
 } from "@ionic/angular/standalone";
+import { DatePipe } from "@angular/common";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,5 +16,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideIonicAngular(),
+    DatePipe
   ],
 };

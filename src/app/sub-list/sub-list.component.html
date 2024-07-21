@@ -10,7 +10,7 @@
       <div class="logo">
         <img
           (click)="handleClick(sub)"
-          ngSrc={{sub.logo}}
+          ngSrc="{{ sub.logo }}"
           width="80"
           height="80"
           priority
@@ -20,8 +20,12 @@
     </div>
     <h2>Liste des dépenses</h2>
     <h3>Pour le mois actuel</h3>
-    {{ monthlyExpenses | currency : "CHF" }}
+    @if (monthlyExpenses$ | async; as monthlyExpenses) {
+      {{ monthlyExpenses | currency : "CHF" }}
+    }
     <h3>Pour l'année actuel</h3>
-    {{ yearlyExpenses | currency : "CHF" }}
+    @if (yearlyExpenses$ | async; as yearlyExpenses) {
+      {{ yearlyExpenses | currency : "CHF" }}
+    }
   </div>
 </ion-content>
