@@ -12,7 +12,12 @@ import {
   Company,
   CompanySuggestionsService,
 } from '../services/companySuggestions/company-suggestions.service';
-import { CommonModule, DatePipe, formatDate, registerLocaleData } from '@angular/common';
+import {
+  CommonModule,
+  DatePipe,
+  formatDate,
+  registerLocaleData,
+} from '@angular/common';
 import { collection, doc, getFirestore, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular/standalone';
@@ -83,8 +88,7 @@ export class AddSubComponent {
   constructor(
     private companySuggestionsService: CompanySuggestionsService,
     private readonly _router: Router,
-    private loadingCtrl: LoadingController,
-    private datePipe: DatePipe
+    private loadingCtrl: LoadingController
   ) {
     this.signinForm = new FormGroup({
       companySelected: this.companySelected,
@@ -108,7 +112,6 @@ export class AddSubComponent {
     if (this.nextPaymentDate.value) {
       this.selectedDate = this.nextPaymentDate.value;
     }
-    this.resetForm();
   }
 
   onInput(ev: any) {
@@ -133,6 +136,7 @@ export class AddSubComponent {
     this.signinForm.reset();
     this.logo = '';
     this.domain = '';
+    this.resetDateTime()
   }
 
   async onSubmit() {
@@ -144,9 +148,9 @@ export class AddSubComponent {
     }
 
     if (this.signinForm.valid) {
-      // const loading = await this.loadingCtrl.create({
-      //   message: 'Connexion...',
-      // });
+      const loading = await this.loadingCtrl.create({
+        message: 'Connexion...',
+      });
 
       const formData = {
         ...this.signinForm.value,
@@ -156,14 +160,14 @@ export class AddSubComponent {
         userID: localStorageData.uid,
       };
 
-      console.log(this.signinForm.valid)
-      console.log(formData)
+      console.log(this.signinForm.valid);
+      console.log(formData);
 
-      // const db = getFirestore();
-      // await setDoc(doc(collection(db, 'subscriptions')), formData);
+      const db = getFirestore();
+      await setDoc(doc(collection(db, 'subscriptions')), formData);
 
       this.resetForm();
-      // this._router.navigate(['/home']);
+      this._router.navigate(['/home']);
     }
   }
 }
