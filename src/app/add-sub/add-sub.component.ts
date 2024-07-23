@@ -160,9 +160,6 @@ export class AddSubComponent {
         userID: localStorageData.uid,
       };
 
-      console.log(this.signinForm.valid);
-      console.log(formData);
-
       const db = getFirestore();
       await setDoc(doc(collection(db, 'subscriptions')), formData);
 

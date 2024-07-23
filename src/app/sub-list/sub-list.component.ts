@@ -5,11 +5,38 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgOptimizedImage } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { addIcons } from 'ionicons';
 import { map, Observable } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { AuthService } from '../services/auth/auth.service';
-import { ChartModule } from 'primeng/chart';
+import {
+  ApexNonAxisChartSeries,
+  ApexResponsive,
+  ApexChart,
+  ApexDataLabels,
+  ApexLegend,
+  ApexStroke,
+  ApexPlotOptions,
+  ApexStates,
+  ApexTheme,
+  ApexTitleSubtitle,
+} from 'ng-apexcharts';
+import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
+import { Camera, CameraResultType } from '@capacitor/camera';
+
+export type ChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  responsive: ApexResponsive[];
+  labels: any;
+  fill: any;
+  stroke: ApexStroke;
+  states: ApexStates;
+  legend: ApexLegend;
+  title: ApexTitleSubtitle;
+  theme: ApexTheme;
+  plotOptions: ApexPlotOptions;
+  dataLabels: ApexDataLabels;
+};
 
 @Component({
   selector: 'app-sub-list',
@@ -19,7 +46,7 @@ import { ChartModule } from 'primeng/chart';
     NgOptimizedImage,
     IonicModule,
     RouterLink,
-    ChartModule,
+    NgApexchartsModule,
   ],
   templateUrl: './sub-list.component.html',
   styleUrls: ['./sub-list.component.css'],
@@ -34,15 +61,15 @@ export class SubListComponent implements OnInit {
   credentials: string | null = localStorage.getItem('user');
   data: any;
   options: any;
+  @ViewChild('chart') chart!: ChartComponent;
+  public chartOptions!: Partial<ChartOptions> | any;
 
   constructor(
     private readonly expenses: ExepensesService,
     private readonly firestore: DataService,
     private readonly _router: Router,
     private readonly _auth: AuthService
-  ) {
-    addIcons({});
-  }
+  ) {}
 
   ngOnInit(): void {
     if (this._auth.isAuthenticated()) {
@@ -62,48 +89,165 @@ export class SubListComponent implements OnInit {
           )
         );
 
-        const documentStyle = getComputedStyle(document.documentElement);
-        const textColor = documentStyle.getPropertyValue('--text-color');
-
         let labels: string[] = [];
-        let data: number[] = [];
+        let series: number[] = [];
 
         this.userSubData$.subscribe((subscriptions) => {
           subscriptions.forEach((sub) => {
             labels.push(sub.companyName);
-            data.push(sub.amount);
+            series.push(sub.amount);
           });
+        });
 
-          this.data = {
-            labels: labels,
-            datasets: [
-              {
-                data: data,
-                backgroundColor: [
-                  documentStyle.getPropertyValue('--blue-500') || '#FF6384',
-                  documentStyle.getPropertyValue('--yellow-500') || '#36A2EB',
-                  documentStyle.getPropertyValue('--green-500') || '#FFCE56',
-                ],
-                hoverBackgroundColor: [
-                  documentStyle.getPropertyValue('--blue-400') || '#FF6384',
-                  documentStyle.getPropertyValue('--yellow-400') || '#36A2EB',
-                  documentStyle.getPropertyValue('--green-400') || '#FFCE56',
-                ],
+        this.chartOptions = {
+          series: series,
+          chart: {
+            width: '30%',
+            type: 'donut',
+            dropShadow: {
+              enabled: true,
+              color: '#111',
+              top: -1,
+              left: 3,
+              blur: 3,
+              opacity: 0.2,
+            },
+            animations: {
+              enabled: true,
+              easing: 'linear',
+              speed: 500,
+              animateGradually: {
+                enabled: true,
+                delay: 150,
               },
-            ],
-          };
-
-          this.options = {
-            plugins: {
-              legend: {
+              dynamicAnimation: {
+                enabled: true,
+                speed: 350,
+              },
+            },
+          },
+          stroke: {
+            width: 0,
+          },
+          plotOptions: {
+            pie: {
+              donut: {
+                size: '70%',
                 labels: {
-                  usePointStyle: true,
-                  color: textColor,
+                  show: true,
+                  total: {
+                    showAlways: true,
+                    show: true,
+                    label: 'Total',
+                    fontSize: '14px',
+                    color: '#555',
+                  },
                 },
               },
             },
-          };
-        });
+          },
+          labels: labels,
+          dataLabels: {
+            enabled: true,
+            style: {
+              fontSize: '12px',
+            },
+            dropShadow: {
+              blur: 3,
+              opacity: 0.8,
+            },
+          },
+          fill: {
+            type: 'pattern',
+            opacity: 1,
+            pattern: {
+              enabled: true,
+              style: [],
+            },
+          },
+          states: {
+            hover: {
+              filter: {
+                type: 'none',
+              },
+            },
+          },
+          theme: {
+            palette: 'palette2',
+          },
+          title: {
+            text: 'Favourite Movie Type',
+            align: 'center',
+            floating: false,
+            margin: 30,
+            style: {
+              fontSize: '16px',
+              color: '#333',
+            },
+          },
+          legend: {
+            position: 'bottom',
+            horizontalAlign: 'center',
+            floating: false,
+            fontSize: '12px',
+            offsetY: 20,
+            itemMargin: {
+              horizontal: 10,
+              vertical: 5,
+            },
+          },
+          responsive: [
+            {
+              breakpoint: 500,
+              options: {
+                chart: {
+                  width: '99%',
+                },
+                title: {
+                  text: 'Favourite Movie Type',
+                  align: 'center',
+                  margin: 20,
+                  style: {
+                    fontSize: '14px',
+                    color: '#333',
+                  },
+                },
+                legend: {
+                  position: 'bottom',
+                  horizontalAlign: 'center',
+                  fontSize: '10px',
+                  offsetY: 10,
+                  itemMargin: {
+                    horizontal: 5,
+                    vertical: 5,
+                  },
+                },
+                plotOptions: {
+                  pie: {
+                    donut: {
+                      size: '50%',
+                      labels: {
+                        show: true,
+                        total: {
+                          showAlways: true,
+                          show: true,
+                          label: 'Total',
+                          fontSize: '12px',
+                        },
+                      },
+                    },
+                  },
+                },
+                dataLabels: {
+                  enabled: true,
+                  style: {
+                    fontSize: '10px',
+                  },
+                },
+              },
+            },
+          ],
+        };
       }
     }
   }

@@ -5,20 +5,7 @@
 </ion-header>
 <ion-content>
   <div class="main-content">
-    <div class="sub-list">
-      @for (sub of userSubData$ | async; track sub) {
-      <div class="logo">
-        <img
-          (click)="handleClick(sub)"
-          ngSrc="{{ sub.logo }}"
-          width="80"
-          height="80"
-          priority
-        />
-      </div>
-      }
-    </div>
-    <h2>Liste des dépenses</h2>
+    <!-- <h2>Liste des dépenses</h2>
     <h3>Pour le mois actuel</h3>
     @if (monthlyExpenses$ | async; as monthlyExpenses) {
     {{ monthlyExpenses | currency : "CHF" }}
@@ -26,9 +13,33 @@
     <h3>Pour l'année actuel</h3>
     @if (yearlyExpenses$ | async; as yearlyExpenses) {
     {{ yearlyExpenses | currency : "CHF" }}
-    }
-    <div class="card flex justify-content-center">
-      <p-chart type="doughnut" [data]="data" [options]="options" />
+    } -->
+    <!--The content below is only a placeholder and can be replaced.-->
+    <div id="chart" >
+      <apx-chart class="ion-justify-content-start"
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [labels]="chartOptions.labels"
+        [dataLabels]="chartOptions.dataLabels"
+        [title]="chartOptions.title"
+        [fill]="chartOptions.fill"
+        [states]="chartOptions.states"
+        [plotOptions]="chartOptions.plotOptions"
+        [stroke]="chartOptions.stroke"
+        [theme]="chartOptions.theme"
+        [responsive]="chartOptions.responsive"
+      ></apx-chart>
     </div>
+    <ion-list>
+        @for (sub of userSubData$ | async; track sub) {
+          <ion-item>
+            <div class="logo">
+              <img (click)="handleClick(sub)" ngSrc="{{ sub.logo }}" width="80" height="80" priority />
+            </div>
+            <ion-label>{{ sub.companyName }}</ion-label>
+            <ion-label>{{ sub.amount }}.- {{ sub.renewal }}</ion-label>
+          </ion-item>
+        }
+    </ion-list>
   </div>
 </ion-content>
