@@ -21,7 +21,6 @@ import {
   ApexTitleSubtitle,
 } from 'ng-apexcharts';
 import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
-import { Camera, CameraResultType } from '@capacitor/camera';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
