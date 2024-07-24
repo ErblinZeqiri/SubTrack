@@ -35,9 +35,7 @@
               "src/favicon.ico"
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": [
-              "node_modules/apexcharts/dist/apexcharts.min.js"
-            ],
+            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"],
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json"
           },
@@ -130,6 +128,12 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {
+            "baseHref": "/SubTrack/"
           }
         }
       }
