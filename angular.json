@@ -29,10 +29,17 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
-              }
+              },
+              "src/manifest.webmanifest",
+              "src/assets/icons",
+              "src/favicon.ico"
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
+            "scripts": [
+              "node_modules/apexcharts/dist/apexcharts.min.js"
+            ],
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -104,7 +111,10 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
-              }
+              },
+              "src/manifest.webmanifest",
+              "src/assets/icons",
+              "src/favicon.ico"
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
             "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
