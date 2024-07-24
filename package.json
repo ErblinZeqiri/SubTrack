@@ -10,7 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "deploy:github": "ng deploy --base-href=https://github.com/ErblinZeqiri/SubTrack --repo=https://github.com/ErblinZeqiri/SubTrack.git --name=ErblinZeqiri --email=erblin.zeqiri17@gmail.com --no-silent"
+    "deploy:github": "ng deploy --base-href=https://erblinzeqiri.github.io/SubTrack/ --repo=https://github.com/ErblinZeqiri/SubTrack.git --name=ErblinZeqiri --email=erblin.zeqiri17@gmail.com --no-silent --dir=www/" 
   },
   "private": true,
   "dependencies": {
