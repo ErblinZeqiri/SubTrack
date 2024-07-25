@@ -10,7 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "deploy:github": "ng deploy --base-href=https://erblinzeqiri.github.io/SubTrack/ --repo=https://github.com/ErblinZeqiri/SubTrack.git --name=ErblinZeqiri --email=erblin.zeqiri17@gmail.com --no-silent --dir=www/" 
+    "deploy:github": "ng deploy --base-href=https://erblinzeqiri.github.io/SubTrack/ --repo=https://github.com/ErblinZeqiri/SubTrack.git --name=ErblinZeqiri --email=erblin.zeqiri17@gmail.com --no-silent --dir=www/"
   },
   "private": true,
   "dependencies": {
@@ -31,7 +31,7 @@
     "@capacitor/haptics": "6.0.0",
     "@capacitor/keyboard": "6.0.1",
     "@capacitor/status-bar": "6.0.0",
-    "@ionic/angular": "^8.2.5",
+    "@ionic/angular": "^8.2.6",
     "@ionic/pwa-elements": "^3.3.0",
     "apexcharts": "^3.51.0",
     "chart.js": "^4.4.3",
