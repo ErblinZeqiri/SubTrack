@@ -1,17 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [IonicModule],
+  imports: [IonContent, IonTitle, IonToolbar, IonHeader],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss'],
 })
-export class NotificationsComponent  implements OnInit {
-
-  constructor() { }
+export class NotificationsComponent implements OnInit {
+  constructor() {}
 
   ngOnInit() {}
-
 }

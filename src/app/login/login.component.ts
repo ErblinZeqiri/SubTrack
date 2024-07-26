@@ -1,14 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth/auth.service';
-import { IonicModule } from '@ionic/angular';
-import { LoadingController, NavController } from '@ionic/angular/standalone';
+import {
+  LoadingController,
+  NavController,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonButton,
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [IonicModule],
+  imports: [IonButton, IonContent, IonTitle, IonToolbar, IonHeader],
 })
 export class LoginComponent implements OnInit {
   constructor(

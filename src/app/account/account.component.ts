@@ -1,12 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../services/auth/auth.service';
-import { LoadingController } from '@ionic/angular/standalone';
+import {
+  LoadingController,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonButton,
+  IonAlert,
+  IonLoading,
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [IonicModule],
+  imports: [
+    IonLoading,
+    IonAlert,
+    IonButton,
+    IonContent,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+  ],
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
 })

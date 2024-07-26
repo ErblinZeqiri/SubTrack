@@ -4,6 +4,10 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  IonTabs,
+  IonIcon,
+  IonTabButton,
+  IonTabBar,
 } from '@ionic/angular/standalone';
 import {
   homeOutline,
@@ -13,16 +17,24 @@ import {
   personOutline,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
-import { SubListComponent } from "../sub-list/sub-list.component";
-import { IonicModule } from "@ionic/angular";
-
+import { SubListComponent } from '../sub-list/sub-list.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, SubListComponent, IonicModule],
+  imports: [
+    IonTabBar,
+    IonTabButton,
+    IonIcon,
+    IonTabs,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    SubListComponent,
+  ],
 })
 export class HomePage {
   constructor() {

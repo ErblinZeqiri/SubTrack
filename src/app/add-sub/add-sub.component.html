@@ -19,7 +19,8 @@
           id="companySelected"
         >
         </ion-input>
-        <ion-text color="danger"
+        <ion-text
+          color="danger"
           [hidden]="
             companySelected.valid ||
             (!companySelected.touched && !companySelected.valid)
@@ -48,7 +49,10 @@
           formControlName="amount"
           [formControl]="amount"
         ></ion-input>
-        <ion-text color="danger" [hidden]="amount.valid || (!amount.touched && !amount.valid)">
+        <ion-text
+          color="danger"
+          [hidden]="amount.valid || (!amount.touched && !amount.valid)"
+        >
           Ce champ est obligatoire.
         </ion-text>
       </ion-item>
@@ -66,15 +70,16 @@
           }}</ion-select-option>
           }
         </ion-select>
-        
-        <ion-text color="danger"
-        [hidden]="
-          selectedCategory.valid ||
-          (!selectedCategory.touched && !selectedCategory.valid)
-        "
-      >
-        Ce champ est obligatoire.
-      </ion-text>
+
+        <ion-text
+          color="danger"
+          [hidden]="
+            selectedCategory.valid ||
+            (!selectedCategory.touched && !selectedCategory.valid)
+          "
+        >
+          Ce champ est obligatoire.
+        </ion-text>
       </ion-item>
       <ion-item>
         <ion-select
@@ -90,7 +95,8 @@
           }}</ion-select-option>
           }
         </ion-select>
-        <ion-text color="danger"
+        <ion-text
+          color="danger"
           [hidden]="
             selectedRenewal.valid ||
             (!selectedRenewal.touched && !selectedRenewal.valid)
@@ -104,15 +110,19 @@
           labelPlacement="floating"
           label="Prochain paiement"
           type="text"
-          value="{{ selectedDate | date : 'dd.MM.YYYY' }}"
+          value=""
           readonly
-        ></ion-input>
+          formControlName="datePicker"
+          [formControl]="datePicker"
+        >{{ selectedDate | date : 'dd.MM.YYYY' }}</ion-input>
       </ion-item>
       <ion-item class="ion-margin">
         <ion-datetime
           #datetime
           presentation="date"
-          min="{{ today }}"
+          min=""
+          displayFormat="YYYY-MM-dd" 
+          [(ngModel)]="today"
           max="2099-12-09"
           name="nextPaymentDate"
           [formControl]="nextPaymentDate"

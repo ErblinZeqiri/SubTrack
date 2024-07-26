@@ -4,7 +4,6 @@ import { ExepensesService } from '../services/expenses/exepenses.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgOptimizedImage } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { map, Observable } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { AuthService } from '../services/auth/auth.service';
@@ -21,6 +20,15 @@ import {
   ApexTitleSubtitle,
 } from 'ng-apexcharts';
 import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+} from '@ionic/angular/standalone';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -41,9 +49,15 @@ export type ChartOptions = {
   selector: 'app-sub-list',
   standalone: true,
   imports: [
+    IonLabel,
+    IonItem,
+    IonList,
+    IonContent,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
     CommonModule,
     NgOptimizedImage,
-    IonicModule,
     RouterLink,
     NgApexchartsModule,
   ],

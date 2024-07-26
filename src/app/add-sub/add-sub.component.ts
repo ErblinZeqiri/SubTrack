@@ -1,4 +1,4 @@
-import { Component, NgModule, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
   FormGroup,
   FormsModule,
@@ -6,8 +6,27 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { IonicModule, IonDatetime } from '@ionic/angular';
-import { IonInput } from '@ionic/angular/standalone';
+import {
+  IonInput,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonList,
+  IonItem,
+  IonText,
+  IonAvatar,
+  IonLabel,
+  IonButtons,
+  IonButton,
+  IonGrid,
+  IonRow,
+  IonCol,
+  LoadingController,
+  IonSelect,
+  IonSelectOption,
+  IonDatetime,
+} from '@ionic/angular/standalone';
 import {
   Company,
   CompanySuggestionsService,
@@ -20,7 +39,6 @@ import {
 } from '@angular/common';
 import { collection, doc, getFirestore, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular/standalone';
 import { Observable } from 'rxjs';
 import localeFrCh from '@angular/common/locales/fr-CH';
 
@@ -29,7 +47,27 @@ registerLocaleData(localeFrCh, 'fr-CH');
 @Component({
   selector: 'app-add-sub',
   standalone: true,
-  imports: [CommonModule, IonicModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonButton,
+    IonButtons,
+    IonLabel,
+    IonAvatar,
+    IonText,
+    IonItem,
+    IonList,
+    IonContent,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IonSelect,
+    IonSelectOption,
+  ],
   providers: [DatePipe],
   templateUrl: './add-sub.component.html',
   styleUrls: ['./add-sub.component.scss'],
@@ -84,6 +122,7 @@ export class AddSubComponent {
     this.today,
     Validators.compose([Validators.required])
   );
+  datePicker = new FormControl();
 
   constructor(
     private companySuggestionsService: CompanySuggestionsService,
@@ -97,6 +136,7 @@ export class AddSubComponent {
       selectedRenewal: this.selectedRenewal,
       nextPaymentDate: this.nextPaymentDate,
     });
+    console.log(this.today)
   }
 
   selectDate() {
@@ -136,7 +176,7 @@ export class AddSubComponent {
     this.signinForm.reset();
     this.logo = '';
     this.domain = '';
-    this.resetDateTime()
+    this.resetDateTime();
   }
 
   async onSubmit() {
