@@ -110,17 +110,15 @@
           labelPlacement="floating"
           label="Prochain paiement"
           type="text"
-          value=""
+          value="{{ selectedDate | date : 'dd.MM.YYYY' }}"
           readonly
-          formControlName="datePicker"
-          [formControl]="datePicker"
-        >{{ selectedDate | date : 'dd.MM.YYYY' }}</ion-input>
+        ></ion-input>
       </ion-item>
       <ion-item class="ion-margin">
         <ion-datetime
           #datetime
           presentation="date"
-          min=""
+          min="{{ today }}"
           displayFormat="YYYY-MM-dd" 
           [(ngModel)]="today"
           max="2099-12-09"

@@ -67,6 +67,8 @@ registerLocaleData(localeFrCh, 'fr-CH');
     ReactiveFormsModule,
     IonSelect,
     IonSelectOption,
+    IonInput,
+    IonDatetime,
   ],
   providers: [DatePipe],
   templateUrl: './add-sub.component.html',
@@ -122,7 +124,6 @@ export class AddSubComponent {
     this.today,
     Validators.compose([Validators.required])
   );
-  datePicker = new FormControl();
 
   constructor(
     private companySuggestionsService: CompanySuggestionsService,
@@ -136,7 +137,7 @@ export class AddSubComponent {
       selectedRenewal: this.selectedRenewal,
       nextPaymentDate: this.nextPaymentDate,
     });
-    console.log(this.today)
+    console.log(this.today);
   }
 
   selectDate() {
