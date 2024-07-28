@@ -5,8 +5,77 @@
 </ion-header>
 <ion-content>
   <div class="main-content">
-    <ion-button id="open-loading" (click)="signin()" expand="full"
-      >Login</ion-button
+    <ion-button id="open-loading" (click)="loginWithGoogle()" shape="round">
+      <ion-icon name="logo-google"></ion-icon>
+      &nbsp; Login avec Google
+    </ion-button>
+
+    <ion-button id="open-loading" id="open-modal" shape="round">
+      <ion-icon name="log-in-outline"></ion-icon>
+      &nbsp; Login avec Google
+    </ion-button>
+
+    <ion-modal
+      #modal
+      trigger="open-modal"
+      [enterAnimation]="enterAnimation"
+      [leaveAnimation]="leaveAnimation"
     >
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Connexion</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="modal.dismiss()">Fermer</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <form [formGroup]="loginForm" (ngSubmit)="loginWithEmail()">
+            <ion-input
+              labelPlacement="floating"
+              label="Email :"
+              type="email"
+              placeholder="exemple@exemple.com"
+              name="email"
+              formControlName="email"
+              [formControl]="email"
+            ></ion-input>
+            <ion-text
+              color="danger"
+              [hidden]="email.valid || (!email.touched && !email.valid)"
+            >
+              Ajoutez une adresse email valide.
+            </ion-text>
+
+            <ion-input
+              labelPlacement="floating"
+              label="Mot de passe :"
+              type="password"
+              placeholder=""
+              name="password"
+              formControlName="password"
+              [formControl]="password"
+            ></ion-input>
+            <ion-text
+              color="danger"
+              [hidden]="
+                password.valid || (!password.touched && !password.valid)
+              "
+            >
+              Mauvais mot de passe.
+            </ion-text>
+
+            <ion-text color="danger" [hidden]="isDataValid">
+              Mauvaise données de connexion.
+            </ion-text>
+
+            <ion-button id="open-loading" expand="block" type="submit"
+              >Valider</ion-button
+            >
+          </form>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
   </div>
 </ion-content>

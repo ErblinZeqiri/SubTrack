@@ -13,17 +13,17 @@
           (ionInput)="onInput($event)"
           #ionInputEl
           placeholder="Min 2 caractères"
-          formControlName="companySelected"
-          [formControl]="companySelected"
-          name="companySelected"
-          id="companySelected"
+          formControlName="companyName"
+          [formControl]="selectedCompany"
+          name="selectedCompany"
+          id="selectedCompany"
         >
         </ion-input>
         <ion-text
           color="danger"
           [hidden]="
-            companySelected.valid ||
-            (!companySelected.touched && !companySelected.valid)
+            selectedCompany.valid ||
+            (!selectedCompany.touched && !selectedCompany.valid)
           "
         >
           Ce champ est obligatoire.
@@ -61,7 +61,7 @@
           labelPlacement="floating"
           label="Catégorie :"
           name="selectedCategory"
-          formControlName="selectedCategory"
+          formControlName="category"
           [formControl]="selectedCategory"
         >
           @for (category of subscriptionCategories; track category) {
@@ -86,7 +86,7 @@
           labelPlacement="floating"
           label="Férquence :"
           name="selectedRenewal"
-          formControlName="selectedRenewal"
+          formControlName="renewal"
           [formControl]="selectedRenewal"
         >
           @for (renewal of subscriptionRenewal; track renewal) {

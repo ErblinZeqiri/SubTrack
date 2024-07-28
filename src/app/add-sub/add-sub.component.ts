@@ -107,7 +107,7 @@ export class AddSubComponent {
   selectedDate: string | null = this.today;
 
   addSubscribtionForm!: FormGroup;
-  companySelected = new FormControl(
+  selectedCompany = new FormControl(
     '',
     Validators.compose([Validators.required])
   );
@@ -131,13 +131,12 @@ export class AddSubComponent {
     private loadingCtrl: LoadingController
   ) {
     this.addSubscribtionForm = new FormGroup({
-      companySelected: this.companySelected,
+      companyName: this.selectedCompany,
       amount: this.amount,
-      selectedCategory: this.selectedCategory,
-      selectedRenewal: this.selectedRenewal,
+      category: this.selectedCategory,
+      renewal: this.selectedRenewal,
       nextPaymentDate: this.nextPaymentDate,
     });
-    console.log(this.today);
   }
 
   selectDate() {
@@ -167,7 +166,7 @@ export class AddSubComponent {
   }
 
   selectOption(option: Company) {
-    this.companySelected.setValue(option.name);
+    this.selectedCompany.setValue(option.name);
     this.logo = option.logo;
     this.domain = option.domain;
     this.toggleDropdown = false;
