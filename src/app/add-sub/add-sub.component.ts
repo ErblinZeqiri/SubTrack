@@ -106,7 +106,7 @@ export class AddSubComponent {
   today = formatDate(new Date().toISOString(), 'YYYY-MM-dd', 'fr-CH');
   selectedDate: string | null = this.today;
 
-  signinForm!: FormGroup;
+  addSubscribtionForm!: FormGroup;
   companySelected = new FormControl(
     '',
     Validators.compose([Validators.required])
@@ -130,7 +130,7 @@ export class AddSubComponent {
     private readonly _router: Router,
     private loadingCtrl: LoadingController
   ) {
-    this.signinForm = new FormGroup({
+    this.addSubscribtionForm = new FormGroup({
       companySelected: this.companySelected,
       amount: this.amount,
       selectedCategory: this.selectedCategory,
@@ -174,7 +174,7 @@ export class AddSubComponent {
   }
 
   resetForm() {
-    this.signinForm.reset();
+    this.addSubscribtionForm.reset();
     this.logo = '';
     this.domain = '';
     this.resetDateTime();
@@ -188,13 +188,13 @@ export class AddSubComponent {
       throw new Error('User ID not found in localStorage');
     }
 
-    if (this.signinForm.valid) {
+    if (this.addSubscribtionForm.valid) {
       const loading = await this.loadingCtrl.create({
         message: 'Connexion...',
       });
 
       const formData = {
-        ...this.signinForm.value,
+        ...this.addSubscribtionForm.value,
         logo: this.logo,
         domain: this.domain,
         paymentHistory: [],
