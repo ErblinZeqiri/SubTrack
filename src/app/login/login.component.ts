@@ -23,8 +23,9 @@ import {
   IonRow,
   AnimationController,
   ModalController,
+  IonInputPasswordToggle,
 } from '@ionic/angular/standalone';
-import { logInOutline, logoGoogle } from 'ionicons/icons';
+import { logInOutline, logoGoogle, personAddOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import {
   FormGroup,
@@ -32,6 +33,7 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -58,6 +60,7 @@ import {
     IonToolbar,
     IonHeader,
     ReactiveFormsModule,
+    IonInputPasswordToggle,
   ],
 })
 export class LoginComponent implements OnInit {
@@ -78,7 +81,8 @@ export class LoginComponent implements OnInit {
     private loadingCtrl: LoadingController,
     private navCtrl: NavController,
     private animationCtrl: AnimationController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private readonly _router: Router,
   ) {
     this.loginForm = new FormGroup({
       email: this.email,
@@ -87,7 +91,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    addIcons({ logoGoogle, logInOutline });
+    addIcons({ logoGoogle, logInOutline, personAddOutline });
   }
 
   enterAnimation = (baseEl: HTMLElement) => {
@@ -155,9 +159,14 @@ export class LoginComponent implements OnInit {
         this.modalCtrl.dismiss();
       } catch (error) {
         console.error('Login failed:', error);
+        this.isDataValid = false;
       } finally {
         await loading.dismiss();
       }
     }
+  }
+
+  toSigninForm(){
+    this._router.navigate(['/signin']);
   }
 }

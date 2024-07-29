@@ -38,7 +38,9 @@ export class AccountComponent implements OnInit {
       role: 'confirm',
       handler: async () => {
         await this.showLoading();
-        await this.authService.logout();
+        setTimeout(async () => {
+          await this.authService.logout();
+        }, 2500);
       },
     },
   ];

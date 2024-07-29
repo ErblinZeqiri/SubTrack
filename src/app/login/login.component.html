@@ -5,15 +5,45 @@
 </ion-header>
 <ion-content>
   <div class="main-content">
-    <ion-button id="open-loading" (click)="loginWithGoogle()" shape="round">
-      <ion-icon name="logo-google"></ion-icon>
-      &nbsp; Login avec Google
-    </ion-button>
-
-    <ion-button id="open-loading" id="open-modal" shape="round">
-      <ion-icon name="log-in-outline"></ion-icon>
-      &nbsp; Login avec Google
-    </ion-button>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-button
+            id="open-loading"
+            (click)="loginWithGoogle()"
+            shape="round"
+            expand="block"
+          >
+            <ion-icon name="logo-google"></ion-icon>
+            &nbsp; Login avec Google
+          </ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button
+            id="open-loading"
+            id="open-modal"
+            shape="round"
+            expand="block"
+          >
+            <ion-icon name="log-in-outline"></ion-icon>
+            &nbsp; Login avec adresse mail
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <ion-button
+            id="signin"
+            shape="round"
+            expand="block"
+            (click)="toSigninForm()"
+          >
+            <ion-icon name="person-add-outline"></ion-icon>
+            &nbsp; Créer un compte
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
     <ion-modal
       #modal
@@ -31,40 +61,52 @@
           </ion-toolbar>
         </ion-header>
         <ion-content>
-          <form [formGroup]="loginForm" (ngSubmit)="loginWithEmail()">
-            <ion-input
-              labelPlacement="floating"
-              label="Email :"
-              type="email"
-              placeholder="exemple@exemple.com"
-              name="email"
-              formControlName="email"
-              [formControl]="email"
-            ></ion-input>
-            <ion-text
-              color="danger"
-              [hidden]="email.valid || (!email.touched && !email.valid)"
-            >
-              Ajoutez une adresse email valide.
-            </ion-text>
+          <form
+            [formGroup]="loginForm"
+            (ngSubmit)="loginWithEmail()"
+            class="loginWithEmail"
+          >
+            <div class="formField">
+              <ion-input
+                labelPlacement="floating"
+                label="Email :"
+                type="email"
+                placeholder="exemple@exemple.com"
+                name="email"
+                formControlName="email"
+                [formControl]="email"
+              ></ion-input>
+              <ion-text
+                color="danger"
+                [hidden]="email.valid || (!email.touched && !email.valid)"
+              >
+                Ajoutez une adresse email valide.
+              </ion-text>
+            </div>
 
-            <ion-input
-              labelPlacement="floating"
-              label="Mot de passe :"
-              type="password"
-              placeholder=""
-              name="password"
-              formControlName="password"
-              [formControl]="password"
-            ></ion-input>
-            <ion-text
-              color="danger"
-              [hidden]="
-                password.valid || (!password.touched && !password.valid)
-              "
-            >
-              Mauvais mot de passe.
-            </ion-text>
+            <div class="formField">
+              <ion-input
+                labelPlacement="floating"
+                label="Mot de passe :"
+                type="password"
+                placeholder=""
+                name="password"
+                formControlName="password"
+                [formControl]="password"
+              >
+                <ion-input-password-toggle
+                  slot="end"
+                ></ion-input-password-toggle>
+              </ion-input>
+              <ion-text
+                color="danger"
+                [hidden]="
+                  password.valid || (!password.touched && !password.valid)
+                "
+              >
+                Mauvais mot de passe.
+              </ion-text>
+            </div>
 
             <ion-text color="danger" [hidden]="isDataValid">
               Mauvaise données de connexion.

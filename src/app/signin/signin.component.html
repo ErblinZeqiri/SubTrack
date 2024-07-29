@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Inscription</ion-title>
+    <ion-icon name="arrow-back-outline" (click)="back()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="signinFrom" (ngSubmit)="signin()" class="loginWithEmail">
+    <ion-input
+      labelPlacement="floating"
+      label="Nom et prénom :"
+      type="text"
+      placeholder="John Doe"
+      name="fullName"
+      formControlName="fullName"
+      [formControl]="fullName"
+      class="formField"
+    ></ion-input>
+    <ion-text
+      color="danger"
+      [hidden]="fullName.valid || (!fullName.touched && !fullName.valid)"
+    >
+      Ajoutez un nom et un prénom valide.
+    </ion-text>
+
+    <div class="formField">
+      <ion-input
+        labelPlacement="floating"
+        label="Email :"
+        type="email"
+        placeholder="exemple@exemple.com"
+        name="email"
+        formControlName="email"
+        [formControl]="email"
+      ></ion-input>
+      <ion-text
+        color="danger"
+        [hidden]="email.valid || (!email.touched && !email.valid)"
+      >
+        Ajoutez une adresse email valide.
+      </ion-text>
+    </div>
+
+    <div class="formField">
+      <ion-input
+        labelPlacement="floating"
+        label="Mot de passe :"
+        type="password"
+        placeholder=""
+        name="password"
+        formControlName="password"
+        [formControl]="password"
+      >
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+      <ion-text
+        color="danger"
+        [hidden]="password.valid || (!password.touched && !password.valid)"
+      >
+        Mauvais mot de passe.
+      </ion-text>
+    </div>
+
+    <ion-text color="danger" [hidden]="isDataValid">
+      Mauvaise données de connexion.
+    </ion-text>
+
+    <ion-button id="open-loading" expand="block" type="submit"
+      >Valider</ion-button
+    >
+  </form>
+</ion-content>

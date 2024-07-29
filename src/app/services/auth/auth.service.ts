@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   Auth,
+  createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithEmailAndPassword,
 } from '@angular/fire/auth';
@@ -21,8 +22,7 @@ export class AuthService {
     });
     const credential = await signInWithPopup(this._auth, provider);
     if (credential) {
-      localStorage.setItem('user', JSON.stringify(credential.user));
-      this.auth = true;
+      this.updateUserData(credential.user);
       setTimeout(() => this._router.navigate(['/home']));
     }
   }
@@ -34,18 +34,32 @@ export class AuthService {
       password
     );
     if (credential) {
-      localStorage.setItem('user', JSON.stringify(credential.user));
-      this.auth = true;
+      this.updateUserData(credential.user);
       setTimeout(() => this._router.navigate(['/home']));
     }
   }
 
+  serviceSigninWithEmail(email: string, password: string) {
+    createUserWithEmailAndPassword(this._auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        this.updateUserData(user);
+        console.log(user);
+        setTimeout(() => this._router.navigate(['/home']));
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(`Error ${errorCode}: ${errorMessage}`);
+      });
+  }
+
   async logout() {
-    await signOut(this._auth);
+    await this._auth.signOut();
     this.auth = false;
     localStorage.removeItem('user');
     window.location.reload();
-    setTimeout(() => this._router.navigate(['/login']), 3000);
+    this._router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {
@@ -57,5 +71,10 @@ export class AuthService {
       this.auth = false;
       return false;
     }
+  }
+
+  private updateUserData(user: any) {
+    localStorage.setItem('user', JSON.stringify(user));
+    this.auth = true;
   }
 }

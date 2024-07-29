@@ -7,6 +7,7 @@ import { SubDetailsComponent } from './sub-details/sub-details.component';
 import { SearchComponent } from './search/search.component';
 import { AddSubComponent } from './add-sub/add-sub.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { SigninComponent } from './signin/signin.component'
 
 export const routes: Routes = [
   {
@@ -48,4 +49,9 @@ export const routes: Routes = [
     component: AccountComponent,
     canActivate: [authGuard],
   },
+  {
+    path: 'signin',
+    component: SigninComponent,
+
+  }
 ];

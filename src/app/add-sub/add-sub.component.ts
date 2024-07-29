@@ -25,8 +25,7 @@ import {
   LoadingController,
   IonSelect,
   IonSelectOption,
-  IonDatetime,
-} from '@ionic/angular/standalone';
+  IonDatetime, IonDatetimeButton } from '@ionic/angular/standalone';
 import {
   Company,
   CompanySuggestionsService,
@@ -47,7 +46,7 @@ registerLocaleData(localeFrCh, 'fr-CH');
 @Component({
   selector: 'app-add-sub',
   standalone: true,
-  imports: [
+  imports: [IonDatetimeButton, 
     IonCol,
     IonRow,
     IonGrid,

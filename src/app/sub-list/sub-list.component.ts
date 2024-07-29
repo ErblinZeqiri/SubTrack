@@ -28,6 +28,8 @@ import {
   IonList,
   IonItem,
   IonLabel,
+  IonRefresher,
+  IonRefresherContent,
 } from '@ionic/angular/standalone';
 
 export type ChartOptions = {
@@ -49,6 +51,8 @@ export type ChartOptions = {
   selector: 'app-sub-list',
   standalone: true,
   imports: [
+    IonRefresherContent,
+    IonRefresher,
     IonLabel,
     IonItem,
     IonList,
@@ -189,7 +193,7 @@ export class SubListComponent implements OnInit {
             palette: 'palette2',
           },
           title: {
-            text: 'Favourite Movie Type',
+            text: 'Résumé de vos abonnements',
             align: 'center',
             floating: false,
             margin: 30,
@@ -217,7 +221,7 @@ export class SubListComponent implements OnInit {
                   width: '99%',
                 },
                 title: {
-                  text: 'Favourite Movie Type',
+                  text: 'Résumé de vos abonnements',
                   align: 'center',
                   margin: 20,
                   style: {
@@ -263,6 +267,13 @@ export class SubListComponent implements OnInit {
         };
       }
     }
+  }
+
+  handleRefresh(event: any) {
+    setTimeout(() => {
+      window.location.reload();
+      event.target.complete();
+    }, 2000);
   }
 
   handleClick(sub: any) {
