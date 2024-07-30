@@ -1,30 +1,27 @@
 <ion-header>
   <ion-toolbar>
     <ion-tab-button tab="home">
+      <ion-title>Inscription</ion-title>
       <ion-icon name="arrow-back"></ion-icon>
     </ion-tab-button>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <!-- <h2>Détails de l'Abonnement {{ subscription.name }}</h2>
+  @if (subscription$ | async; as sub ) {
+  <h2>Détails de l'Abonnement {{ sub.companyName }}</h2>
   <ul>
     <li>
-      <div>
-        <strong>Montant:</strong> {{ subscription.amount | currency : "CHF" }}
-      </div>
+      <div><strong>Montant:</strong> {{ sub.amount | currency : "CHF" }}</div>
     </li>
     <li>
       <div>
         <strong>Date de facturation suivante:</strong>
-        {{ subscription.nextBillingDate | date : "d.M.yyyy" }}
+        {{ sub.nextPaymentDate | date }}
       </div>
     </li>
-    <li>
-      <div><strong>Statut:</strong> {{ subscription.status }}</div>
-    </li>
-    <li>Paiements précedants :</li>
-    <ul>
-      @for (sub of subscription.paymentHistory; track trackByPaymentDate ) {
+    <li><strong>Paiements précedants :</strong></li>
+    <!-- <ul>
+      @for (sub of sub.paymentHistory; track sub ) {
       <li>
         <div>{{ sub.date | date : "d.MM.yyyy" }}</div>
         <ul>
@@ -33,6 +30,7 @@
         </ul>
       </li>
       }
-    </ul>
-  </ul> -->
+    </ul> -->
+  </ul>
+  }
 </ion-content>

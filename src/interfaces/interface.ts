@@ -15,6 +15,6 @@ export interface Subscription {
   amount: number;
   category: string;
   renewal: string;
-  nextPaymentDate: Timestamp;
-  paymentHistory: { [key: string]: { amount: number; date: Timestamp } };
+  nextPaymentDate: Timestamp | Date;
+  paymentHistory: { [key: string]: { amount: number; date: Timestamp | Date } };
 }

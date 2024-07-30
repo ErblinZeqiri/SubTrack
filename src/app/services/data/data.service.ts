@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import {
   collection,
   collectionData,
+  doc,
+  docData,
   documentId,
   Firestore,
   query,
@@ -18,11 +20,9 @@ export class DataService {
   user?: User;
   subscriptions?: Subscription[];
 
-  constructor(
-    private readonly _firestore: Firestore
-  ) {}
+  constructor(private readonly _firestore: Firestore) {}
 
-  loadUserData(userToken: string): Observable<User[]>  {
+  loadUserData(userToken: string): Observable<User[]> {
     const fbCollection = collection(this._firestore, 'users');
     const byUserId: QueryConstraint = where(documentId(), '==', userToken);
     const q = query(fbCollection, byUserId);
@@ -38,5 +38,10 @@ export class DataService {
       Subscription[]
     >;
     return datas;
+  }
+
+  loadOneSubData(userToken: string, subId: string): Observable<Subscription| undefined> {
+    const docRef = doc(this._firestore, `subscriptions/${subId}`);
+    return docData(docRef, { idField: 'id' }) as Observable<Subscription | undefined>;
   }
 }
