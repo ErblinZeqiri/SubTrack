@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-tab-button tab="home">
+    <ion-tab-button tab="home">s
       <ion-title>Inscription</ion-title>
       <ion-icon name="arrow-back"></ion-icon>
     </ion-tab-button>
@@ -20,17 +20,21 @@
       </div>
     </li>
     <li><strong>Paiements précedants :</strong></li>
-    <!-- <ul>
-      @for (sub of sub.paymentHistory; track sub ) {
+    <ul>
+      @if (sub.paymentHistory.length) { 
+        @for (paymentHistory of sub.paymentHistory; track trackByFn ) {
       <li>
-        <div>{{ sub.date | date : "d.MM.yyyy" }}</div>
+        <div>{{ paymentHistory.date | date : "d.MM.yyyy" }}</div>
         <ul>
-          <li>prix : {{ sub.amount }}</li>
-          <li>Status du paiement : {{ sub.status }}</li>
+          <li>prix : {{ paymentHistory.amount }}</li>
         </ul>
       </li>
-      }
-    </ul> -->
+      } } @else { noHistory }
+    </ul>
   </ul>
+
+  <ng-template #noHistory>
+    <p>Aucun historique de paiement disponible.</p>
+  </ng-template>
   }
 </ion-content>

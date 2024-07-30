@@ -25,22 +25,22 @@ export class ExepensesService {
     for (const subscription of subscriptions) {
       const paymentHistory = Object.values(subscription.paymentHistory);
       const nextPaymentDate = new Date(
-        subscription.nextPaymentDate.seconds * 1000
+        subscription.nextPaymentDate
       );
 
       let mostRecentPayment: any = null;
 
       if (paymentHistory.length > 0) {
         mostRecentPayment = paymentHistory.reduce((prev, current) => {
-          const prevDate = new Date(prev.date.seconds * 1000);
-          const currentDate = new Date(current.date.seconds * 1000);
+          const prevDate = new Date(prev.date);
+          const currentDate = new Date(current.date);
           return prevDate > currentDate ? prev : current;
         });
       }
 
       if (mostRecentPayment) {
         const mostRecentPaymentMonth =
-          new Date(mostRecentPayment.date.seconds * 1000).getMonth() + 1;
+          new Date(mostRecentPayment.date).getMonth() + 1;
         if (
           mostRecentPaymentMonth === this.currentMonth &&
           typeof mostRecentPayment.amount === 'number'
@@ -80,7 +80,7 @@ export class ExepensesService {
       }
       paymentHistory.forEach((element: any) => {
         const paymentHistoryYear = new Date(
-          element.date.seconds * 1000
+          element.date
         ).getFullYear();
         if (
           paymentHistoryYear === this.currentYear &&
@@ -91,7 +91,7 @@ export class ExepensesService {
       });
 
       const nextPaymentDate = new Date(
-        subscription.nextPaymentDate.seconds * 1000
+        subscription.nextPaymentDate
       );
 
       let paymentsLeft = 0;

@@ -34,7 +34,9 @@ import { Timestamp } from '@angular/fire/firestore';
 export class SubDetailsComponent implements OnInit {
   subscription$!: Observable<Subscription | undefined>;
   private subId: string = this._route.snapshot.params['id'];
-  private userToken: string = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).uid : '';
+  private userToken: string = localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user')!).uid
+    : '';
 
   constructor(
     private _route: ActivatedRoute,
@@ -47,14 +49,20 @@ export class SubDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.userToken) {
-      this.subscription$ = this.firestore.loadOneSubData(this.userToken, this.subId).pipe(
-        map(sub => {
-          if (sub && sub.nextPaymentDate instanceof Timestamp) {
-            sub.nextPaymentDate = sub.nextPaymentDate.toDate();
-          }
-          return sub;
-        })
-      );
+      this.subscription$ = this.firestore
+        .loadOneSubData(this.userToken, this.subId)
+        .pipe(
+          map((sub) => {
+            if (sub && sub.nextPaymentDate instanceof Timestamp) {
+              sub.nextPaymentDate = sub.nextPaymentDate.toDate();
+            }
+            return sub;
+          })
+        );
     }
+  }
+
+  trackByFn(index: number, item: any) {
+    return index; // ou utilisez une propriété unique si disponible
   }
 }
