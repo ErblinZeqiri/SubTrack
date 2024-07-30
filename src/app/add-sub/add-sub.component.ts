@@ -25,7 +25,10 @@ import {
   LoadingController,
   IonSelect,
   IonSelectOption,
-  IonDatetime, IonDatetimeButton } from '@ionic/angular/standalone';
+  IonDatetime,
+  IonDatetimeButton,
+  IonModal,
+} from '@ionic/angular/standalone';
 import {
   Company,
   CompanySuggestionsService,
@@ -46,7 +49,9 @@ registerLocaleData(localeFrCh, 'fr-CH');
 @Component({
   selector: 'app-add-sub',
   standalone: true,
-  imports: [IonDatetimeButton, 
+  imports: [
+    IonModal,
+    IonDatetimeButton,
     IonCol,
     IonRow,
     IonGrid,
@@ -75,7 +80,6 @@ registerLocaleData(localeFrCh, 'fr-CH');
 })
 export class AddSubComponent {
   @ViewChild('ionInputEl', { static: true }) ionInputEl!: IonInput;
-  @ViewChild('datetime', { static: false }) datetime!: IonDatetime;
   logo = '';
   domain = '';
   filteredOptions$!: Observable<Company[]>;
@@ -104,6 +108,7 @@ export class AddSubComponent {
   ];
   today = formatDate(new Date().toISOString(), 'YYYY-MM-dd', 'fr-CH');
   selectedDate: string | null = this.today;
+  isDataValid: boolean = true;
 
   addSubscribtionForm!: FormGroup;
   selectedCompany = new FormControl(
@@ -138,21 +143,6 @@ export class AddSubComponent {
     });
   }
 
-  selectDate() {
-    this.datetime.confirm();
-    if (this.nextPaymentDate.value) {
-      this.selectedDate = this.nextPaymentDate.value;
-    }
-  }
-
-  resetDateTime() {
-    this.datetime.reset();
-    this.nextPaymentDate.setValue(this.today);
-    if (this.nextPaymentDate.value) {
-      this.selectedDate = this.nextPaymentDate.value;
-    }
-  }
-
   onInput(ev: any) {
     const value = ev.target.value;
     const filteredValue = value.replace(/[^a-zA-Z0-9 ]+/g, '');
@@ -175,7 +165,6 @@ export class AddSubComponent {
     this.addSubscribtionForm.reset();
     this.logo = '';
     this.domain = '';
-    this.resetDateTime();
   }
 
   async onSubmit() {
@@ -187,6 +176,7 @@ export class AddSubComponent {
     }
 
     if (this.addSubscribtionForm.valid) {
+      this.isDataValid = true;
       const loading = await this.loadingCtrl.create({
         message: 'Connexion...',
       });
@@ -204,6 +194,8 @@ export class AddSubComponent {
 
       this.resetForm();
       this._router.navigate(['/home']);
+    } else {
+      this.isDataValid = false;
     }
   }
 }
