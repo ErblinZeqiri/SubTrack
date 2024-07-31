@@ -1,3 +1,4 @@
+@if (userSubData$ | async; as userSubData ) {
 <div id="chart">
   <apx-chart
     class="ion-justify-content-start"
@@ -14,3 +15,4 @@
     [responsive]="chartOptions.responsive"
   ></apx-chart>
 </div>
+}
