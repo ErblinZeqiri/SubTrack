@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { Subscription } from '../../interfaces/interface';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { arrowBack } from 'ionicons/icons';
+import { arrowBackOutline } from 'ionicons/icons';
 import {
   IonHeader,
   IonToolbar,
@@ -13,6 +13,8 @@ import {
   IonIcon,
   IonContent,
   IonTitle,
+  IonButtons,
+  IonButton,
 } from '@ionic/angular/standalone';
 import { Timestamp } from '@angular/fire/firestore';
 
@@ -20,6 +22,8 @@ import { Timestamp } from '@angular/fire/firestore';
   selector: 'app-sub-details',
   standalone: true,
   imports: [
+    IonButton,
+    IonButtons,
     IonTitle,
     IonContent,
     IonIcon,
@@ -40,10 +44,11 @@ export class SubDetailsComponent implements OnInit {
 
   constructor(
     private _route: ActivatedRoute,
-    private readonly firestore: DataService
+    private readonly firestore: DataService,
+    private readonly _router: Router
   ) {
     addIcons({
-      arrowBack,
+      arrowBackOutline,
     });
   }
 
@@ -51,18 +56,18 @@ export class SubDetailsComponent implements OnInit {
     if (this.userToken) {
       this.subscription$ = this.firestore
         .loadOneSubData(this.userToken, this.subId)
-        .pipe(
-          map((sub) => {
-            if (sub && sub.nextPaymentDate instanceof Timestamp) {
-              sub.nextPaymentDate = sub.nextPaymentDate.toDate();
-            }
-            return sub;
-          })
-        );
     }
   }
 
+  getObjectKeys(obj: any): string[] {
+    return Object.keys(obj);
+  }
+
   trackByFn(index: number, item: any) {
-    return index; // ou utilisez une propriété unique si disponible
+    return index;
+  }
+
+  back() {
+    this._router.navigate(['/home']);
   }
 }

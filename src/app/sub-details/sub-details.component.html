@@ -1,40 +1,41 @@
 <ion-header>
   <ion-toolbar>
-    <ion-tab-button tab="home">s
-      <ion-title>Inscription</ion-title>
-      <ion-icon name="arrow-back"></ion-icon>
-    </ion-tab-button>
+    <ion-icon name="arrow-back-outline" slot="start" (click)="back()" size="large"></ion-icon>
+    <ion-title class="ion-text-center">Détail de l'abonnement</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
   @if (subscription$ | async; as sub ) {
-  <h2>Détails de l'Abonnement {{ sub.companyName }}</h2>
+  <h2 class="ion-text-center">{{ sub.companyName }}</h2>
   <ul>
     <li>
-      <div><strong>Montant:</strong> {{ sub.amount | currency : "CHF" }}</div>
+      <strong>Montant :</strong> {{ sub.amount | currency : "CHF" }}
     </li>
     <li>
-      <div>
-        <strong>Date de facturation suivante:</strong>
+      <strong>Catégorie d'abonnement :</strong> {{ sub.category }}
+    </li>
+    <li>
+        <strong>Date de facturation suivante :</strong>
         {{ sub.nextPaymentDate | date }}
-      </div>
     </li>
     <li><strong>Paiements précedants :</strong></li>
     <ul>
-      @if (sub.paymentHistory.length) { 
-        @for (paymentHistory of sub.paymentHistory; track trackByFn ) {
-      <li>
-        <div>{{ paymentHistory.date | date : "d.MM.yyyy" }}</div>
-        <ul>
-          <li>prix : {{ paymentHistory.amount }}</li>
-        </ul>
-      </li>
-      } } @else { noHistory }
+      <ng-container *ngIf="sub.paymentHistory && getObjectKeys(sub.paymentHistory).length  > 0; else noHistory">
+        @for (payment of getObjectKeys(sub.paymentHistory); track trackByFn ) {
+        <li>
+          <div>Date : {{ sub.paymentHistory[payment].date | date : "d.MM.yyyy" }}</div>
+          <div>Prix : {{ sub.paymentHistory[payment].amount }}</div>
+        </li>
+        <br>
+        }
+      </ng-container>
     </ul>
   </ul>
-
-  <ng-template #noHistory>
-    <p>Aucun historique de paiement disponible.</p>
-  </ng-template>
   }
+  <ion-button color="dark" class="ion-align-self-center">Annuler l'abonnement</ion-button>
+  
+  <ng-template #noHistory>
+    Aucun historique de paiement disponible.
+  </ng-template>
+
 </ion-content>

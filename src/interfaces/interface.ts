@@ -1,5 +1,3 @@
-import { Timestamp } from '@angular/fire/firestore';
-
 export interface User {
   id: string;
   fullName: string;
@@ -16,5 +14,10 @@ export interface Subscription {
   category: string;
   renewal: string;
   nextPaymentDate: Date;
-  paymentHistory: { [key: string]: { amount: number; date: Date } } | [];
+  paymentHistory: { [key: string]: Payment };
+}
+
+export interface Payment {
+  amount: number;
+  date: Date;
 }
