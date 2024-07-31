@@ -66,8 +66,6 @@ export class DonutChartComponent implements OnInit {
         })
       )
       .forEach((result) => {
-        console.log('Labels:', result.labels);
-        console.log('Series:', result.series);
         this.chartOptions = {
           series: result.series,
           chart: {

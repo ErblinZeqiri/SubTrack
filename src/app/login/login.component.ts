@@ -82,7 +82,7 @@ export class LoginComponent implements OnInit {
     private navCtrl: NavController,
     private animationCtrl: AnimationController,
     private modalCtrl: ModalController,
-    private readonly _router: Router,
+    private readonly _router: Router
   ) {
     this.loginForm = new FormGroup({
       email: this.email,
@@ -131,7 +131,7 @@ export class LoginComponent implements OnInit {
 
     try {
       await this.authService.serviceLoginWithGoogle();
-      this.navCtrl.navigateRoot('/home');
+      await this.navCtrl.navigateRoot('/home');
     } catch (error) {
       console.error('Login failed', error);
     } finally {
@@ -166,7 +166,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  toSigninForm(){
+  toSigninForm() {
     this._router.navigate(['/signin']);
   }
 }
