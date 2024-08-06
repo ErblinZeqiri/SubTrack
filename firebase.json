@@ -1,26 +1,64 @@
 {
-    "hosting": [
-      {
-        "target": "web",
-        "public": "web/build",
-        "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-        "rewrites": [
-          {
-            "source": "**",
-            "destination": "/index.html"
-          }
-        ],
-        "headers": [
-          {
-            "source": "**/*",
-            "headers": [
-              {
-                "key": "Cross-Origin-Embedder-Policy",
-                "value": "unsafe-none"
-              }
-            ]
-          }
-        ]
-      }
-    ]
+  "hosting": [
+    {
+      "target": "web",
+      "public": "www",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
+      "headers": [
+        {
+          "source": "**/*",
+          "headers": [
+            {
+              "key": "Cross-Origin-Embedder-Policy",
+              "value": "unsafe-none"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ],
+      "memory": "2GB",
+      "timeoutSeconds": 540
+    }
+  ],
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "pubsub": {
+      "port": 8086
+    },
+    "ui": {
+      "enabled": true,
+      "port": 8076
+    },
+    "singleProjectMode": true
   }
+}

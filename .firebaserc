@@ -1,0 +1,16 @@
+{
+  "projects": {
+    "default": "subtrack-330ce"
+  },
+  "targets": {
+    "subtrack-330ce": {
+      "hosting": {
+        "web": [
+          "my-site"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}

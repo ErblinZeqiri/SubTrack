@@ -3,4 +3,11 @@
     <ion-title>Notifications</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content> </ion-content>
+<ion-content>
+  @if (userSubData$ | async; as subscriptions) {
+    @for (subscription of subscriptions; track subscription) {
+      {{ subscription.companyName }} - Expires le {{ subscription.nextPaymentDate| date }} 
+    <br>
+    }
+  }
+</ion-content>

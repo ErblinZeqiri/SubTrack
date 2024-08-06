@@ -93,7 +93,8 @@ export class SigninComponent implements OnInit {
 
       this.authService.serviceSigninWithEmail(
         this.signinFrom.value.email,
-        this.signinFrom.value.password
+        this.signinFrom.value.password,
+        this.signinFrom.value.fullName
       );
 
       await loading.dismiss();
