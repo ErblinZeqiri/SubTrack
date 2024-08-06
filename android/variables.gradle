@@ -1,5 +1,5 @@
 ext {
-    minSdkVersion = 22
+    minSdkVersion = 23
     compileSdkVersion = 34
     targetSdkVersion = 34
     androidxActivityVersion = '1.8.0'
@@ -14,4 +14,5 @@ ext {
     androidxEspressoCoreVersion = '3.5.1'
     cordovaAndroidVersion = '10.1.1'
     rgcfaIncludeGoogle = true
+    firebaseMessagingVersion = '23.3.1'
 }
