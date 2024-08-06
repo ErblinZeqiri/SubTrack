@@ -7,6 +7,10 @@ import {
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { signInWithPopup, signOut } from '@firebase/auth';
+import {
+  FirebaseAuthentication,
+  SignInWithOAuthOptions,
+} from '@capacitor-firebase/authentication';
 
 @Injectable({
   providedIn: 'root',
@@ -16,15 +20,34 @@ export class AuthService {
   constructor(private readonly _auth: Auth, private readonly _router: Router) {}
 
   async serviceLoginWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({
-      prompt: 'select_account',
-    });
-    const credential = await signInWithPopup(this._auth, provider);
-    if (credential) {
-      this.updateUserData(credential.user);
-      setTimeout(() => this._router.navigate(['/home']));
+    try {
+      const options: SignInWithOAuthOptions = {
+        customParameters: [{ key: 'prompt', value: 'select_account' }],
+        scopes: ['profile', 'email'],
+        mode: 'popup',
+      };
+
+      const credential = await FirebaseAuthentication.signInWithGoogle();
+
+      if (credential.user) {
+        this.updateUserData(credential.user);
+        setTimeout(() => this._router.navigate(['/home']));
+      } else {
+        console.error('User data not available');
+      }
+    } catch (error) {
+      console.error('Login failed', error);
     }
+
+    // const provider = new GoogleAuthProvider();
+    // provider.setCustomParameters({
+    //   prompt: 'select_account',
+    // });
+    // const credential = await signInWithPopup(this._auth, provider);
+    // if (credential) {
+    //   this.updateUserData(credential.user);
+    //   setTimeout(() => this._router.navigate(['/home']));
+    // }
   }
 
   async serviceLoginWithemail(email: string, password: string): Promise<void> {
