@@ -62,7 +62,7 @@ export class AuthService {
     }
   }
 
-  serviceSigninWithEmail(email: string, password: string) {
+  serviceSigninWithEmail(email: string, password: string, fullName?: string) {
     createUserWithEmailAndPassword(this._auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;

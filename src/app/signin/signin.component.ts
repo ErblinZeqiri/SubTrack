@@ -66,9 +66,9 @@ export class SigninComponent implements OnInit {
     private readonly _router: Router
   ) {
     this.signinFrom = new FormGroup({
-      fullName: this.fullName,
       email: this.email,
       password: this.password,
+      fullName: this.fullName,
     });
   }
 
