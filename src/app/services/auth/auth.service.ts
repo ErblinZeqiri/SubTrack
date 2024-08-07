@@ -11,6 +11,13 @@ import {
   FirebaseAuthentication,
   SignInWithOAuthOptions,
 } from '@capacitor-firebase/authentication';
+import {
+  collection,
+  doc,
+  getFirestore,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -62,19 +69,33 @@ export class AuthService {
     }
   }
 
-  serviceSigninWithEmail(email: string, password: string, fullName?: string) {
-    createUserWithEmailAndPassword(this._auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        this.updateUserData(user);
-        console.log(user);
-        setTimeout(() => this._router.navigate(['/home']));
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(`Error ${errorCode}: ${errorMessage}`);
-      });
+  async serviceSigninWithEmail(
+    email: string,
+    password: string,
+    fullName: string
+  ) {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        this._auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        fullName: fullName || null,
+      };
+      await this.saveFullNameIntoDB(userData);
+
+      this.updateUserData(user);
+      setTimeout(() => this._router.navigate(['/home']));
+    } catch (error: any) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error(`Error ${errorCode}: ${errorMessage}`);
+    }
   }
 
   async logout() {
@@ -99,5 +120,12 @@ export class AuthService {
   private updateUserData(user: any) {
     localStorage.setItem('user', JSON.stringify(user));
     this.auth = true;
+  }
+
+  async saveFullNameIntoDB(userData: any) {
+    const db = getFirestore();
+    const userDocRef = doc(db, 'users', userData.uid);
+
+    await setDoc(userDocRef, userData, { merge: true });
   }
 }
