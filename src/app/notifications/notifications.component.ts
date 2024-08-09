@@ -5,7 +5,6 @@ import {
   IonTitle,
   IonContent,
 } from '@ionic/angular/standalone';
-import { PushNotifications } from '@capacitor/push-notifications';
 import { AuthService } from '../services/auth/auth.service';
 import { Subscription } from 'src/interfaces/interface';
 import { map, Observable, tap } from 'rxjs';

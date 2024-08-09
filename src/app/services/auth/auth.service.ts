@@ -2,22 +2,14 @@ import { Injectable } from '@angular/core';
 import {
   Auth,
   createUserWithEmailAndPassword,
-  GoogleAuthProvider,
   signInWithEmailAndPassword,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { signInWithPopup, signOut } from '@firebase/auth';
 import {
   FirebaseAuthentication,
   SignInWithOAuthOptions,
 } from '@capacitor-firebase/authentication';
-import {
-  collection,
-  doc,
-  getFirestore,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore';
+import { doc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -34,8 +26,7 @@ export class AuthService {
         mode: 'popup',
       };
 
-      const credential = await FirebaseAuthentication.signInWithGoogle();
-
+      const credential = await FirebaseAuthentication.signInWithGoogle(options);
       if (credential.user) {
         this.updateUserData(credential.user);
         setTimeout(() => this._router.navigate(['/home']));
@@ -45,16 +36,6 @@ export class AuthService {
     } catch (error) {
       console.error('Login failed', error);
     }
-
-    // const provider = new GoogleAuthProvider();
-    // provider.setCustomParameters({
-    //   prompt: 'select_account',
-    // });
-    // const credential = await signInWithPopup(this._auth, provider);
-    // if (credential) {
-    //   this.updateUserData(credential.user);
-    //   setTimeout(() => this._router.navigate(['/home']));
-    // }
   }
 
   async serviceLoginWithemail(email: string, password: string): Promise<void> {
@@ -82,6 +63,11 @@ export class AuthService {
       );
       const user = userCredential.user;
 
+      if (user) {
+      } else {
+        console.error('User data not available');
+      }
+
       const userData = {
         uid: user.uid,
         email: user.email,
@@ -102,7 +88,7 @@ export class AuthService {
     await this._auth.signOut();
     this.auth = false;
     localStorage.removeItem('user');
-    window.location.reload();
+    await FirebaseAuthentication.signOut();
     this._router.navigate(['/login']);
   }
 
@@ -127,5 +113,12 @@ export class AuthService {
     const userDocRef = doc(db, 'users', userData.uid);
 
     await setDoc(userDocRef, userData, { merge: true });
+  }
+
+  async saveDeviceToken(uid: string, token: string) {
+    const db = getFirestore();
+    const userDocRef = doc(db, 'users', uid);
+
+    await updateDoc(userDocRef, { deviceToken: token });
   }
 }

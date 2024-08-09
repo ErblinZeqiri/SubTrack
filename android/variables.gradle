@@ -14,5 +14,4 @@ ext {
     androidxEspressoCoreVersion = '3.5.1'
     cordovaAndroidVersion = '10.1.1'
     rgcfaIncludeGoogle = true
-    firebaseMessagingVersion = '23.3.1'
 }

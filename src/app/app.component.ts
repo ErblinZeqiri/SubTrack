@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonApp } from '@ionic/angular/standalone';
 import { HomePage } from './home/home.page';
-import { NotificationService } from './services/notificationsService/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +9,5 @@ import { NotificationService } from './services/notificationsService/notificatio
   imports: [IonApp, HomePage],
 })
 export class AppComponent {
-  constructor(private notificationService: NotificationService) {}
+  constructor() {}
 }
