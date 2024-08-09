@@ -9,7 +9,7 @@ import {
   FirebaseAuthentication,
   SignInWithOAuthOptions,
 } from '@capacitor-firebase/authentication';
-import { doc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getFirestore, setDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -113,12 +113,5 @@ export class AuthService {
     const userDocRef = doc(db, 'users', userData.uid);
 
     await setDoc(userDocRef, userData, { merge: true });
-  }
-
-  async saveDeviceToken(uid: string, token: string) {
-    const db = getFirestore();
-    const userDocRef = doc(db, 'users', uid);
-
-    await updateDoc(userDocRef, { deviceToken: token });
   }
 }
