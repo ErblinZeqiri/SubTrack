@@ -55,7 +55,7 @@ export class SubDetailsComponent implements OnInit {
   ngOnInit(): void {
     if (this.userToken) {
       this.subscription$ = this.firestore
-        .loadOneSubData(this.userToken, this.subId)
+        .loadOneSubData(this.subId)
     }
   }
 
