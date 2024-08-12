@@ -17,14 +17,23 @@ import {
   IonLabel,
   IonRefresher,
   IonRefresherContent,
+  IonItemSliding,
+  IonItemOptions,
+  IonItemOption,
+  IonAlert,
+  LoadingController,
+  AlertController,
 } from '@ionic/angular/standalone';
-import { DonutChartComponent } from '../donut-chart/donut-chart.component'
-
+import { DonutChartComponent } from '../donut-chart/donut-chart.component';
 
 @Component({
   selector: 'app-sub-list',
   standalone: true,
   imports: [
+    IonAlert,
+    IonItemOption,
+    IonItemOptions,
+    IonItemSliding,
     IonRefresherContent,
     IonRefresher,
     IonLabel,
@@ -37,7 +46,7 @@ import { DonutChartComponent } from '../donut-chart/donut-chart.component'
     CommonModule,
     NgOptimizedImage,
     RouterLink,
-    DonutChartComponent
+    DonutChartComponent,
   ],
   templateUrl: './sub-list.component.html',
   styleUrls: ['./sub-list.component.css'],
@@ -46,7 +55,7 @@ import { DonutChartComponent } from '../donut-chart/donut-chart.component'
 export class SubListComponent implements OnInit {
   monthlyExpenses$!: Observable<number>;
   yearlyExpenses$!: Observable<number>;
-  userToken: string = '';
+  userID: string = '';
   userData$!: Observable<User[]>;
   userSubData$!: Observable<Subscription[]>;
   credentials: string | null = localStorage.getItem('user');
@@ -55,14 +64,16 @@ export class SubListComponent implements OnInit {
     private readonly expenses: ExepensesService,
     private readonly firestore: DataService,
     private readonly _router: Router,
-    private readonly _auth: AuthService
+    private readonly _auth: AuthService,
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController
   ) {}
 
   ngOnInit(): void {
     if (this._auth.isAuthenticated()) {
       if (this.credentials !== null) {
         const localStorageData: any = JSON.parse(this.credentials);
-        this.userToken = localStorageData.uid;
+        this.userID = localStorageData.uid;
         this.userData$ = this.firestore.loadUserData(localStorageData.uid);
         this.userSubData$ = this.firestore.loadSubData(localStorageData.uid);
         this.monthlyExpenses$ = this.userSubData$.pipe(
@@ -79,6 +90,15 @@ export class SubListComponent implements OnInit {
     }
   }
 
+  async showLoading() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Suppression...',
+      duration: 3000,
+    });
+
+    loading.present();
+  }
+
   handleRefresh(event: any) {
     setTimeout(() => {
       window.location.reload();
@@ -86,7 +106,48 @@ export class SubListComponent implements OnInit {
     }, 2000);
   }
 
-  handleClick(sub: any) {
+  handleClick(sub: Subscription) {
     this._router.navigate(['/home/sub-details', sub.id]);
+  }
+
+  async deleteSub(sub: Subscription) {
+    const loading = await this.loadingCtrl.create({
+      message: 'Veuillez patienter...',
+      duration: 3000,
+    });
+
+    const alert = await this.alertCtrl.create({
+      header: 'Confirmer la suppression',
+      message: 'Êtes-vous sûr de vouloir supprimer cet abonnement ?',
+      buttons: [
+        {
+          text: 'Non',
+          role: 'cancel',
+        },
+        {
+          text: 'Oui',
+          handler: async () => {
+            // Afficher le chargement
+            await loading.present();
+
+            try {
+              // Supprimer l'abonnement
+              await this.firestore.deleteSub(sub);
+              console.log('Abonnement supprimé');
+
+              // Recharger les données (par exemple, en rechargeant la liste des abonnements)
+              this.userSubData$ = this.firestore.loadSubData(this.userID);
+            } catch (error) {
+              console.error('Erreur lors de la suppression:', error);
+            } finally {
+              // Fermer le chargement après la suppression et le rechargement des données
+              loading.dismiss();
+            }
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

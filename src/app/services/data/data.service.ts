@@ -12,6 +12,7 @@ import {
   QueryConstraint,
   where,
 } from '@angular/fire/firestore';
+import { deleteDoc, getFirestore } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -22,17 +23,17 @@ export class DataService {
 
   constructor(private readonly _firestore: Firestore) {}
 
-  loadUserData(userToken: string): Observable<User[]> {
+  loadUserData(userID: string): Observable<User[]> {
     const fbCollection = collection(this._firestore, 'users');
-    const byUserId: QueryConstraint = where(documentId(), '==', userToken);
+    const byUserId: QueryConstraint = where(documentId(), '==', userID);
     const q = query(fbCollection, byUserId);
     const datas = collectionData(q, { idField: 'id' }) as Observable<User[]>;
     return datas;
   }
 
-  loadSubData(userToken: string): Observable<Subscription[]> {
+  loadSubData(userID: string): Observable<Subscription[]> {
     const fbCollection = collection(this._firestore, 'subscriptions');
-    const byUserId: QueryConstraint = where('userID', '==', userToken);
+    const byUserId: QueryConstraint = where('userID', '==', userID);
     const q = query(fbCollection, byUserId);
     const datas = collectionData(q, { idField: 'id' }) as Observable<
       Subscription[]
@@ -40,8 +41,16 @@ export class DataService {
     return datas;
   }
 
-  loadOneSubData(userToken: string, subId: string): Observable<Subscription| undefined> {
+  loadOneSubData(subId: string): Observable<Subscription | undefined> {
     const docRef = doc(this._firestore, `subscriptions/${subId}`);
-    return docData(docRef, { idField: 'id' }) as Observable<Subscription | undefined>;
+    return docData(docRef, { idField: 'id' }) as Observable<
+      Subscription | undefined
+    >;
+  }
+
+  async deleteSub(sub: Subscription) {
+    const subDocRef = doc(this._firestore, `subscriptions/${sub.id}`);
+
+    await deleteDoc(subDocRef);
   }
 }
