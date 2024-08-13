@@ -4,147 +4,149 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <form [formGroup]="addSubscribtionForm" (ngSubmit)="onSubmit()">
-    <ion-list>
-      <ion-item>
-        <ion-input
-          labelPlacement="floating"
-          label="Rechercher une marque :"
-          (ionInput)="onInput($event)"
-          #ionInputEl
-          placeholder="Min 2 caractères"
-          formControlName="companyName"
-          [formControl]="selectedCompany"
-          name="selectedCompany"
-          id="selectedCompany"
-        >
-        </ion-input>
-        <ion-text
-          color="danger"
-          [hidden]="
-            selectedCompany.valid ||
-            (!selectedCompany.touched && !selectedCompany.valid)
-          "
-        >
-          Ce champ est obligatoire.
-        </ion-text>
-      </ion-item>
-      @if (filteredOptions$ | async; as filteredOptions) { @if (toggleDropdown)
-      { @for (option of filteredOptions; track option) {
-      <ion-item (click)="selectOption(option)">
-        <ion-avatar slot="start">
-          <img [src]="option.logo" alt="{{ option.name }} logo" />
-        </ion-avatar>
-        <ion-label>{{ option.name }}</ion-label>
-      </ion-item>
+  <div class="main-content">
+    <form [formGroup]="addSubscribtionForm" (ngSubmit)="onSubmit()">
+      <ion-list>
+        <ion-item>
+          <ion-input
+            labelPlacement="floating"
+            label="Rechercher une marque :"
+            (ionInput)="onInput($event)"
+            #ionInputEl
+            placeholder="Min 2 caractères"
+            formControlName="companyName"
+            [formControl]="selectedCompany"
+            name="selectedCompany"
+            id="selectedCompany"
+          >
+          </ion-input>
+          <ion-text
+            color="danger"
+            [hidden]="
+              selectedCompany.valid ||
+              (!selectedCompany.touched && !selectedCompany.valid)
+            "
+          >
+            Ce champ est obligatoire.
+          </ion-text>
+        </ion-item>
+        @if (filteredOptions$ | async; as filteredOptions) { @if (toggleDropdown)
+        { @for (option of filteredOptions; track option) {
+        <ion-item (click)="selectOption(option)">
+          <ion-avatar slot="start">
+            <img [src]="option.logo" alt="{{ option.name }} logo" />
+          </ion-avatar>
+          <ion-label>{{ option.name }}</ion-label>
+        </ion-item>
 
-      } } }
-      <ion-item>
-        <ion-input
-          labelPlacement="floating"
-          label="Prix :"
-          type="number"
-          placeholder=""
-          name="amount"
-          formControlName="amount"
-          [formControl]="amount"
-        ></ion-input>
-        <ion-text
-          color="danger"
-          [hidden]="amount.valid || (!amount.touched && !amount.valid)"
-        >
-          Ce champ est obligatoire.
-        </ion-text>
-      </ion-item>
+        } } }
+        <ion-item>
+          <ion-input
+            labelPlacement="floating"
+            label="Prix :"
+            type="number"
+            placeholder=""
+            name="amount"
+            formControlName="amount"
+            [formControl]="amount"
+          ></ion-input>
+          <ion-text
+            color="danger"
+            [hidden]="amount.valid || (!amount.touched && !amount.valid)"
+          >
+            Ce champ est obligatoire.
+          </ion-text>
+        </ion-item>
 
-      <ion-item>
-        <ion-select
-          labelPlacement="floating"
-          label="Catégorie :"
-          name="selectedCategory"
-          formControlName="category"
-          [formControl]="selectedCategory"
-        >
-          @for (category of subscriptionCategories; track category) {
-          <ion-select-option value="{{ category }}">{{
-            category
-          }}</ion-select-option>
-          }
-        </ion-select>
+        <ion-item>
+          <ion-select
+            labelPlacement="floating"
+            label="Catégorie :"
+            name="selectedCategory"
+            formControlName="category"
+            [formControl]="selectedCategory"
+          >
+            @for (category of subscriptionCategories; track category) {
+            <ion-select-option value="{{ category }}">{{
+              category
+            }}</ion-select-option>
+            }
+          </ion-select>
 
-        <ion-text
-          color="danger"
-          [hidden]="
-            selectedCategory.valid ||
-            (!selectedCategory.touched && !selectedCategory.valid)
-          "
-        >
-          Ce champ est obligatoire.
+          <ion-text
+            color="danger"
+            [hidden]="
+              selectedCategory.valid ||
+              (!selectedCategory.touched && !selectedCategory.valid)
+            "
+          >
+            Ce champ est obligatoire.
+          </ion-text>
+        </ion-item>
+        <ion-item>
+          <ion-select
+            labelPlacement="floating"
+            label="Férquence :"
+            name="selectedRenewal"
+            formControlName="renewal"
+            [formControl]="selectedRenewal"
+          >
+            @for (renewal of subscriptionRenewal; track renewal) {
+            <ion-select-option value="{{ renewal }}">{{
+              renewal
+            }}</ion-select-option>
+            }
+          </ion-select>
+          <ion-text
+            color="danger"
+            [hidden]="
+              selectedRenewal.valid ||
+              (!selectedRenewal.touched && !selectedRenewal.valid)
+            "
+          >
+            Ce champ est obligatoire.
+          </ion-text>
+        </ion-item>
+        <ion-item>
+          <ion-label>Prochain paiement :</ion-label>
+          <ion-datetime-button
+            datetime="datetime"
+            slot="end"
+          ></ion-datetime-button>
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime
+                id="datetime"
+                presentation="date"
+                min="{{ today }}"
+                max="2099-12-09"
+                [(ngModel)]="selectedDate"
+                name="nextPaymentDate"
+                [formControl]="nextPaymentDate"
+                formControlName="nextPaymentDate"
+              >
+              </ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-item>
+        <ion-text color="danger" [hidden]="isDataValid">
+          Veuillez remplir tous les champs.
         </ion-text>
-      </ion-item>
-      <ion-item>
-        <ion-select
-          labelPlacement="floating"
-          label="Férquence :"
-          name="selectedRenewal"
-          formControlName="renewal"
-          [formControl]="selectedRenewal"
-        >
-          @for (renewal of subscriptionRenewal; track renewal) {
-          <ion-select-option value="{{ renewal }}">{{
-            renewal
-          }}</ion-select-option>
-          }
-        </ion-select>
-        <ion-text
-          color="danger"
-          [hidden]="
-            selectedRenewal.valid ||
-            (!selectedRenewal.touched && !selectedRenewal.valid)
-          "
-        >
-          Ce champ est obligatoire.
-        </ion-text>
-      </ion-item>
-      <ion-item>
-        <ion-label>Prochain paiement :</ion-label>
-        <ion-datetime-button
-          datetime="datetime"
-          slot="end"
-        ></ion-datetime-button>
-        <ion-modal [keepContentsMounted]="true">
-          <ng-template>
-            <ion-datetime
-              id="datetime"
-              presentation="date"
-              min="{{ today }}"
-              max="2099-12-09"
-              [(ngModel)]="selectedDate"
-              name="nextPaymentDate"
-              [formControl]="nextPaymentDate"
-              formControlName="nextPaymentDate"
+      </ion-list>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-button color="medium" expand="block" (click)="resetForm()"
+              >Effacer</ion-button
             >
-            </ion-datetime>
-          </ng-template>
-        </ion-modal>
-      </ion-item>
-      <ion-text color="danger" [hidden]="isDataValid">
-        Veuillez remplir tous les champs.
-      </ion-text>
-    </ion-list>
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6">
-          <ion-button color="medium" expand="block" (click)="resetForm()"
-            >Effacer</ion-button
-          >
-        </ion-col>
-        <ion-col size="6">
-          <ion-button id="open-loading" expand="block" type="submit"
-            >Valider</ion-button
-          >
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </form>
+          </ion-col>
+          <ion-col size="6">
+            <ion-button id="open-loading" expand="block" type="submit"
+              >Valider</ion-button
+            >
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </div>
 </ion-content>

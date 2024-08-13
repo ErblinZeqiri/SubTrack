@@ -1,15 +1,21 @@
-.loginWithEmail {
-  margin: 5%;
-}
-
 .formField {
-  border: 2px, solid, #b5b5b5;
-  border-radius: 5px;
   margin-bottom: 10px;
-  padding: 2px;
+  padding: 5px;
 }
 
 ion-button {
+  text-transform: none !important;
+}
 
-  text-transform: none !important
+ion-img {
+  height: 192px;
+  width: 192px;
+}
+
+.image-container {
+  display: flex;
+}
+
+h5 {
+  text-decoration: underline;
 }

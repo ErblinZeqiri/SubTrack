@@ -10,8 +10,7 @@ import {
   IonInput,
   IonText,
   IonInputPasswordToggle,
-  IonButton,
-} from '@ionic/angular/standalone';
+  IonButton, IonItem, IonList } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
 import {
@@ -27,7 +26,7 @@ import { AuthService } from '../services/auth/auth.service';
   templateUrl: './signin.component.html',
   standalone: true,
   styleUrls: ['./signin.component.scss'],
-  imports: [
+  imports: [IonList, IonItem, 
     IonButton,
     IonText,
     IonInput,

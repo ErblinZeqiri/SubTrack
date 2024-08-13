@@ -127,20 +127,16 @@ export class SubListComponent implements OnInit {
         {
           text: 'Oui',
           handler: async () => {
-            // Afficher le chargement
             await loading.present();
 
             try {
-              // Supprimer l'abonnement
               await this.firestore.deleteSub(sub);
               console.log('Abonnement supprimé');
 
-              // Recharger les données (par exemple, en rechargeant la liste des abonnements)
               this.userSubData$ = this.firestore.loadSubData(this.userID);
             } catch (error) {
               console.error('Erreur lors de la suppression:', error);
             } finally {
-              // Fermer le chargement après la suppression et le rechargement des données
               loading.dismiss();
             }
           },
