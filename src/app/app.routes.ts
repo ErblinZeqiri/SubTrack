@@ -9,6 +9,7 @@ import { AddSubComponent } from './add-sub/add-sub.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { SigninComponent } from './signin/signin.component'
 import { UpdateSubComponent } from './update-sub/update-sub.component'
+import { Page404Component } from './page404/page404.component'
 
 export const routes: Routes = [
   {
@@ -58,5 +59,14 @@ export const routes: Routes = [
     path: 'update/:id',
     component: UpdateSubComponent,
     canActivate: [authGuard],
-  }
-];
+  },
+  {
+    path: '404',
+    component: Page404Component,
+  },
+  {
+    path: '**',
+    redirectTo: '404',
+    pathMatch: 'full',
+  },
+]

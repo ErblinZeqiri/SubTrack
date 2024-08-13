@@ -79,7 +79,6 @@ export class LoginComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private loadingCtrl: LoadingController,
-    private navCtrl: NavController,
     private animationCtrl: AnimationController,
     private modalCtrl: ModalController,
     private readonly _router: Router
