@@ -4,7 +4,7 @@ import { ExepensesService } from '../services/expenses/exepenses.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgOptimizedImage } from '@angular/common';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { AuthService } from '../services/auth/auth.service';
 import {
@@ -23,6 +23,7 @@ import {
   IonAlert,
   LoadingController,
   AlertController,
+  IonText,
 } from '@ionic/angular/standalone';
 import { DonutChartComponent } from '../donut-chart/donut-chart.component';
 
@@ -30,6 +31,7 @@ import { DonutChartComponent } from '../donut-chart/donut-chart.component';
   selector: 'app-sub-list',
   standalone: true,
   imports: [
+    IonText,
     IonAlert,
     IonItemOption,
     IonItemOptions,
@@ -58,6 +60,7 @@ export class SubListComponent implements OnInit {
   userID: string = '';
   userData$!: Observable<User[]>;
   userSubData$!: Observable<Subscription[]>;
+  noSub: boolean = false;
   credentials: string | null = localStorage.getItem('user');
 
   constructor(
@@ -74,8 +77,13 @@ export class SubListComponent implements OnInit {
       if (this.credentials !== null) {
         const localStorageData: any = JSON.parse(this.credentials);
         this.userID = localStorageData.uid;
+        // this.userData$.pipe( map(element => this.firestore.loadUserData(localStorageData.uid)))
         this.userData$ = this.firestore.loadUserData(localStorageData.uid);
-        this.userSubData$ = this.firestore.loadSubData(localStorageData.uid);
+        this.userSubData$ = this.firestore.loadSubData(localStorageData.uid).pipe(
+          tap(userSubData => {
+            this.noSub = userSubData.length === 0;
+          })
+        );
         this.monthlyExpenses$ = this.userSubData$.pipe(
           map((userSubData) =>
             this.expenses.getCurrentExpensesMonth(userSubData)
@@ -147,7 +155,7 @@ export class SubListComponent implements OnInit {
     await alert.present();
   }
 
-  updateSub(sub: Subscription){
-    this._router.navigate(['/update', sub.id])
+  updateSub(sub: Subscription) {
+    this._router.navigate(['/update', sub.id]);
   }
 }

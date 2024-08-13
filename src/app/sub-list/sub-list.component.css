@@ -16,3 +16,7 @@
   object-fit: contain;
   border-radius: 5%;
 }
+
+.flex {
+  margin-top: 50%;
+}

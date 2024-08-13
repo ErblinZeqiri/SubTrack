@@ -8,28 +8,32 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <div class="main-content">
-    @if(userSubData$) {
-      <app-donut-chart [userSubData$]="userSubData$" ></app-donut-chart>
-      <ion-list>
-        @for (sub of userSubData$ | async; track sub) {
-        <ion-item-sliding>
-          <ion-item (click)="subDetails(sub)">
-            <div class="logo">
-              <img ngSrc="{{ sub.logo }}" width="80" height="80" priority />
-            </div>
-            <ion-label>{{ sub.companyName }}</ion-label>
-            <ion-label>{{ sub.amount }}.- {{ sub.renewal }}</ion-label>
-          </ion-item>
-
-          <ion-item-options>
-            <ion-item-option (click)="updateSub(sub)" >Modifier</ion-item-option>
-            <ion-item-option color="danger" (click)="deleteSub(sub)">Effacer</ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
-        }
-      </ion-list>
+    @if(!noSub) {
+        <app-donut-chart [userSubData$]="userSubData$"></app-donut-chart>
+        <ion-list>
+          @for (sub of userSubData$ | async; track sub) {
+          <ion-item-sliding>
+            <ion-item (click)="subDetails(sub)">
+              <div class="logo">
+                <img ngSrc="{{ sub.logo }}" width="80" height="80" priority />
+              </div>
+              <ion-label>{{ sub.companyName }}</ion-label>
+              <ion-label>{{ sub.amount }}.- {{ sub.renewal }}</ion-label>
+            </ion-item>
+  
+            <ion-item-options>
+              <ion-item-option (click)="updateSub(sub)">Modifier</ion-item-option>
+              <ion-item-option color="danger" (click)="deleteSub(sub)"
+                >Effacer</ion-item-option
+              >
+            </ion-item-options>
+          </ion-item-sliding>
+          }
+        </ion-list>
     } @else {
-      <h1>Pas d'abonnement enregistré</h1>
+      <ion-text class="ion-text-center ion-align-items-center">
+        <h1 class="flex">Pas d'abonnement enregistré</h1>
+      </ion-text>
     }
   </div>
 </ion-content>
