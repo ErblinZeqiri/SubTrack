@@ -8,13 +8,16 @@ import {
   IonContent,
   IonButton,
   IonAlert,
-  IonLoading,
-} from '@ionic/angular/standalone';
+  IonLoading, IonText } from '@ionic/angular/standalone';
+import { Observable } from 'rxjs';
+import { Subscription, User } from 'src/interfaces/interface';
+import { CommonModule } from '@angular/common';
+import { DataService } from '../services/data/data.service';
 
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [
+  imports: [IonText, 
     IonLoading,
     IonAlert,
     IonButton,
@@ -22,11 +25,17 @@ import {
     IonTitle,
     IonToolbar,
     IonHeader,
+    CommonModule,
   ],
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit {
+  userData$!: Observable<User[]>;
+  userSubData$!: Observable<Subscription[]>;
+  credentials: string | null = localStorage.getItem('user');
+  userID: string = '';
+
   public alertButtons = [
     {
       text: 'Non',
@@ -47,10 +56,20 @@ export class AccountComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private readonly firestore: DataService,
+    private readonly _auth: AuthService,
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this._auth.isAuthenticated()) {
+      if (this.credentials !== null) {
+        const localStorageData: any = JSON.parse(this.credentials);
+        this.userID = localStorageData.uid;
+        this.userData$ = this.firestore.loadUserData(localStorageData.uid);
+      }
+    }
+  }
 
   async showLoading() {
     const loading = await this.loadingCtrl.create({

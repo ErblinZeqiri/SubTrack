@@ -5,6 +5,12 @@
 </ion-header>
 <ion-content>
   <div class="main-content">
+    
+    @for (data of userData$ | async; track data) {
+      <ion-text>
+        <h2>{{data.fullName}}</h2>
+      </ion-text>
+    }
     <ion-button expand="full" id="present-alert">Logout</ion-button>
     <ion-alert
       trigger="present-alert"

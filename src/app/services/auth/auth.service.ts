@@ -9,7 +9,7 @@ import {
   FirebaseAuthentication,
   SignInWithOAuthOptions,
 } from '@capacitor-firebase/authentication';
-import { doc, getFirestore, setDoc } from 'firebase/firestore';
+import { doc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +29,19 @@ export class AuthService {
       const credential = await FirebaseAuthentication.signInWithGoogle(options);
       if (credential.user) {
         this.updateUserData(credential.user);
+
+        const userCredential = {
+          email: credential.user.email,
+          fullName: credential.user.displayName,
+          uid: credential.user.uid,
+        };
+
+        const db = getFirestore();
+        const docRef = doc(db, `users/${credential.user.uid}`);
+        if (!docRef) {
+          await setDoc(docRef, userCredential);
+        }
+
         this._router.navigate(['/home']);
       } else {
         console.error('User data not available');
