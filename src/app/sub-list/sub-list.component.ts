@@ -106,7 +106,7 @@ export class SubListComponent implements OnInit {
     }, 2000);
   }
 
-  handleClick(sub: Subscription) {
+  subDetails(sub: Subscription) {
     this._router.navigate(['/home/sub-details', sub.id]);
   }
 
@@ -145,5 +145,9 @@ export class SubListComponent implements OnInit {
     });
 
     await alert.present();
+  }
+
+  updateSub(sub: Subscription){
+    this._router.navigate(['/update', sub.id])
   }
 }

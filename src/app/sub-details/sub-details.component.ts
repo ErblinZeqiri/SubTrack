@@ -16,7 +16,6 @@ import {
   IonButtons,
   IonButton,
 } from '@ionic/angular/standalone';
-import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-sub-details',

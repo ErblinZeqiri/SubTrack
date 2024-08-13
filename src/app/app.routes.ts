@@ -8,6 +8,7 @@ import { SearchComponent } from './search/search.component';
 import { AddSubComponent } from './add-sub/add-sub.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { SigninComponent } from './signin/signin.component'
+import { UpdateSubComponent } from './update-sub/update-sub.component'
 
 export const routes: Routes = [
   {
@@ -52,6 +53,10 @@ export const routes: Routes = [
   {
     path: 'signin',
     component: SigninComponent,
-
+  },
+  {
+    path: 'update/:id',
+    component: UpdateSubComponent,
+    canActivate: [authGuard],
   }
 ];
