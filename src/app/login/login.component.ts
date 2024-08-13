@@ -131,7 +131,6 @@ export class LoginComponent implements OnInit {
 
     try {
       await this.authService.serviceLoginWithGoogle();
-      await this.navCtrl.navigateRoot('/home');
     } catch (error) {
       console.error('Login failed', error);
     } finally {
@@ -155,7 +154,6 @@ export class LoginComponent implements OnInit {
           this.loginForm.value.email,
           this.loginForm.value.password
         );
-        this.navCtrl.navigateRoot('/home');
         this.modalCtrl.dismiss();
       } catch (error) {
         console.error('Login failed:', error);

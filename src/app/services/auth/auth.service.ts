@@ -29,7 +29,7 @@ export class AuthService {
       const credential = await FirebaseAuthentication.signInWithGoogle(options);
       if (credential.user) {
         this.updateUserData(credential.user);
-        setTimeout(() => this._router.navigate(['/home']));
+        this._router.navigate(['/home']);
       } else {
         console.error('User data not available');
       }
@@ -46,7 +46,7 @@ export class AuthService {
     );
     if (credential) {
       this.updateUserData(credential.user);
-      setTimeout(() => this._router.navigate(['/home']));
+      this._router.navigate(['/home']);
     }
   }
 
@@ -76,7 +76,7 @@ export class AuthService {
       await this.saveFullNameIntoDB(userData);
 
       this.updateUserData(user);
-      setTimeout(() => this._router.navigate(['/home']));
+      this._router.navigate(['/home']);
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;
