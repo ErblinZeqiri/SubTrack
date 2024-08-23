@@ -15,6 +15,7 @@ export interface Subscription {
   renewal: string;
   nextPaymentDate: Date;
   paymentHistory: { [key: string]: Payment };
+  deadline: Date | string;
 }
 
 export interface Payment {

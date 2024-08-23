@@ -106,9 +106,13 @@ export class AddSubComponent {
     'Semestriel',
     'Annuel',
   ];
+  subsciptionDeadline: string[] = ['Indéterminée', 'Date de fin'];
   today = formatDate(new Date().toISOString(), 'YYYY-MM-dd', 'fr-CH');
-  selectedDate: string | null = this.today;
+  selectedNextPaymentDate: string | null = this.today;
+  selectedDeadlineDate: string | null = this.today;
   isDataValid: boolean = true;
+  status: boolean = false;
+  indetermineeValue: string = 'Indéterminée';
 
   addSubscribtionForm!: FormGroup;
   selectedCompany = new FormControl(
@@ -128,6 +132,14 @@ export class AddSubComponent {
     this.today,
     Validators.compose([Validators.required])
   );
+  selectedDeadline = new FormControl(
+    '',
+    Validators.compose([Validators.required])
+  );
+  deadline = new FormControl(
+    this.indetermineeValue,
+    Validators.compose([Validators.required])
+  );
 
   constructor(
     private companySuggestionsService: CompanySuggestionsService,
@@ -140,6 +152,7 @@ export class AddSubComponent {
       category: this.selectedCategory,
       renewal: this.selectedRenewal,
       nextPaymentDate: this.nextPaymentDate,
+      deadline: this.deadline,
     });
   }
 
@@ -165,6 +178,26 @@ export class AddSubComponent {
     this.addSubscribtionForm.reset();
     this.logo = '';
     this.domain = '';
+    // Récupérer les données du formulaire
+    const formData = this.addSubscribtionForm.value;
+
+    // Vérifier si "Indéterminé" est sélectionné et ajuster les données en conséquence
+    if (formData.selectedDeadline === this.indetermineeValue) {
+      formData.deadline = null;
+    }
+    this.status = false;  
+    console.log(formData)
+    console.log(this.status)
+  }
+
+  openDateModal($event: any) {
+    const value = $event.detail.value;
+    this.status = value === 'Date de fin';
+    if (value === this.indetermineeValue) {
+      this.deadline.setValue(this.indetermineeValue);
+    } else if (value === 'Date de fin') {
+      this.deadline.reset();
+    }
   }
 
   async onSubmit() {
@@ -173,6 +206,9 @@ export class AddSubComponent {
 
     if (!localStorageData || !localStorageData.uid) {
       throw new Error('User ID not found in localStorage');
+    }
+    if (this.selectedDeadline.value === this.indetermineeValue) {
+      this.addSubscribtionForm.value.deadline = null;
     }
 
     if (this.addSubscribtionForm.valid) {

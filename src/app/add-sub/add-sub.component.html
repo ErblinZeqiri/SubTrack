@@ -110,20 +110,58 @@
         <ion-item>
           <ion-label>Prochain paiement :</ion-label>
           <ion-datetime-button
-            datetime="datetime"
+            datetime="nextPaymentDatetime"
             slot="end"
           ></ion-datetime-button>
           <ion-modal [keepContentsMounted]="true">
             <ng-template>
               <ion-datetime
-                id="datetime"
+                id="nextPaymentDatetime"
                 presentation="date"
                 min="{{ today }}"
                 max="2099-12-09"
-                [(ngModel)]="selectedDate"
+                [(ngModel)]="selectedNextPaymentDate"
                 name="nextPaymentDate"
                 [formControl]="nextPaymentDate"
                 formControlName="nextPaymentDate"
+              >
+              </ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-item>
+        
+        <ion-item>
+          <ion-select
+            labelPlacement="floating"
+            label="Echéance :"
+            name="selectedDeadline"
+            (ionChange)="openDateModal($event)"
+            #itemElem
+          >
+            @for (deadline of subsciptionDeadline; track deadline) {
+            <ion-select-option value="{{ deadline }}"> {{
+              deadline
+            }}</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+        <ion-item [ngClass]="status ? 'ion-show' : 'ion-hide'">
+          <ion-label>Date d'échéance :</ion-label>
+          <ion-datetime-button
+            datetime="deadlineDatetime"
+            slot="end"
+          ></ion-datetime-button>
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime
+                id="deadlineDatetime"
+                presentation="date"
+                min="{{ today }}"
+                max="2099-12-09"
+                name="deadline"
+                [(ngModel)]="selectedDeadlineDate"
+                [formControl]="deadline"
+                formControlName="deadline"
               >
               </ion-datetime>
             </ng-template>
