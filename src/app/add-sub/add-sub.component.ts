@@ -27,8 +27,7 @@ import {
   IonSelectOption,
   IonDatetime,
   IonDatetimeButton,
-  IonModal,
-} from '@ionic/angular/standalone';
+  IonModal, IonRadio, IonRadioGroup } from '@ionic/angular/standalone';
 import {
   Company,
   CompanySuggestionsService,
@@ -49,7 +48,7 @@ registerLocaleData(localeFrCh, 'fr-CH');
 @Component({
   selector: 'app-add-sub',
   standalone: true,
-  imports: [
+  imports: [IonRadioGroup, IonRadio, 
     IonModal,
     IonDatetimeButton,
     IonCol,
@@ -106,9 +105,13 @@ export class AddSubComponent {
     'Semestriel',
     'Annuel',
   ];
+  subsciptionDeadline: string[] = ['Indéterminée', 'Date de fin'];
   today = formatDate(new Date().toISOString(), 'YYYY-MM-dd', 'fr-CH');
-  selectedDate: string | null = this.today;
+  selectedNextPaymentDate: string | null = this.today;
+  selectedDeadlineDate: string | null = this.today;
   isDataValid: boolean = true;
+  status: boolean = false;
+  indetermineeValue: string = 'Indéterminée';
 
   addSubscribtionForm!: FormGroup;
   selectedCompany = new FormControl(
@@ -128,6 +131,14 @@ export class AddSubComponent {
     this.today,
     Validators.compose([Validators.required])
   );
+  selectedDeadline = new FormControl(
+    '',
+    Validators.compose([Validators.required])
+  );
+  deadline = new FormControl(
+    this.subsciptionDeadline[0],
+    Validators.compose([Validators.required])
+  );
 
   constructor(
     private companySuggestionsService: CompanySuggestionsService,
@@ -140,9 +151,10 @@ export class AddSubComponent {
       category: this.selectedCategory,
       renewal: this.selectedRenewal,
       nextPaymentDate: this.nextPaymentDate,
+      deadline: this.deadline,
     });
   }
-
+  
   onInput(ev: any) {
     const value = ev.target.value;
     const filteredValue = value.replace(/[^a-zA-Z0-9 ]+/g, '');
@@ -165,6 +177,22 @@ export class AddSubComponent {
     this.addSubscribtionForm.reset();
     this.logo = '';
     this.domain = '';
+    const formData = this.addSubscribtionForm.value;
+    formData.deadline = null;
+    this.selectedDeadline
+    this.selectedDeadlineDate
+    this.deadline
+    this.status = false;
+  }
+
+  openDateModal($event: any) {
+    const value = $event.detail.value;
+    this.status = value === 'Date de fin';
+    if (value === this.subsciptionDeadline[0]) {
+      this.deadline.setValue(this.subsciptionDeadline[0]);
+    } else if (value === 'Date de fin') {
+      this.deadline.reset();
+    }
   }
 
   async onSubmit() {
@@ -173,6 +201,9 @@ export class AddSubComponent {
 
     if (!localStorageData || !localStorageData.uid) {
       throw new Error('User ID not found in localStorage');
+    }
+    if (this.selectedDeadline.value === this.subsciptionDeadline[0]) {
+      this.addSubscribtionForm.value.deadline = null;
     }
 
     if (this.addSubscribtionForm.valid) {
