@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Subscription, User } from '../../interfaces/interface';
 import { ExepensesService } from '../services/expenses/exepenses.service';
 import { Router, RouterLink } from '@angular/router';
@@ -57,15 +57,14 @@ import { DonutChartComponent } from '../donut-chart/donut-chart.component';
 export class SubListComponent implements OnInit {
   monthlyExpenses$!: Observable<number>;
   yearlyExpenses$!: Observable<number>;
-  userID: string = '';
-  userData$!: Observable<User[]>;
   userSubData$!: Observable<Subscription[]>;
   noSub: boolean = false;
-  credentials: string | null = localStorage.getItem('user');
+  credentials: string = this._auth.getToken();
+  userID: string = JSON.parse(this.credentials).uid;
 
   constructor(
     private readonly expenses: ExepensesService,
-    private readonly firestore: DataService,
+    private readonly _dataService: DataService,
     private readonly _router: Router,
     private readonly _auth: AuthService,
     private loadingCtrl: LoadingController,
@@ -73,17 +72,16 @@ export class SubListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.credentials);
+    console.log(this.userID);
     if (this._auth.isAuthenticated()) {
       if (this.credentials !== null) {
-        const localStorageData: any = JSON.parse(this.credentials);
-        this.userID = localStorageData.uid;
-        // this.userData$.pipe( map(element => this.firestore.loadUserData(localStorageData.uid)))
-        this.userData$ = this.firestore.loadUserData(localStorageData.uid);
-        this.userSubData$ = this.firestore.loadSubData(localStorageData.uid).pipe(
-          tap(userSubData => {
+        this.userSubData$ = this._dataService.loadSubData(this.userID).pipe(
+          tap((userSubData) => {
             this.noSub = userSubData.length === 0;
           })
         );
+
         this.monthlyExpenses$ = this.userSubData$.pipe(
           map((userSubData) =>
             this.expenses.getCurrentExpensesMonth(userSubData)
@@ -138,10 +136,10 @@ export class SubListComponent implements OnInit {
             await loading.present();
 
             try {
-              await this.firestore.deleteSub(sub);
+              await this._dataService.deleteSub(sub);
               console.log('Abonnement supprimé');
 
-              this.userSubData$ = this.firestore.loadSubData(this.userID);
+              this.userSubData$ = this._dataService.loadSubData(this.userID);
             } catch (error) {
               console.error('Erreur lors de la suppression:', error);
             } finally {

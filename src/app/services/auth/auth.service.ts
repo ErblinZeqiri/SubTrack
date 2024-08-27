@@ -10,13 +10,22 @@ import {
   SignInWithOAuthOptions,
 } from '@capacitor-firebase/authentication';
 import { doc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
+import { DataService } from '../data/data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   auth: boolean = false;
-  constructor(private readonly _auth: Auth, private readonly _router: Router) {}
+  constructor(
+    private readonly _auth: Auth,
+    private readonly _router: Router,
+    private readonly _dataService: DataService
+  ) {}
+
+  getToken(){
+    return localStorage.getItem('user') || '';
+  }
 
   async serviceLoginWithGoogle() {
     try {
@@ -101,6 +110,7 @@ export class AuthService {
     await this._auth.signOut();
     this.auth = false;
     localStorage.removeItem('user');
+    this._dataService.clearData();
     await FirebaseAuthentication.signOut();
     this._router.navigate(['/login']);
   }
