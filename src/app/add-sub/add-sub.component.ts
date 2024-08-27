@@ -27,8 +27,7 @@ import {
   IonSelectOption,
   IonDatetime,
   IonDatetimeButton,
-  IonModal,
-} from '@ionic/angular/standalone';
+  IonModal, IonRadio, IonRadioGroup } from '@ionic/angular/standalone';
 import {
   Company,
   CompanySuggestionsService,
@@ -49,7 +48,7 @@ registerLocaleData(localeFrCh, 'fr-CH');
 @Component({
   selector: 'app-add-sub',
   standalone: true,
-  imports: [
+  imports: [IonRadioGroup, IonRadio, 
     IonModal,
     IonDatetimeButton,
     IonCol,
@@ -137,7 +136,7 @@ export class AddSubComponent {
     Validators.compose([Validators.required])
   );
   deadline = new FormControl(
-    this.indetermineeValue,
+    this.subsciptionDeadline[0],
     Validators.compose([Validators.required])
   );
 
@@ -155,7 +154,7 @@ export class AddSubComponent {
       deadline: this.deadline,
     });
   }
-
+  
   onInput(ev: any) {
     const value = ev.target.value;
     const filteredValue = value.replace(/[^a-zA-Z0-9 ]+/g, '');
@@ -178,23 +177,19 @@ export class AddSubComponent {
     this.addSubscribtionForm.reset();
     this.logo = '';
     this.domain = '';
-    // Récupérer les données du formulaire
     const formData = this.addSubscribtionForm.value;
-
-    // Vérifier si "Indéterminé" est sélectionné et ajuster les données en conséquence
-    if (formData.selectedDeadline === this.indetermineeValue) {
-      formData.deadline = null;
-    }
-    this.status = false;  
-    console.log(formData)
-    console.log(this.status)
+    formData.deadline = null;
+    this.selectedDeadline
+    this.selectedDeadlineDate
+    this.deadline
+    this.status = false;
   }
 
   openDateModal($event: any) {
     const value = $event.detail.value;
     this.status = value === 'Date de fin';
-    if (value === this.indetermineeValue) {
-      this.deadline.setValue(this.indetermineeValue);
+    if (value === this.subsciptionDeadline[0]) {
+      this.deadline.setValue(this.subsciptionDeadline[0]);
     } else if (value === 'Date de fin') {
       this.deadline.reset();
     }
@@ -207,7 +202,7 @@ export class AddSubComponent {
     if (!localStorageData || !localStorageData.uid) {
       throw new Error('User ID not found in localStorage');
     }
-    if (this.selectedDeadline.value === this.indetermineeValue) {
+    if (this.selectedDeadline.value === this.subsciptionDeadline[0]) {
       this.addSubscribtionForm.value.deadline = null;
     }
 
