@@ -48,6 +48,7 @@ import {
 } from '@angular/forms';
 import { collection, doc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
 import localeFrCh from '@angular/common/locales/fr-CH';
+import { AuthService } from '../services/auth/auth.service';
 
 registerLocaleData(localeFrCh, 'fr-CH');
 
@@ -88,9 +89,8 @@ export class UpdateSubComponent implements OnInit {
   @ViewChild('ionInputEl', { static: true }) ionInputEl!: IonInput;
   subscription$!: Observable<Subscription | undefined>;
   subId: string = this._route.snapshot.params['id'];
-  userToken: string = localStorage.getItem('user')
-    ? JSON.parse(localStorage.getItem('user')!).uid
-    : '';
+  credentials: string = this._auth.getToken();
+  userID: string = JSON.parse(this.credentials).uid
   logo = '';
   domain = '';
   filteredOptions$!: Observable<Company[]>;
@@ -153,9 +153,10 @@ export class UpdateSubComponent implements OnInit {
 
   constructor(
     private _route: ActivatedRoute,
-    private readonly firestore: DataService,
+    private readonly _dataService: DataService,
     private readonly _router: Router,
     private companySuggestionsService: CompanySuggestionsService,
+    private readonly _auth: AuthService,
     private loadingCtrl: LoadingController
   ) {
     addIcons({
@@ -172,8 +173,8 @@ export class UpdateSubComponent implements OnInit {
       nextPaymentDate: this.nextPaymentDate,
       deadline: this.deadline,
     });
-    if (this.userToken) {
-      this.subscription$ = this.firestore.loadOneSubData(this.subId);
+    if (this.userID) {
+      this.subscription$ = this._dataService.loadOneSubData(this.subId);
       this.subscription$.subscribe((subscription) => {
         if (subscription) {
           this.updateSubscribtionForm.patchValue({
