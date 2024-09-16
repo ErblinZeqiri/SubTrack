@@ -1,0 +1,1289 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>SubTrack documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">SubTrack documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  SubListComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/sub-list/sub-list.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">providers</td>
+                <td class="col-md-9">
+                                <code><a href="../injectables/ExepensesService.html" target="_self" >ExepensesService</a></code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-sub-list</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>IonText</code>
+                            <code>IonAlert</code>
+                            <code>IonItemOption</code>
+                            <code>IonItemOptions</code>
+                            <code>IonItemSliding</code>
+                            <code>IonRefresherContent</code>
+                            <code>IonRefresher</code>
+                            <code>IonLabel</code>
+                            <code>IonItem</code>
+                            <code>IonList</code>
+                            <code>IonContent</code>
+                            <code>IonTitle</code>
+                            <code>IonToolbar</code>
+                            <code>IonHeader</code>
+                            <code>CommonModule</code>
+                            <code>NgOptimizedImage</code>
+                            <code>RouterLink</code>
+                                <code><a href="../components/DonutChartComponent.html" target="_self" >DonutChartComponent</a></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./sub-list.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./sub-list.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#credentials" >credentials</a>
+                            </li>
+                            <li>
+                                <a href="#monthlyExpenses$" >monthlyExpenses$</a>
+                            </li>
+                            <li>
+                                <a href="#noSub" >noSub</a>
+                            </li>
+                            <li>
+                                <a href="#userID" >userID</a>
+                            </li>
+                            <li>
+                                <a href="#userSubData$" >userSubData$</a>
+                            </li>
+                            <li>
+                                <a href="#yearlyExpenses$" >yearlyExpenses$</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#deleteSub" >deleteSub</a>
+                            </li>
+                            <li>
+                                <a href="#handleRefresh" >handleRefresh</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#showLoading" >showLoading</a>
+                            </li>
+                            <li>
+                                <a href="#subDetails" >subDetails</a>
+                            </li>
+                            <li>
+                                <a href="#updateSub" >updateSub</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(expenses: <a href="../injectables/ExepensesService.html" target="_self">ExepensesService</a>, _dataService: <a href="../injectables/DataService.html" target="_self">DataService</a>, _router: Router, _auth: <a href="../injectables/AuthService.html" target="_self">AuthService</a>, loadingCtrl: LoadingController, alertCtrl: AlertController)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/app/sub-list/sub-list.component.ts:63</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>expenses</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ExepensesService.html" target="_self" >ExepensesService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_dataService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/DataService.html" target="_self" >DataService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_router</td>
+                                                  
+                                                        <td>
+                                                                    <code>Router</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_auth</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AuthService.html" target="_self" >AuthService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>loadingCtrl</td>
+                                                  
+                                                        <td>
+                                                                    <code>LoadingController</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>alertCtrl</td>
+                                                  
+                                                        <td>
+                                                                    <code>AlertController</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteSub"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>deleteSub</b></span>
+                        <a href="#deleteSub"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteSub(sub: <a href="../interfaces/Subscription.html" target="_self">Subscription</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="119"
+                                    class="link-to-prism">src/app/sub-list/sub-list.component.ts:119</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>sub</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Subscription.html" target="_self" >Subscription</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleRefresh"></a>
+                    <span class="name">
+                        <span ><b>handleRefresh</b></span>
+                        <a href="#handleRefresh"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>handleRefresh(event: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="108"
+                                    class="link-to-prism">src/app/sub-list/sub-list.component.ts:108</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="74"
+                                    class="link-to-prism">src/app/sub-list/sub-list.component.ts:74</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showLoading"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>showLoading</b></span>
+                        <a href="#showLoading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>showLoading()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">src/app/sub-list/sub-list.component.ts:99</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="subDetails"></a>
+                    <span class="name">
+                        <span ><b>subDetails</b></span>
+                        <a href="#subDetails"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>subDetails(sub: <a href="../interfaces/Subscription.html" target="_self">Subscription</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="115"
+                                    class="link-to-prism">src/app/sub-list/sub-list.component.ts:115</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>sub</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Subscription.html" target="_self" >Subscription</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateSub"></a>
+                    <span class="name">
+                        <span ><b>updateSub</b></span>
+                        <a href="#updateSub"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>updateSub(sub: <a href="../interfaces/Subscription.html" target="_self">Subscription</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="156"
+                                    class="link-to-prism">src/app/sub-list/sub-list.component.ts:156</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>sub</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Subscription.html" target="_self" >Subscription</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="credentials"></a>
+                    <span class="name">
+                        <span ><b>credentials</b></span>
+                        <a href="#credentials"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._auth.getToken()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/sub-list/sub-list.component.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="monthlyExpenses$"></a>
+                    <span class="name">
+                        <span ><b>monthlyExpenses$</b></span>
+                        <a href="#monthlyExpenses$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Observable&lt;number&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/sub-list/sub-list.component.ts:58</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="noSub"></a>
+                    <span class="name">
+                        <span ><b>noSub</b></span>
+                        <a href="#noSub"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/app/sub-list/sub-list.component.ts:61</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userID"></a>
+                    <span class="name">
+                        <span ><b>userID</b></span>
+                        <a href="#userID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>JSON.parse(this.credentials).uid</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/app/sub-list/sub-list.component.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userSubData$"></a>
+                    <span class="name">
+                        <span ><b>userSubData$</b></span>
+                        <a href="#userSubData$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Subscription.html" target="_self" >Observable&lt;Subscription[]&gt;</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/app/sub-list/sub-list.component.ts:60</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="yearlyExpenses$"></a>
+                    <span class="name">
+                        <span ><b>yearlyExpenses$</b></span>
+                        <a href="#yearlyExpenses$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Observable&lt;number&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/app/sub-list/sub-list.component.ts:59</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit } from &#x27;@angular/core&#x27;;
+import { Subscription, User } from &#x27;../../interfaces/interface&#x27;;
+import { ExepensesService } from &#x27;../services/expenses/exepenses.service&#x27;;
+import { Router, RouterLink } from &#x27;@angular/router&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { NgOptimizedImage } from &#x27;@angular/common&#x27;;
+import { map, Observable, tap } from &#x27;rxjs&#x27;;
+import { DataService } from &#x27;../services/data/data.service&#x27;;
+import { AuthService } from &#x27;../services/auth/auth.service&#x27;;
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonRefresher,
+  IonRefresherContent,
+  IonItemSliding,
+  IonItemOptions,
+  IonItemOption,
+  IonAlert,
+  LoadingController,
+  AlertController,
+  IonText,
+} from &#x27;@ionic/angular/standalone&#x27;;
+import { DonutChartComponent } from &#x27;../donut-chart/donut-chart.component&#x27;;
+
+@Component({
+  selector: &#x27;app-sub-list&#x27;,
+  standalone: true,
+  imports: [
+    IonText,
+    IonAlert,
+    IonItemOption,
+    IonItemOptions,
+    IonItemSliding,
+    IonRefresherContent,
+    IonRefresher,
+    IonLabel,
+    IonItem,
+    IonList,
+    IonContent,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+    CommonModule,
+    NgOptimizedImage,
+    RouterLink,
+    DonutChartComponent,
+  ],
+  templateUrl: &#x27;./sub-list.component.html&#x27;,
+  styleUrls: [&#x27;./sub-list.component.css&#x27;],
+  providers: [ExepensesService],
+})
+export class SubListComponent implements OnInit {
+  monthlyExpenses$!: Observable&lt;number&gt;;
+  yearlyExpenses$!: Observable&lt;number&gt;;
+  userSubData$!: Observable&lt;Subscription[]&gt;;
+  noSub: boolean &#x3D; false;
+  credentials: string &#x3D; this._auth.getToken();
+  userID: string &#x3D; JSON.parse(this.credentials).uid;
+
+  constructor(
+    private readonly expenses: ExepensesService,
+    private readonly _dataService: DataService,
+    private readonly _router: Router,
+    private readonly _auth: AuthService,
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController
+  ) {}
+
+  ngOnInit(): void {
+    console.log(this.credentials);
+    console.log(this.userID);
+    if (this._auth.isAuthenticated()) {
+      if (this.credentials !&#x3D;&#x3D; null) {
+        this.userSubData$ &#x3D; this._dataService.loadSubData(this.userID).pipe(
+          tap((userSubData) &#x3D;&gt; {
+            this.noSub &#x3D; userSubData.length &#x3D;&#x3D;&#x3D; 0;
+          })
+        );
+
+        this.monthlyExpenses$ &#x3D; this.userSubData$.pipe(
+          map((userSubData) &#x3D;&gt;
+            this.expenses.getCurrentExpensesMonth(userSubData)
+          )
+        );
+        this.yearlyExpenses$ &#x3D; this.userSubData$.pipe(
+          map((userSubData) &#x3D;&gt;
+            this.expenses.getCurrentExpensesYear(userSubData)
+          )
+        );
+      }
+    }
+  }
+
+  async showLoading() {
+    const loading &#x3D; await this.loadingCtrl.create({
+      message: &#x27;Suppression...&#x27;,
+      duration: 3000,
+    });
+
+    loading.present();
+  }
+
+  handleRefresh(event: any) {
+    setTimeout(() &#x3D;&gt; {
+      window.location.reload();
+      event.target.complete();
+    }, 2000);
+  }
+
+  subDetails(sub: Subscription) {
+    this._router.navigate([&#x27;/home/sub-details&#x27;, sub.id]);
+  }
+
+  async deleteSub(sub: Subscription) {
+    const loading &#x3D; await this.loadingCtrl.create({
+      message: &#x27;Veuillez patienter...&#x27;,
+      duration: 3000,
+    });
+
+    const alert &#x3D; await this.alertCtrl.create({
+      header: &#x27;Confirmer la suppression&#x27;,
+      message: &#x27;Êtes-vous sûr de vouloir supprimer cet abonnement ?&#x27;,
+      buttons: [
+        {
+          text: &#x27;Non&#x27;,
+          role: &#x27;cancel&#x27;,
+        },
+        {
+          text: &#x27;Oui&#x27;,
+          handler: async () &#x3D;&gt; {
+            await loading.present();
+
+            try {
+              await this._dataService.deleteSub(sub);
+              console.log(&#x27;Abonnement supprimé&#x27;);
+
+              this.userSubData$ &#x3D; this._dataService.loadSubData(this.userID);
+            } catch (error) {
+              console.error(&#x27;Erreur lors de la suppression:&#x27;, error);
+            } finally {
+              loading.dismiss();
+            }
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  updateSub(sub: Subscription) {
+    this._router.navigate([&#x27;/update&#x27;, sub.id]);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;ion-header&gt;
+  &lt;ion-toolbar&gt;
+    &lt;ion-title&gt;Accueil&lt;/ion-title&gt;
+  &lt;/ion-toolbar&gt;
+&lt;/ion-header&gt;
+&lt;ion-content&gt;
+  &lt;ion-refresher slot&#x3D;&quot;fixed&quot; (ionRefresh)&#x3D;&quot;handleRefresh($event)&quot;&gt;
+    &lt;ion-refresher-content&gt;&lt;/ion-refresher-content&gt;
+  &lt;/ion-refresher&gt;
+  &lt;div class&#x3D;&quot;main-content&quot;&gt;
+    @if(!noSub) {
+        &lt;app-donut-chart [userSubData$]&#x3D;&quot;userSubData$&quot;&gt;&lt;/app-donut-chart&gt;
+        &lt;ion-list&gt;
+          @for (sub of userSubData$ | async; track sub) {
+          &lt;ion-item-sliding&gt;
+            &lt;ion-item (click)&#x3D;&quot;subDetails(sub)&quot;&gt;
+              &lt;div class&#x3D;&quot;logo&quot;&gt;
+                &lt;img ngSrc&#x3D;&quot;{{ sub.logo }}&quot; width&#x3D;&quot;80&quot; height&#x3D;&quot;80&quot; priority /&gt;
+              &lt;/div&gt;
+              &lt;ion-label&gt;{{ sub.companyName }}&lt;/ion-label&gt;
+              &lt;ion-label&gt;{{ sub.amount }}.- {{ sub.renewal }}&lt;/ion-label&gt;
+            &lt;/ion-item&gt;
+  
+            &lt;ion-item-options&gt;
+              &lt;ion-item-option (click)&#x3D;&quot;updateSub(sub)&quot;&gt;Modifier&lt;/ion-item-option&gt;
+              &lt;ion-item-option color&#x3D;&quot;danger&quot; (click)&#x3D;&quot;deleteSub(sub)&quot;
+                &gt;Effacer&lt;/ion-item-option
+              &gt;
+            &lt;/ion-item-options&gt;
+          &lt;/ion-item-sliding&gt;
+          }
+        &lt;/ion-list&gt;
+    } @else {
+      &lt;ion-text class&#x3D;&quot;ion-text-center ion-align-items-center&quot;&gt;
+        &lt;h1 class&#x3D;&quot;flex&quot;&gt;Pas d&#x27;abonnement enregistré&lt;/h1&gt;
+      &lt;/ion-text&gt;
+    }
+  &lt;/div&gt;
+&lt;/ion-content&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./sub-list.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.logo {
+  flex: 0 1 auto;
+  padding: 1%;
+  height: 80px;
+  width: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 5%;
+}
+
+.flex {
+  margin-top: 50%;
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><ion-header>  <ion-toolbar>    <ion-title>Accueil</ion-title>  </ion-toolbar></ion-header><ion-content>  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">    <ion-refresher-content></ion-refresher-content>  </ion-refresher>  <div class="main-content">    @if(!noSub) {        <app-donut-chart [userSubData$]="userSubData$"></app-donut-chart>        <ion-list>          @for (sub of userSubData$ | async; track sub) {          <ion-item-sliding>            <ion-item (click)="subDetails(sub)">              <div class="logo">                <img ngSrc="{{ sub.logo }}" width="80" height="80" priority />              </div>              <ion-label>{{ sub.companyName }}</ion-label>              <ion-label>{{ sub.amount }}.- {{ sub.renewal }}</ion-label>            </ion-item>              <ion-item-options>              <ion-item-option (click)="updateSub(sub)">Modifier</ion-item-option>              <ion-item-option color="danger" (click)="deleteSub(sub)"                >Effacer</ion-item-option              >            </ion-item-options>          </ion-item-sliding>          }        </ion-list>    } @else {      <ion-text class="ion-text-center ion-align-items-center">        <h1 class="flex">Pas d\'abonnement enregistré</h1>      </ion-text>    }  </div></ion-content></div>'
+    var COMPONENTS = [{'name': 'AccountComponent', 'selector': 'app-account'},{'name': 'AddSubComponent', 'selector': 'app-add-sub'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'DonutChartComponent', 'selector': 'app-donut-chart'},{'name': 'HomePage', 'selector': 'app-home'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'Page404Component', 'selector': 'app-page404'},{'name': 'SearchComponent', 'selector': 'app-search'},{'name': 'SigninComponent', 'selector': 'app-signin'},{'name': 'SubDetailsComponent', 'selector': 'app-sub-details'},{'name': 'SubListComponent', 'selector': 'app-sub-list'},{'name': 'UpdateSubComponent', 'selector': 'app-update-sub'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'SubListComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'SubListComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

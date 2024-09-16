@@ -10,7 +10,11 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "deploy:github": "ng deploy --base-href=https://erblinzeqiri.github.io/SubTrack/ --repo=https://github.com/ErblinZeqiri/SubTrack.git --name=ErblinZeqiri --email=erblin.zeqiri17@gmail.com --no-silent --dir=www/"
+    "deploy:github": "ng deploy --base-href=https://erblinzeqiri.github.io/SubTrack/ --repo=https://github.com/ErblinZeqiri/SubTrack.git --name=ErblinZeqiri --email=erblin.zeqiri17@gmail.com --no-silent --dir=www/",
+    "compodoc:build": "compodoc -p tsconfig.doc.json",
+    "compodoc:build-and-serve": "compodoc -p tsconfig.doc.json -s",
+    "compodoc:serve": "compodoc -s",
+    "compodoc": "npx compodoc -p tsconfig.doc.json"
   },
   "private": true,
   "dependencies": {
@@ -55,6 +59,7 @@
     "@angular/compiler-cli": "^18.1.1",
     "@angular/language-service": "^18.1.1",
     "@capacitor/cli": "^6.1.1",
+    "@compodoc/compodoc": "^1.1.25",
     "@ionic/angular-toolkit": "^11.0.1",
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",

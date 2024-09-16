@@ -1,0 +1,2259 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>SubTrack documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">SubTrack documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  UpdateSubComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/update-sub/update-sub.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">providers</td>
+                <td class="col-md-9">
+                            <code>DatePipe</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-update-sub</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>IonIcon</code>
+                            <code>IonModal</code>
+                            <code>IonDatetimeButton</code>
+                            <code>IonCol</code>
+                            <code>IonRow</code>
+                            <code>IonGrid</code>
+                            <code>IonButton</code>
+                            <code>IonButtons</code>
+                            <code>IonLabel</code>
+                            <code>IonAvatar</code>
+                            <code>IonText</code>
+                            <code>IonItem</code>
+                            <code>IonList</code>
+                            <code>IonContent</code>
+                            <code>IonTitle</code>
+                            <code>IonToolbar</code>
+                            <code>IonHeader</code>
+                            <code>CommonModule</code>
+                            <code>FormsModule</code>
+                            <code>ReactiveFormsModule</code>
+                            <code>IonSelect</code>
+                            <code>IonSelectOption</code>
+                            <code>IonInput</code>
+                            <code>IonDatetime</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./update-sub.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./update-sub.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#amount" >amount</a>
+                            </li>
+                            <li>
+                                <a href="#credentials" >credentials</a>
+                            </li>
+                            <li>
+                                <a href="#deadline" >deadline</a>
+                            </li>
+                            <li>
+                                <a href="#domain" >domain</a>
+                            </li>
+                            <li>
+                                <a href="#filteredOptions$" >filteredOptions$</a>
+                            </li>
+                            <li>
+                                <a href="#indetermineeValue" >indetermineeValue</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#ionInputEl" >ionInputEl</a>
+                            </li>
+                            <li>
+                                <a href="#isDataValid" >isDataValid</a>
+                            </li>
+                            <li>
+                                <a href="#logo" >logo</a>
+                            </li>
+                            <li>
+                                <a href="#nextPaymentDate" >nextPaymentDate</a>
+                            </li>
+                            <li>
+                                <a href="#selectedCategory" >selectedCategory</a>
+                            </li>
+                            <li>
+                                <a href="#selectedCompany" >selectedCompany</a>
+                            </li>
+                            <li>
+                                <a href="#selectedDeadline" >selectedDeadline</a>
+                            </li>
+                            <li>
+                                <a href="#selectedDeadlineDate" >selectedDeadlineDate</a>
+                            </li>
+                            <li>
+                                <a href="#selectedNextPaymentDate" >selectedNextPaymentDate</a>
+                            </li>
+                            <li>
+                                <a href="#selectedOption" >selectedOption</a>
+                            </li>
+                            <li>
+                                <a href="#selectedRenewal" >selectedRenewal</a>
+                            </li>
+                            <li>
+                                <a href="#status" >status</a>
+                            </li>
+                            <li>
+                                <a href="#subId" >subId</a>
+                            </li>
+                            <li>
+                                <a href="#subsciptionDeadline" >subsciptionDeadline</a>
+                            </li>
+                            <li>
+                                <a href="#subscription$" >subscription$</a>
+                            </li>
+                            <li>
+                                <a href="#subscriptionCategories" >subscriptionCategories</a>
+                            </li>
+                            <li>
+                                <a href="#subscriptionRenewal" >subscriptionRenewal</a>
+                            </li>
+                            <li>
+                                <a href="#today" >today</a>
+                            </li>
+                            <li>
+                                <a href="#toggleDropdown" >toggleDropdown</a>
+                            </li>
+                            <li>
+                                <a href="#updateSubscribtionForm" >updateSubscribtionForm</a>
+                            </li>
+                            <li>
+                                <a href="#userID" >userID</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#back" >back</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onInput" >onInput</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#onSubmit" >onSubmit</a>
+                            </li>
+                            <li>
+                                <a href="#openDateModal" >openDateModal</a>
+                            </li>
+                            <li>
+                                <a href="#resetForm" >resetForm</a>
+                            </li>
+                            <li>
+                                <a href="#selectOption" >selectOption</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(_route: ActivatedRoute, _dataService: <a href="../injectables/DataService.html" target="_self">DataService</a>, _router: Router, companySuggestionsService: <a href="../injectables/CompanySuggestionsService.html" target="_self">CompanySuggestionsService</a>, _auth: <a href="../injectables/AuthService.html" target="_self">AuthService</a>, loadingCtrl: LoadingController)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="152" class="link-to-prism">src/app/update-sub/update-sub.component.ts:152</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>_route</td>
+                                                  
+                                                        <td>
+                                                                    <code>ActivatedRoute</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_dataService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/DataService.html" target="_self" >DataService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_router</td>
+                                                  
+                                                        <td>
+                                                                    <code>Router</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>companySuggestionsService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/CompanySuggestionsService.html" target="_self" >CompanySuggestionsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_auth</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AuthService.html" target="_self" >AuthService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>loadingCtrl</td>
+                                                  
+                                                        <td>
+                                                                    <code>LoadingController</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="back"></a>
+                    <span class="name">
+                        <span ><b>back</b></span>
+                        <a href="#back"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>back()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="194"
+                                    class="link-to-prism">src/app/update-sub/update-sub.component.ts:194</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="167"
+                                    class="link-to-prism">src/app/update-sub/update-sub.component.ts:167</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onInput"></a>
+                    <span class="name">
+                        <span ><b>onInput</b></span>
+                        <a href="#onInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onInput(ev: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="198"
+                                    class="link-to-prism">src/app/update-sub/update-sub.component.ts:198</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>ev</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSubmit"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>onSubmit</b></span>
+                        <a href="#onSubmit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onSubmit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="240"
+                                    class="link-to-prism">src/app/update-sub/update-sub.component.ts:240</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openDateModal"></a>
+                    <span class="name">
+                        <span ><b>openDateModal</b></span>
+                        <a href="#openDateModal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openDateModal($event: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="230"
+                                    class="link-to-prism">src/app/update-sub/update-sub.component.ts:230</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>$event</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resetForm"></a>
+                    <span class="name">
+                        <span ><b>resetForm</b></span>
+                        <a href="#resetForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>resetForm()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="216"
+                                    class="link-to-prism">src/app/update-sub/update-sub.component.ts:216</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectOption"></a>
+                    <span class="name">
+                        <span ><b>selectOption</b></span>
+                        <a href="#selectOption"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>selectOption(option: <a href="../interfaces/Company.html" target="_self">Company</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="209"
+                                    class="link-to-prism">src/app/update-sub/update-sub.component.ts:209</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>option</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Company.html" target="_self" >Company</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="amount"></a>
+                    <span class="name">
+                        <span ><b>amount</b></span>
+                        <a href="#amount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new FormControl(&#x27;&#x27;, Validators.compose([Validators.required]))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">src/app/update-sub/update-sub.component.ts:132</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="credentials"></a>
+                    <span class="name">
+                        <span ><b>credentials</b></span>
+                        <a href="#credentials"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._auth.getToken()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">src/app/update-sub/update-sub.component.ts:92</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deadline"></a>
+                    <span class="name">
+                        <span ><b>deadline</b></span>
+                        <a href="#deadline"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new FormControl(
+    this.indetermineeValue,
+    Validators.compose([Validators.required])
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="149" class="link-to-prism">src/app/update-sub/update-sub.component.ts:149</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="domain"></a>
+                    <span class="name">
+                        <span ><b>domain</b></span>
+                        <a href="#domain"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="95" class="link-to-prism">src/app/update-sub/update-sub.component.ts:95</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filteredOptions$"></a>
+                    <span class="name">
+                        <span ><b>filteredOptions$</b></span>
+                        <a href="#filteredOptions$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Company.html" target="_self" >Observable&lt;Company[]&gt;</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="96" class="link-to-prism">src/app/update-sub/update-sub.component.ts:96</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="indetermineeValue"></a>
+                    <span class="name">
+                        <span ><b>indetermineeValue</b></span>
+                        <a href="#indetermineeValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Indéterminée&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="126" class="link-to-prism">src/app/update-sub/update-sub.component.ts:126</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ionInputEl"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>ionInputEl</b></span>
+                        <a href="#ionInputEl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>IonInput</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;ionInputEl&#x27;, {static: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="89" class="link-to-prism">src/app/update-sub/update-sub.component.ts:89</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isDataValid"></a>
+                    <span class="name">
+                        <span ><b>isDataValid</b></span>
+                        <a href="#isDataValid"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="124" class="link-to-prism">src/app/update-sub/update-sub.component.ts:124</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logo"></a>
+                    <span class="name">
+                        <span ><b>logo</b></span>
+                        <a href="#logo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="94" class="link-to-prism">src/app/update-sub/update-sub.component.ts:94</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="nextPaymentDate"></a>
+                    <span class="name">
+                        <span ><b>nextPaymentDate</b></span>
+                        <a href="#nextPaymentDate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new FormControl(
+    this.today,
+    Validators.compose([Validators.required])
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="141" class="link-to-prism">src/app/update-sub/update-sub.component.ts:141</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedCategory"></a>
+                    <span class="name">
+                        <span ><b>selectedCategory</b></span>
+                        <a href="#selectedCategory"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new FormControl(
+    &#x27;&#x27;,
+    Validators.compose([Validators.required])
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="133" class="link-to-prism">src/app/update-sub/update-sub.component.ts:133</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedCompany"></a>
+                    <span class="name">
+                        <span ><b>selectedCompany</b></span>
+                        <a href="#selectedCompany"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new FormControl(
+    &#x27;&#x27;,
+    Validators.compose([Validators.required])
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="128" class="link-to-prism">src/app/update-sub/update-sub.component.ts:128</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedDeadline"></a>
+                    <span class="name">
+                        <span ><b>selectedDeadline</b></span>
+                        <a href="#selectedDeadline"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new FormControl(
+    &#x27;&#x27;,
+    Validators.compose([Validators.required])
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="145" class="link-to-prism">src/app/update-sub/update-sub.component.ts:145</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedDeadlineDate"></a>
+                    <span class="name">
+                        <span ><b>selectedDeadlineDate</b></span>
+                        <a href="#selectedDeadlineDate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.today</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="123" class="link-to-prism">src/app/update-sub/update-sub.component.ts:123</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedNextPaymentDate"></a>
+                    <span class="name">
+                        <span ><b>selectedNextPaymentDate</b></span>
+                        <a href="#selectedNextPaymentDate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.today</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="122" class="link-to-prism">src/app/update-sub/update-sub.component.ts:122</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedOption"></a>
+                    <span class="name">
+                        <span ><b>selectedOption</b></span>
+                        <a href="#selectedOption"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Company.html" target="_self" >Company | null</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="98" class="link-to-prism">src/app/update-sub/update-sub.component.ts:98</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedRenewal"></a>
+                    <span class="name">
+                        <span ><b>selectedRenewal</b></span>
+                        <a href="#selectedRenewal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new FormControl(
+    &#x27;&#x27;,
+    Validators.compose([Validators.required])
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="137" class="link-to-prism">src/app/update-sub/update-sub.component.ts:137</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="status"></a>
+                    <span class="name">
+                        <span ><b>status</b></span>
+                        <a href="#status"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="125" class="link-to-prism">src/app/update-sub/update-sub.component.ts:125</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="subId"></a>
+                    <span class="name">
+                        <span ><b>subId</b></span>
+                        <a href="#subId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._route.snapshot.params[&#x27;id&#x27;]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="91" class="link-to-prism">src/app/update-sub/update-sub.component.ts:91</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="subsciptionDeadline"></a>
+                    <span class="name">
+                        <span ><b>subsciptionDeadline</b></span>
+                        <a href="#subsciptionDeadline"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[&#x27;Indéterminée&#x27;, &#x27;Date de fin&#x27;]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="120" class="link-to-prism">src/app/update-sub/update-sub.component.ts:120</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="subscription$"></a>
+                    <span class="name">
+                        <span ><b>subscription$</b></span>
+                        <a href="#subscription$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Subscription.html" target="_self" >Observable&lt;Subscription | undefined&gt;</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/app/update-sub/update-sub.component.ts:90</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="subscriptionCategories"></a>
+                    <span class="name">
+                        <span ><b>subscriptionCategories</b></span>
+                        <a href="#subscriptionCategories"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &#x27;Divertissement&#x27;,
+    &#x27;Indispensable&#x27;,
+    &#x27;Streaming&#x27;,
+    &#x27;Presse&#x27;,
+    &#x27;Fitness&#x27;,
+    &#x27;Jeux&#x27;,
+    &#x27;Cuisine&#x27;,
+    &#x27;Éducation&#x27;,
+    &#x27;Technologie&#x27;,
+    &#x27;Mode&#x27;,
+    &#x27;Finance&#x27;,
+    &#x27;Voyage&#x27;,
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="99" class="link-to-prism">src/app/update-sub/update-sub.component.ts:99</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="subscriptionRenewal"></a>
+                    <span class="name">
+                        <span ><b>subscriptionRenewal</b></span>
+                        <a href="#subscriptionRenewal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &#x27;Hebdomadaire&#x27;,
+    &#x27;Mensuel&#x27;,
+    &#x27;Trimestriel&#x27;,
+    &#x27;Semestriel&#x27;,
+    &#x27;Annuel&#x27;,
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="113" class="link-to-prism">src/app/update-sub/update-sub.component.ts:113</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="today"></a>
+                    <span class="name">
+                        <span ><b>today</b></span>
+                        <a href="#today"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>formatDate(new Date().toISOString(), &#x27;YYYY-MM-dd&#x27;, &#x27;fr-CH&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="121" class="link-to-prism">src/app/update-sub/update-sub.component.ts:121</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleDropdown"></a>
+                    <span class="name">
+                        <span ><b>toggleDropdown</b></span>
+                        <a href="#toggleDropdown"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="97" class="link-to-prism">src/app/update-sub/update-sub.component.ts:97</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateSubscribtionForm"></a>
+                    <span class="name">
+                        <span ><b>updateSubscribtionForm</b></span>
+                        <a href="#updateSubscribtionForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FormGroup</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="127" class="link-to-prism">src/app/update-sub/update-sub.component.ts:127</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userID"></a>
+                    <span class="name">
+                        <span ><b>userID</b></span>
+                        <a href="#userID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>JSON.parse(this.credentials).uid</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="93" class="link-to-prism">src/app/update-sub/update-sub.component.ts:93</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, ViewChild } from &#x27;@angular/core&#x27;;
+import { ActivatedRoute, Router } from &#x27;@angular/router&#x27;;
+import { elementAt, map, Observable, tap } from &#x27;rxjs&#x27;;
+import { Subscription } from &#x27;src/interfaces/interface&#x27;;
+import { DataService } from &#x27;../services/data/data.service&#x27;;
+import { addIcons } from &#x27;ionicons&#x27;;
+import { arrowBackOutline } from &#x27;ionicons/icons&#x27;;
+import {
+  IonContent,
+  IonHeader,
+  IonToolbar,
+  IonIcon,
+  IonTitle,
+  IonList,
+  IonItem,
+  IonInput,
+  IonText,
+  IonLabel,
+  IonDatetimeButton,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonButton,
+  LoadingController,
+  IonAvatar,
+  IonModal,
+  IonDatetime,
+  IonSelect,
+  IonSelectOption,
+  IonButtons,
+} from &#x27;@ionic/angular/standalone&#x27;;
+import {
+  Company,
+  CompanySuggestionsService,
+} from &#x27;../services/companySuggestions/company-suggestions.service&#x27;;
+import {
+  formatDate,
+  CommonModule,
+  DatePipe,
+  registerLocaleData,
+} from &#x27;@angular/common&#x27;;
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from &#x27;@angular/forms&#x27;;
+import { collection, doc, getFirestore, setDoc, updateDoc } from &#x27;firebase/firestore&#x27;;
+import localeFrCh from &#x27;@angular/common/locales/fr-CH&#x27;;
+import { AuthService } from &#x27;../services/auth/auth.service&#x27;;
+
+registerLocaleData(localeFrCh, &#x27;fr-CH&#x27;);
+
+@Component({
+  selector: &#x27;app-update-sub&#x27;,
+  templateUrl: &#x27;./update-sub.component.html&#x27;,
+  styleUrls: [&#x27;./update-sub.component.scss&#x27;],
+  standalone: true,
+  imports: [
+    IonIcon,
+    IonModal,
+    IonDatetimeButton,
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonButton,
+    IonButtons,
+    IonLabel,
+    IonAvatar,
+    IonText,
+    IonItem,
+    IonList,
+    IonContent,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IonSelect,
+    IonSelectOption,
+    IonInput,
+    IonDatetime,
+  ],
+  providers: [DatePipe],
+})
+export class UpdateSubComponent implements OnInit {
+  @ViewChild(&#x27;ionInputEl&#x27;, { static: true }) ionInputEl!: IonInput;
+  subscription$!: Observable&lt;Subscription | undefined&gt;;
+  subId: string &#x3D; this._route.snapshot.params[&#x27;id&#x27;];
+  credentials: string &#x3D; this._auth.getToken();
+  userID: string &#x3D; JSON.parse(this.credentials).uid
+  logo &#x3D; &#x27;&#x27;;
+  domain &#x3D; &#x27;&#x27;;
+  filteredOptions$!: Observable&lt;Company[]&gt;;
+  toggleDropdown: boolean &#x3D; false;
+  selectedOption: Company | null &#x3D; null;
+  subscriptionCategories: string[] &#x3D; [
+    &#x27;Divertissement&#x27;,
+    &#x27;Indispensable&#x27;,
+    &#x27;Streaming&#x27;,
+    &#x27;Presse&#x27;,
+    &#x27;Fitness&#x27;,
+    &#x27;Jeux&#x27;,
+    &#x27;Cuisine&#x27;,
+    &#x27;Éducation&#x27;,
+    &#x27;Technologie&#x27;,
+    &#x27;Mode&#x27;,
+    &#x27;Finance&#x27;,
+    &#x27;Voyage&#x27;,
+  ];
+  subscriptionRenewal: string[] &#x3D; [
+    &#x27;Hebdomadaire&#x27;,
+    &#x27;Mensuel&#x27;,
+    &#x27;Trimestriel&#x27;,
+    &#x27;Semestriel&#x27;,
+    &#x27;Annuel&#x27;,
+  ];
+  subsciptionDeadline: string[] &#x3D; [&#x27;Indéterminée&#x27;, &#x27;Date de fin&#x27;];
+  today &#x3D; formatDate(new Date().toISOString(), &#x27;YYYY-MM-dd&#x27;, &#x27;fr-CH&#x27;);
+  selectedNextPaymentDate: string | null &#x3D; this.today;
+  selectedDeadlineDate: string | null &#x3D; this.today;
+  isDataValid: boolean &#x3D; true;
+  status: boolean &#x3D; false;
+  indetermineeValue: string &#x3D; &#x27;Indéterminée&#x27;;
+  updateSubscribtionForm!: FormGroup;
+  selectedCompany &#x3D; new FormControl(
+    &#x27;&#x27;,
+    Validators.compose([Validators.required])
+  );
+  amount &#x3D; new FormControl(&#x27;&#x27;, Validators.compose([Validators.required]));
+  selectedCategory &#x3D; new FormControl(
+    &#x27;&#x27;,
+    Validators.compose([Validators.required])
+  );
+  selectedRenewal &#x3D; new FormControl(
+    &#x27;&#x27;,
+    Validators.compose([Validators.required])
+  );
+  nextPaymentDate &#x3D; new FormControl(
+    this.today,
+    Validators.compose([Validators.required])
+  );
+  selectedDeadline &#x3D; new FormControl(
+    &#x27;&#x27;,
+    Validators.compose([Validators.required])
+  );
+  deadline &#x3D; new FormControl(
+    this.indetermineeValue,
+    Validators.compose([Validators.required])
+  );
+
+  constructor(
+    private _route: ActivatedRoute,
+    private readonly _dataService: DataService,
+    private readonly _router: Router,
+    private companySuggestionsService: CompanySuggestionsService,
+    private readonly _auth: AuthService,
+    private loadingCtrl: LoadingController
+  ) {
+    addIcons({
+      arrowBackOutline,
+    });
+  }
+
+  ngOnInit() {
+    this.updateSubscribtionForm &#x3D; new FormGroup({
+      companyName: this.selectedCompany,
+      amount: this.amount,
+      category: this.selectedCategory,
+      renewal: this.selectedRenewal,
+      nextPaymentDate: this.nextPaymentDate,
+      deadline: this.deadline,
+    });
+    if (this.userID) {
+      this.subscription$ &#x3D; this._dataService.loadOneSubData(this.subId);
+      this.subscription$.subscribe((subscription) &#x3D;&gt; {
+        if (subscription) {
+          this.updateSubscribtionForm.patchValue({
+            companyName: subscription.companyName,
+            amount: subscription.amount,
+            category: subscription.category,
+            renewal: subscription.renewal,
+            nextPaymentDate: subscription.nextPaymentDate,
+          });
+
+          this.logo &#x3D; subscription.logo || &#x27;&#x27;;
+          this.domain &#x3D; subscription.domain || &#x27;&#x27;;
+        }
+      });
+    }
+  }
+  back() {
+    this._router.navigate([&#x27;/home&#x27;]);
+  }
+
+  onInput(ev: any) {
+    const value &#x3D; ev.target.value;
+    const filteredValue &#x3D; value.replace(/[^a-zA-Z0-9 ]+/g, &#x27;&#x27;);
+
+    if (filteredValue.length &gt; 1) {
+      this.filteredOptions$ &#x3D;
+        this.companySuggestionsService.fetchCompanySuggestions(filteredValue);
+      this.toggleDropdown &#x3D; true;
+    }
+  }
+
+  selectOption(option: Company) {
+    this.selectedCompany.setValue(option.name);
+    this.logo &#x3D; option.logo;
+    this.domain &#x3D; option.domain;
+    this.toggleDropdown &#x3D; false;
+  }
+
+  resetForm() {
+    this.updateSubscribtionForm.reset();
+    this.logo &#x3D; &#x27;&#x27;;
+    this.domain &#x3D; &#x27;&#x27;;
+    // Récupérer les données du formulaire
+    const formData &#x3D; this.updateSubscribtionForm.value;
+
+    // Vérifier si &quot;Indéterminé&quot; est sélectionné et ajuster les données en conséquence
+    if (formData.selectedDeadline &#x3D;&#x3D;&#x3D; this.indetermineeValue) {
+      formData.deadline &#x3D; null;
+    }
+    this.status &#x3D; false;
+  }
+
+  openDateModal($event: any) {
+    const value &#x3D; $event.detail.value;
+    this.status &#x3D; value &#x3D;&#x3D;&#x3D; &#x27;Date de fin&#x27;;
+    if (value &#x3D;&#x3D;&#x3D; this.indetermineeValue) {
+      this.deadline.setValue(this.indetermineeValue);
+    } else if (value &#x3D;&#x3D;&#x3D; &#x27;Date de fin&#x27;) {
+      this.deadline.reset();
+    }
+  }
+
+  async onSubmit() {
+    const user: any &#x3D; localStorage.getItem(&#x27;user&#x27;);
+    const localStorageData: any &#x3D; JSON.parse(user);
+
+    if (!localStorageData || !localStorageData.uid) {
+      throw new Error(&#x27;User ID not found in localStorage&#x27;);
+    }
+    
+    if (this.selectedDeadline.value &#x3D;&#x3D;&#x3D; this.indetermineeValue) {
+      this.updateSubscribtionForm.value.deadline &#x3D; null;
+    }
+
+
+    if (this.updateSubscribtionForm.valid) {
+      this.isDataValid &#x3D; true;
+      const loading &#x3D; await this.loadingCtrl.create({
+        message: &#x27;Connexion...&#x27;,
+      });
+
+      const formData &#x3D; {
+        ...this.updateSubscribtionForm.value,
+        logo: this.logo,
+        domain: this.domain,
+        paymentHistory: [],
+        userID: localStorageData.uid,
+      };
+
+      const db &#x3D; getFirestore();
+      const docRef &#x3D; doc(db, &#x60;subscriptions/${this.subId}&#x60;);
+      await updateDoc(docRef, formData);
+
+      this.resetForm();
+      this._router.navigate([&#x27;/home&#x27;]);
+    } else {
+      this.isDataValid &#x3D; false;
+    }
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;ion-header&gt;
+  &lt;ion-toolbar&gt;
+    &lt;ion-icon name&#x3D;&quot;arrow-back-outline&quot; slot&#x3D;&quot;start&quot; (click)&#x3D;&quot;back()&quot; size&#x3D;&quot;large&quot;&gt;&lt;/ion-icon&gt;
+    &lt;ion-title class&#x3D;&quot;ion-text-center&quot;&gt;Modifier l&#x27;abonnement&lt;/ion-title&gt;
+  &lt;/ion-toolbar&gt;
+&lt;/ion-header&gt;
+&lt;ion-content&gt;
+  &lt;div class&#x3D;&quot;main-content&quot;&gt;
+    &lt;form [formGroup]&#x3D;&quot;updateSubscribtionForm&quot; (ngSubmit)&#x3D;&quot;onSubmit()&quot;&gt;
+      &lt;ion-list&gt;
+        &lt;ion-item&gt;
+          &lt;ion-input
+            labelPlacement&#x3D;&quot;floating&quot;
+            label&#x3D;&quot;Rechercher une marque :&quot;
+            (ionInput)&#x3D;&quot;onInput($event)&quot;
+            #ionInputEl
+            placeholder&#x3D;&quot;Min 2 caractères&quot;
+            formControlName&#x3D;&quot;companyName&quot;
+            [formControl]&#x3D;&quot;selectedCompany&quot;
+            name&#x3D;&quot;selectedCompany&quot;
+            id&#x3D;&quot;selectedCompany&quot;
+          &gt;
+          &lt;/ion-input&gt;
+          &lt;ion-text
+            color&#x3D;&quot;danger&quot;
+            [hidden]&#x3D;&quot;
+              selectedCompany.valid ||
+              (!selectedCompany.touched &amp;&amp; !selectedCompany.valid)
+            &quot;
+          &gt;
+            Ce champ est obligatoire.
+          &lt;/ion-text&gt;
+        &lt;/ion-item&gt;
+        @if (filteredOptions$ | async; as filteredOptions) { @if (toggleDropdown)
+        { @for (option of filteredOptions; track option) {
+        &lt;ion-item (click)&#x3D;&quot;selectOption(option)&quot;&gt;
+          &lt;ion-avatar slot&#x3D;&quot;start&quot;&gt;
+            &lt;img [src]&#x3D;&quot;option.logo&quot; alt&#x3D;&quot;{{ option.name }} logo&quot; /&gt;
+          &lt;/ion-avatar&gt;
+          &lt;ion-label&gt;{{ option.name }}&lt;/ion-label&gt;
+        &lt;/ion-item&gt;
+
+        } } }
+        &lt;ion-item&gt;
+          &lt;ion-input
+            labelPlacement&#x3D;&quot;floating&quot;
+            label&#x3D;&quot;Prix :&quot;
+            type&#x3D;&quot;number&quot;
+            placeholder&#x3D;&quot;&quot;
+            name&#x3D;&quot;amount&quot;
+            formControlName&#x3D;&quot;amount&quot;
+            [formControl]&#x3D;&quot;amount&quot;
+          &gt;&lt;/ion-input&gt;
+          &lt;ion-text
+            color&#x3D;&quot;danger&quot;
+            [hidden]&#x3D;&quot;amount.valid || (!amount.touched &amp;&amp; !amount.valid)&quot;
+          &gt;
+            Ce champ est obligatoire.
+          &lt;/ion-text&gt;
+        &lt;/ion-item&gt;
+
+        &lt;ion-item&gt;
+          &lt;ion-select
+            labelPlacement&#x3D;&quot;floating&quot;
+            label&#x3D;&quot;Catégorie :&quot;
+            name&#x3D;&quot;selectedCategory&quot;
+            formControlName&#x3D;&quot;category&quot;
+            [formControl]&#x3D;&quot;selectedCategory&quot;
+          &gt;
+            @for (category of subscriptionCategories; track category) {
+            &lt;ion-select-option value&#x3D;&quot;{{ category }}&quot;&gt;{{
+              category
+            }}&lt;/ion-select-option&gt;
+            }
+          &lt;/ion-select&gt;
+
+          &lt;ion-text
+            color&#x3D;&quot;danger&quot;
+            [hidden]&#x3D;&quot;
+              selectedCategory.valid ||
+              (!selectedCategory.touched &amp;&amp; !selectedCategory.valid)
+            &quot;
+          &gt;
+            Ce champ est obligatoire.
+          &lt;/ion-text&gt;
+        &lt;/ion-item&gt;
+        &lt;ion-item&gt;
+          &lt;ion-select
+            labelPlacement&#x3D;&quot;floating&quot;
+            label&#x3D;&quot;Férquence :&quot;
+            name&#x3D;&quot;selectedRenewal&quot;
+            formControlName&#x3D;&quot;renewal&quot;
+            [formControl]&#x3D;&quot;selectedRenewal&quot;
+          &gt;
+            @for (renewal of subscriptionRenewal; track renewal) {
+            &lt;ion-select-option value&#x3D;&quot;{{ renewal }}&quot;&gt;{{
+              renewal
+            }}&lt;/ion-select-option&gt;
+            }
+          &lt;/ion-select&gt;
+          &lt;ion-text
+            color&#x3D;&quot;danger&quot;
+            [hidden]&#x3D;&quot;
+              selectedRenewal.valid ||
+              (!selectedRenewal.touched &amp;&amp; !selectedRenewal.valid)
+            &quot;
+          &gt;
+            Ce champ est obligatoire.
+          &lt;/ion-text&gt;
+        &lt;/ion-item&gt;
+        &lt;ion-item&gt;
+          &lt;ion-label&gt;Prochain paiement :&lt;/ion-label&gt;
+          &lt;ion-datetime-button
+            datetime&#x3D;&quot;nextPaymentDatetime&quot;
+            slot&#x3D;&quot;end&quot;
+          &gt;&lt;/ion-datetime-button&gt;
+          &lt;ion-modal [keepContentsMounted]&#x3D;&quot;true&quot;&gt;
+            &lt;ng-template&gt;
+              &lt;ion-datetime
+                id&#x3D;&quot;nextPaymentDatetime&quot;
+                presentation&#x3D;&quot;date&quot;
+                min&#x3D;&quot;{{ today }}&quot;
+                max&#x3D;&quot;2099-12-09&quot;
+                [(ngModel)]&#x3D;&quot;selectedNextPaymentDate&quot;
+                name&#x3D;&quot;nextPaymentDate&quot;
+                [formControl]&#x3D;&quot;nextPaymentDate&quot;
+                formControlName&#x3D;&quot;nextPaymentDate&quot;
+              &gt;
+              &lt;/ion-datetime&gt;
+            &lt;/ng-template&gt;
+          &lt;/ion-modal&gt;
+        &lt;/ion-item&gt;
+        &lt;ion-item&gt;
+          &lt;ion-select
+            labelPlacement&#x3D;&quot;floating&quot;
+            label&#x3D;&quot;Echéance :&quot;
+            name&#x3D;&quot;selectedDeadline&quot;
+            formControlName&#x3D;&quot;deadline&quot;
+            [formControl]&#x3D;&quot;selectedDeadline&quot;
+            (ionChange)&#x3D;&quot;openDateModal($event)&quot;
+          &gt;
+            @for (deadline of subsciptionDeadline; track deadline) {
+            &lt;ion-select-option value&#x3D;&quot;{{ deadline }}&quot;&gt; {{
+              deadline
+            }}&lt;/ion-select-option&gt;
+            }
+          &lt;/ion-select&gt;
+        &lt;/ion-item&gt;
+        &lt;ion-item [ngClass]&#x3D;&quot;status ? &#x27;ion-show&#x27; : &#x27;ion-hide&#x27;&quot;&gt;
+          &lt;ion-label&gt;Date d&#x27;échéance :&lt;/ion-label&gt;
+          &lt;ion-datetime-button
+            datetime&#x3D;&quot;deadlineDatetime&quot;
+            slot&#x3D;&quot;end&quot;
+          &gt;&lt;/ion-datetime-button&gt;
+          &lt;ion-modal [keepContentsMounted]&#x3D;&quot;true&quot;&gt;
+            &lt;ng-template&gt;
+              &lt;ion-datetime
+                id&#x3D;&quot;deadlineDatetime&quot;
+                presentation&#x3D;&quot;date&quot;
+                min&#x3D;&quot;{{ today }}&quot;
+                max&#x3D;&quot;2099-12-09&quot;
+                name&#x3D;&quot;deadline&quot;
+                [(ngModel)]&#x3D;&quot;selectedDeadlineDate&quot;
+                [formControl]&#x3D;&quot;deadline&quot;
+                formControlName&#x3D;&quot;deadline&quot;
+              &gt;
+              &lt;/ion-datetime&gt;
+            &lt;/ng-template&gt;
+          &lt;/ion-modal&gt;
+        &lt;/ion-item&gt;
+        &lt;ion-text color&#x3D;&quot;danger&quot; [hidden]&#x3D;&quot;isDataValid&quot;&gt;
+          Veuillez remplir tous les champs.
+        &lt;/ion-text&gt;
+      &lt;/ion-list&gt;
+      &lt;ion-grid&gt;
+        &lt;ion-row&gt;
+          &lt;ion-col size&#x3D;&quot;6&quot;&gt;
+            &lt;ion-button color&#x3D;&quot;medium&quot; expand&#x3D;&quot;block&quot; (click)&#x3D;&quot;resetForm()&quot;
+              &gt;Effacer&lt;/ion-button
+            &gt;
+          &lt;/ion-col&gt;
+          &lt;ion-col size&#x3D;&quot;6&quot;&gt;
+            &lt;ion-button id&#x3D;&quot;open-loading&quot; expand&#x3D;&quot;block&quot; type&#x3D;&quot;submit&quot;
+              &gt;Valider&lt;/ion-button
+            &gt;
+          &lt;/ion-col&gt;
+        &lt;/ion-row&gt;
+      &lt;/ion-grid&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+&lt;/ion-content&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./update-sub.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss"></code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><ion-header>  <ion-toolbar>    <ion-icon name="arrow-back-outline" slot="start" (click)="back()" size="large"></ion-icon>    <ion-title class="ion-text-center">Modifier l\'abonnement</ion-title>  </ion-toolbar></ion-header><ion-content>  <div class="main-content">    <form [formGroup]="updateSubscribtionForm" (ngSubmit)="onSubmit()">      <ion-list>        <ion-item>          <ion-input            labelPlacement="floating"            label="Rechercher une marque :"            (ionInput)="onInput($event)"            #ionInputEl            placeholder="Min 2 caractères"            formControlName="companyName"            [formControl]="selectedCompany"            name="selectedCompany"            id="selectedCompany"          >          </ion-input>          <ion-text            color="danger"            [hidden]="              selectedCompany.valid ||              (!selectedCompany.touched && !selectedCompany.valid)            "          >            Ce champ est obligatoire.          </ion-text>        </ion-item>        @if (filteredOptions$ | async; as filteredOptions) { @if (toggleDropdown)        { @for (option of filteredOptions; track option) {        <ion-item (click)="selectOption(option)">          <ion-avatar slot="start">            <img [src]="option.logo" alt="{{ option.name }} logo" />          </ion-avatar>          <ion-label>{{ option.name }}</ion-label>        </ion-item>        } } }        <ion-item>          <ion-input            labelPlacement="floating"            label="Prix :"            type="number"            placeholder=""            name="amount"            formControlName="amount"            [formControl]="amount"          ></ion-input>          <ion-text            color="danger"            [hidden]="amount.valid || (!amount.touched && !amount.valid)"          >            Ce champ est obligatoire.          </ion-text>        </ion-item>        <ion-item>          <ion-select            labelPlacement="floating"            label="Catégorie :"            name="selectedCategory"            formControlName="category"            [formControl]="selectedCategory"          >            @for (category of subscriptionCategories; track category) {            <ion-select-option value="{{ category }}">{{              category            }}</ion-select-option>            }          </ion-select>          <ion-text            color="danger"            [hidden]="              selectedCategory.valid ||              (!selectedCategory.touched && !selectedCategory.valid)            "          >            Ce champ est obligatoire.          </ion-text>        </ion-item>        <ion-item>          <ion-select            labelPlacement="floating"            label="Férquence :"            name="selectedRenewal"            formControlName="renewal"            [formControl]="selectedRenewal"          >            @for (renewal of subscriptionRenewal; track renewal) {            <ion-select-option value="{{ renewal }}">{{              renewal            }}</ion-select-option>            }          </ion-select>          <ion-text            color="danger"            [hidden]="              selectedRenewal.valid ||              (!selectedRenewal.touched && !selectedRenewal.valid)            "          >            Ce champ est obligatoire.          </ion-text>        </ion-item>        <ion-item>          <ion-label>Prochain paiement :</ion-label>          <ion-datetime-button            datetime="nextPaymentDatetime"            slot="end"          ></ion-datetime-button>          <ion-modal [keepContentsMounted]="true">            <ng-template>              <ion-datetime                id="nextPaymentDatetime"                presentation="date"                min="{{ today }}"                max="2099-12-09"                [(ngModel)]="selectedNextPaymentDate"                name="nextPaymentDate"                [formControl]="nextPaymentDate"                formControlName="nextPaymentDate"              >              </ion-datetime>            </ng-template>          </ion-modal>        </ion-item>        <ion-item>          <ion-select            labelPlacement="floating"            label="Echéance :"            name="selectedDeadline"            formControlName="deadline"            [formControl]="selectedDeadline"            (ionChange)="openDateModal($event)"          >            @for (deadline of subsciptionDeadline; track deadline) {            <ion-select-option value="{{ deadline }}"> {{              deadline            }}</ion-select-option>            }          </ion-select>        </ion-item>        <ion-item [ngClass]="status ? \'ion-show\' : \'ion-hide\'">          <ion-label>Date d\'échéance :</ion-label>          <ion-datetime-button            datetime="deadlineDatetime"            slot="end"          ></ion-datetime-button>          <ion-modal [keepContentsMounted]="true">            <ng-template>              <ion-datetime                id="deadlineDatetime"                presentation="date"                min="{{ today }}"                max="2099-12-09"                name="deadline"                [(ngModel)]="selectedDeadlineDate"                [formControl]="deadline"                formControlName="deadline"              >              </ion-datetime>            </ng-template>          </ion-modal>        </ion-item>        <ion-text color="danger" [hidden]="isDataValid">          Veuillez remplir tous les champs.        </ion-text>      </ion-list>      <ion-grid>        <ion-row>          <ion-col size="6">            <ion-button color="medium" expand="block" (click)="resetForm()"              >Effacer</ion-button            >          </ion-col>          <ion-col size="6">            <ion-button id="open-loading" expand="block" type="submit"              >Valider</ion-button            >          </ion-col>        </ion-row>      </ion-grid>    </form>  </div></ion-content></div>'
+    var COMPONENTS = [{'name': 'AccountComponent', 'selector': 'app-account'},{'name': 'AddSubComponent', 'selector': 'app-add-sub'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'DonutChartComponent', 'selector': 'app-donut-chart'},{'name': 'HomePage', 'selector': 'app-home'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'Page404Component', 'selector': 'app-page404'},{'name': 'SearchComponent', 'selector': 'app-search'},{'name': 'SigninComponent', 'selector': 'app-signin'},{'name': 'SubDetailsComponent', 'selector': 'app-sub-details'},{'name': 'SubListComponent', 'selector': 'app-sub-list'},{'name': 'UpdateSubComponent', 'selector': 'app-update-sub'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'UpdateSubComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'UpdateSubComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
