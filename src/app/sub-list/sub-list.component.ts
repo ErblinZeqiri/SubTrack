@@ -4,7 +4,15 @@ import { ExepensesService } from '../services/expenses/exepenses.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgOptimizedImage } from '@angular/common';
-import { map, Observable, tap } from 'rxjs';
+import {
+  firstValueFrom,
+  from,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { AuthService } from '../services/auth/auth.service';
 import {
@@ -59,11 +67,8 @@ export class SubListComponent implements OnInit {
   yearlyExpenses$!: Observable<number>;
   userSubData$!: Observable<Subscription[]>;
   noSub: boolean = false;
-  credentials: string = this._auth.getToken();
-  userID: string = JSON.parse(this.credentials).uid;
 
   constructor(
-    private readonly expenses: ExepensesService,
     private readonly _dataService: DataService,
     private readonly _router: Router,
     private readonly _auth: AuthService,
@@ -72,30 +77,19 @@ export class SubListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.credentials);
-    console.log(this.userID);
-    if (this._auth.isAuthenticated()) {
-      if (this.credentials !== null) {
-        this.userSubData$ = this._dataService.loadSubData(this.userID).pipe(
-          tap((userSubData) => {
-            this.noSub = userSubData.length === 0;
-          })
-        );
-
-        this.monthlyExpenses$ = this.userSubData$.pipe(
-          map((userSubData) =>
-            this.expenses.getCurrentExpensesMonth(userSubData)
-          )
-        );
-        this.yearlyExpenses$ = this.userSubData$.pipe(
-          map((userSubData) =>
-            this.expenses.getCurrentExpensesYear(userSubData)
-          )
-        );
-      }
-    }
+    this.userSubData$ = this._auth.getCurrentUser().pipe(
+      // tap((e) => console.log('oninit', e)),
+      switchMap(async (user) => {
+        if (user) {
+          await this._dataService.loadSubData(user.uid);
+          this.noSub = false;
+        } else {
+          this.noSub = true;
+        }
+      }),
+      switchMap(() => this._dataService.userSubData$)
+    );
   }
-
   async showLoading() {
     const loading = await this.loadingCtrl.create({
       message: 'Suppression...',
@@ -117,11 +111,6 @@ export class SubListComponent implements OnInit {
   }
 
   async deleteSub(sub: Subscription) {
-    const loading = await this.loadingCtrl.create({
-      message: 'Veuillez patienter...',
-      duration: 3000,
-    });
-
     const alert = await this.alertCtrl.create({
       header: 'Confirmer la suppression',
       message: 'Êtes-vous sûr de vouloir supprimer cet abonnement ?',
@@ -133,17 +122,16 @@ export class SubListComponent implements OnInit {
         {
           text: 'Oui',
           handler: async () => {
-            await loading.present();
+            await this.showLoading();
 
             try {
               await this._dataService.deleteSub(sub);
-              console.log('Abonnement supprimé');
-
-              this.userSubData$ = this._dataService.loadSubData(this.userID);
+              const user = await firstValueFrom(this._auth.getCurrentUser());
+              if (user) {
+                await this._dataService.loadSubData(user.uid);
+              }
             } catch (error) {
               console.error('Erreur lors de la suppression:', error);
-            } finally {
-              loading.dismiss();
             }
           },
         },

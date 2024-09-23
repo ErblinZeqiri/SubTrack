@@ -3,6 +3,8 @@ import {
   Auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  user as firebaseUser,
+  User,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import {
@@ -11,6 +13,8 @@ import {
 } from '@capacitor-firebase/authentication';
 import { doc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
 import { DataService } from '../data/data.service';
+import { map, Observable } from 'rxjs';
+import { updateProfile } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -23,10 +27,6 @@ export class AuthService {
     private readonly _dataService: DataService
   ) {}
 
-  getToken(){
-    return localStorage.getItem('user') || '';
-  }
-
   async serviceLoginWithGoogle() {
     try {
       const options: SignInWithOAuthOptions = {
@@ -37,8 +37,6 @@ export class AuthService {
 
       const credential = await FirebaseAuthentication.signInWithGoogle(options);
       if (credential.user) {
-        this.updateUserData(credential.user);
-
         const userCredential = {
           email: credential.user.email,
           fullName: credential.user.displayName,
@@ -67,7 +65,6 @@ export class AuthService {
       password
     );
     if (credential) {
-      this.updateUserData(credential.user);
       this._router.navigate(['/home']);
     }
   }
@@ -85,19 +82,20 @@ export class AuthService {
       );
       const user = userCredential.user;
 
+      updateProfile(user, { displayName: fullName })
+        .then(() => {
+          // Profile updated!
+        })
+        .catch((error) => {
+          // An error occurred
+          console.log(error);
+        });
+
       if (user) {
       } else {
         console.error('User data not available');
       }
 
-      const userData = {
-        uid: user.uid,
-        email: user.email,
-        fullName: fullName || null,
-      };
-      await this.saveFullNameIntoDB(userData);
-
-      this.updateUserData(user);
       this._router.navigate(['/home']);
     } catch (error: any) {
       const errorCode = error.code;
@@ -109,32 +107,16 @@ export class AuthService {
   async logout() {
     await this._auth.signOut();
     this.auth = false;
-    localStorage.removeItem('user');
     this._dataService.clearData();
     await FirebaseAuthentication.signOut();
     this._router.navigate(['/login']);
   }
 
-  isAuthenticated(): boolean {
-    const user = localStorage.getItem('user');
-    if (user) {
-      this.auth = true;
-      return true;
-    } else {
-      this.auth = false;
-      return false;
-    }
+  isAuthenticated(): Observable<boolean> {
+    return firebaseUser(this._auth).pipe(map((user) => (user ? true : false)));
   }
 
-  private updateUserData(user: any) {
-    localStorage.setItem('user', JSON.stringify(user));
-    this.auth = true;
-  }
-
-  async saveFullNameIntoDB(userData: any) {
-    const db = getFirestore();
-    const userDocRef = doc(db, 'users', userData.uid);
-
-    await setDoc(userDocRef, userData, { merge: true });
+  getCurrentUser(): Observable<User | null> {
+    return firebaseUser(this._auth);
   }
 }

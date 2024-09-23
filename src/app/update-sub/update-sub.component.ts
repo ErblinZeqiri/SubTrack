@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { elementAt, map, Observable, tap } from 'rxjs';
+import { elementAt, firstValueFrom, map, Observable, switchMap, tap } from 'rxjs';
 import { Subscription } from 'src/interfaces/interface';
 import { DataService } from '../services/data/data.service';
 import { addIcons } from 'ionicons';
@@ -46,7 +46,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { collection, doc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getFirestore,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import localeFrCh from '@angular/common/locales/fr-CH';
 import { AuthService } from '../services/auth/auth.service';
 
@@ -89,8 +95,6 @@ export class UpdateSubComponent implements OnInit {
   @ViewChild('ionInputEl', { static: true }) ionInputEl!: IonInput;
   subscription$!: Observable<Subscription | undefined>;
   subId: string = this._route.snapshot.params['id'];
-  credentials: string = this._auth.getToken();
-  userID: string = JSON.parse(this.credentials).uid
   logo = '';
   domain = '';
   filteredOptions$!: Observable<Company[]>;
@@ -150,6 +154,7 @@ export class UpdateSubComponent implements OnInit {
     this.indetermineeValue,
     Validators.compose([Validators.required])
   );
+  userSubData$!: Observable<Subscription[]>;
 
   constructor(
     private _route: ActivatedRoute,
@@ -164,7 +169,7 @@ export class UpdateSubComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.updateSubscribtionForm = new FormGroup({
       companyName: this.selectedCompany,
       amount: this.amount,
@@ -173,7 +178,14 @@ export class UpdateSubComponent implements OnInit {
       nextPaymentDate: this.nextPaymentDate,
       deadline: this.deadline,
     });
-    if (this.userID) {
+    
+    const currentUser = await firstValueFrom(this._auth.getCurrentUser());
+
+    if (!currentUser || !currentUser.uid) {
+      throw new Error('User ID not found');
+    }
+
+    if (currentUser.uid) {
       this.subscription$ = this._dataService.loadOneSubData(this.subId);
       this.subscription$.subscribe((subscription) => {
         if (subscription) {
@@ -191,6 +203,7 @@ export class UpdateSubComponent implements OnInit {
       });
     }
   }
+
   back() {
     this._router.navigate(['/home']);
   }
@@ -217,10 +230,8 @@ export class UpdateSubComponent implements OnInit {
     this.updateSubscribtionForm.reset();
     this.logo = '';
     this.domain = '';
-    // Récupérer les données du formulaire
     const formData = this.updateSubscribtionForm.value;
 
-    // Vérifier si "Indéterminé" est sélectionné et ajuster les données en conséquence
     if (formData.selectedDeadline === this.indetermineeValue) {
       formData.deadline = null;
     }
@@ -238,17 +249,14 @@ export class UpdateSubComponent implements OnInit {
   }
 
   async onSubmit() {
-    const user: any = localStorage.getItem('user');
-    const localStorageData: any = JSON.parse(user);
-
-    if (!localStorageData || !localStorageData.uid) {
-      throw new Error('User ID not found in localStorage');
+    const currentUser = await firstValueFrom(this._auth.getCurrentUser());
+    if (!currentUser || !currentUser.uid) {
+      throw new Error('User ID not found');
     }
-    
+
     if (this.selectedDeadline.value === this.indetermineeValue) {
       this.updateSubscribtionForm.value.deadline = null;
     }
-
 
     if (this.updateSubscribtionForm.valid) {
       this.isDataValid = true;
@@ -261,12 +269,10 @@ export class UpdateSubComponent implements OnInit {
         logo: this.logo,
         domain: this.domain,
         paymentHistory: [],
-        userID: localStorageData.uid,
+        userID: currentUser.uid,
       };
 
-      const db = getFirestore();
-      const docRef = doc(db, `subscriptions/${this.subId}`);
-      await updateDoc(docRef, formData);
+      await this._dataService.updateSubscription(this.subId, formData);  
 
       this.resetForm();
       this._router.navigate(['/home']);

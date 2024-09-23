@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth/auth.service';
 import {
   LoadingController,
@@ -11,10 +11,11 @@ import {
   IonLoading,
   IonText,
 } from '@ionic/angular/standalone';
-import { map, Observable, Subject, takeUntil } from 'rxjs';
-import { Subscription, User } from 'src/interfaces/interface';
+import { map, Observable, pipe, Subject, tap } from 'rxjs';
+import { Subscription } from 'src/interfaces/interface';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../services/data/data.service';
+import { User } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-account',
@@ -34,10 +35,7 @@ import { DataService } from '../services/data/data.service';
   styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit {
-  userData$: Observable<User[]> = new Observable<User[]>();
-  userSubData$: Observable<Subscription[]> = new Observable<Subscription[]>();
-  credentials: string = this._auth.getToken();
-  userID: string = JSON.parse(this.credentials).uid;
+  userData$: Observable<User | null> = new Observable<User | null>();
 
   public alertButtons = [
     {
@@ -68,19 +66,8 @@ export class AccountComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this._auth.isAuthenticated()) {
-      if (this.credentials !== null) {
-        // Load user data
-        this.userData$ = this._dataService
-          .loadUserData(this.userID)
-          .pipe(takeUntil(this.destroy$));
-
-        // Load subscription data
-        this.userSubData$ = this._dataService
-          .loadSubData(this.userID)
-          .pipe(takeUntil(this.destroy$));
-      }
-    }
+    this.userData$ = this._auth.getCurrentUser().pipe(
+      tap((e) => console.log('oninit', e)));
   }
 
   async showLoading() {
@@ -91,7 +78,7 @@ export class AccountComponent implements OnInit {
 
     loading.present();
   }
-  
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
