@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { Subscription } from '../../interfaces/interface';
 import { CommonModule } from '@angular/common';
@@ -16,6 +16,7 @@ import {
   IonButtons,
   IonButton,
 } from '@ionic/angular/standalone';
+import { AuthService } from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-sub-details',
@@ -36,15 +37,13 @@ import {
 })
 export class SubDetailsComponent implements OnInit {
   subscription$!: Observable<Subscription | undefined>;
+  userSubData$!: Observable<Subscription[]>;
   private subId: string = this._route.snapshot.params['id'];
-  private userToken: string = localStorage.getItem('user')
-    ? JSON.parse(localStorage.getItem('user')!).uid
-    : '';
-
   constructor(
     private _route: ActivatedRoute,
-    private readonly firestore: DataService,
-    private readonly _router: Router
+    private readonly _dataService: DataService,
+    private readonly _router: Router,
+    private readonly _auth: AuthService
   ) {
     addIcons({
       arrowBackOutline,
@@ -52,9 +51,8 @@ export class SubDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.userToken) {
-      this.subscription$ = this.firestore
-        .loadOneSubData(this.subId)
+    if (this.subId) {
+      this.subscription$ = this._dataService.loadOneSubData(this.subId);
     }
   }
 

@@ -27,7 +27,10 @@ import {
   IonSelectOption,
   IonDatetime,
   IonDatetimeButton,
-  IonModal, IonRadio, IonRadioGroup } from '@ionic/angular/standalone';
+  IonModal,
+  IonRadio,
+  IonRadioGroup,
+} from '@ionic/angular/standalone';
 import {
   Company,
   CompanySuggestionsService,
@@ -40,15 +43,19 @@ import {
 } from '@angular/common';
 import { collection, doc, getFirestore, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import localeFrCh from '@angular/common/locales/fr-CH';
+import { AuthService } from '../services/auth/auth.service';
+import { DataService } from '../services/data/data.service';
 
 registerLocaleData(localeFrCh, 'fr-CH');
 
 @Component({
   selector: 'app-add-sub',
   standalone: true,
-  imports: [IonRadioGroup, IonRadio, 
+  imports: [
+    IonRadioGroup,
+    IonRadio,
     IonModal,
     IonDatetimeButton,
     IonCol,
@@ -143,7 +150,9 @@ export class AddSubComponent {
   constructor(
     private companySuggestionsService: CompanySuggestionsService,
     private readonly _router: Router,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private readonly _dataService: DataService,
+    private readonly _auth: AuthService
   ) {
     this.addSubscribtionForm = new FormGroup({
       companyName: this.selectedCompany,
@@ -154,7 +163,7 @@ export class AddSubComponent {
       deadline: this.deadline,
     });
   }
-  
+
   onInput(ev: any) {
     const value = ev.target.value;
     const filteredValue = value.replace(/[^a-zA-Z0-9 ]+/g, '');
@@ -179,9 +188,9 @@ export class AddSubComponent {
     this.domain = '';
     const formData = this.addSubscribtionForm.value;
     formData.deadline = null;
-    this.selectedDeadline
-    this.selectedDeadlineDate
-    this.deadline
+    this.selectedDeadline;
+    this.selectedDeadlineDate;
+    this.deadline;
     this.status = false;
   }
 
@@ -196,11 +205,9 @@ export class AddSubComponent {
   }
 
   async onSubmit() {
-    const user: any = localStorage.getItem('user');
-    const localStorageData: any = JSON.parse(user);
-
-    if (!localStorageData || !localStorageData.uid) {
-      throw new Error('User ID not found in localStorage');
+    const currentUser = await firstValueFrom(this._auth.getCurrentUser());
+    if (!currentUser || !currentUser.uid) {
+      throw new Error('User ID not found');
     }
     if (this.selectedDeadline.value === this.subsciptionDeadline[0]) {
       this.addSubscribtionForm.value.deadline = null;
@@ -217,11 +224,10 @@ export class AddSubComponent {
         logo: this.logo,
         domain: this.domain,
         paymentHistory: [],
-        userID: localStorageData.uid,
+        userID: currentUser.uid,
       };
 
-      const db = getFirestore();
-      await setDoc(doc(collection(db, 'subscriptions')), formData);
+      await this._dataService.addSubscription(formData);
 
       this.resetForm();
       this._router.navigate(['/home']);

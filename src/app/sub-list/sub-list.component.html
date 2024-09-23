@@ -9,7 +9,7 @@
   </ion-refresher>
   <div class="main-content">
     @if(!noSub) {
-        <app-donut-chart [userSubData$]="userSubData$"></app-donut-chart>
+        <app-donut-chart [userSubData$]="(userSubData$ | async) || []"></app-donut-chart>
         <ion-list>
           @for (sub of userSubData$ | async; track sub) {
           <ion-item-sliding>

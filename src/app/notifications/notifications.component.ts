@@ -7,7 +7,7 @@ import {
 } from '@ionic/angular/standalone';
 import { AuthService } from '../services/auth/auth.service';
 import { Subscription } from 'src/interfaces/interface';
-import { map, Observable, tap } from 'rxjs';
+import { from, map, Observable, of, switchMap, tap } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { CommonModule } from '@angular/common';
 
@@ -19,26 +19,24 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./notifications.component.scss'],
 })
 export class NotificationsComponent implements OnInit {
-  // sevenDaysInMillis:  = 7 * 24 * 60 * 60 * 1000;
   userSubData$!: Observable<Subscription[]>;
 
   constructor(
-    private readonly _authService: AuthService,
-    private readonly firestore: DataService
+    private readonly _auth: AuthService,
+    private readonly _dataService: DataService
   ) {}
-  
+
   ngOnInit() {
     this.loadUserSubscriptions();
   }
 
   private loadUserSubscriptions() {
-    const user: any = localStorage.getItem('user');
-    const localStorageData: any = JSON.parse(user);
-    const userID = localStorageData.uid;
-    this.userSubData$ = this.firestore.loadSubData(userID);
-    this.userSubData$.pipe(
-      tap((subscriptions: any) => {
-        console.log('Abonnements utilisateur:', subscriptions);
+    this.userSubData$ = this._auth.getCurrentUser().pipe(
+      switchMap((user) => {
+        return user
+          ? (this._dataService.loadSubData(user.uid),
+            this._dataService.userSubData$)
+          : of([]);
       })
     );
   }
