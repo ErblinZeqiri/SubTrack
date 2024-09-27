@@ -9,7 +9,34 @@
   </ion-refresher>
   <div class="main-content">
     @if(!noSub) {
-        <app-donut-chart [userSubData$]="(userSubData$ | async) || []"></app-donut-chart>
+        @if(userSubData$ | async; as subData) {
+          @if(subData.length > 0) {
+            <app-donut-chart [subData]="subData"></app-donut-chart>
+          }
+        }
+        @if(!(userSubData$ | async)?.length){
+          <ion-loading trigger="open-loading" message="Loading..." [duration]="3000" spinner="circles"></ion-loading>
+        }
+          
+        
+        <ion-list>
+          <ion-item>
+            <ion-select aria-label="Category" [(ngModel)]="selectedCategory" (ionChange)="onFilterChange()">
+              <ion-select-option value="Tout">Tout</ion-select-option>
+              @for (category of subscriptionCategories; track category) {
+                <ion-select-option value="{{ category }}">{{ category }}</ion-select-option>
+              }
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-select aria-label="Renewal" [(ngModel)]="selectedRenewal" (ionChange)="onFilterChange()">
+              <ion-select-option value="Tout">Tout</ion-select-option>
+              @for (renewal of subscriptionRenewal; track renewal) {
+                <ion-select-option value="{{ renewal }}">{{ renewal }}</ion-select-option>
+              }
+            </ion-select>
+          </ion-item>
+        </ion-list>
         <ion-list>
           @for (sub of userSubData$ | async; track sub) {
           <ion-item-sliding>

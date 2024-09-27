@@ -5,6 +5,10 @@ import {
   NgModule,
   OnInit,
   ViewChild,
+  AfterViewInit,
+  SimpleChanges,
+  OnChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -48,50 +52,26 @@ export type ChartOptions = {
   imports: [IonLoading, CommonModule, NgApexchartsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DonutChartComponent implements OnInit {
-  public subData: Subscription[] = [];
-  /**
-   * Setter pour la propriété userSubData$.
-   * Met à jour les données du graphique (subData) avec les données reçues.
-   * Si les données sont présentes, met à jour le graphique via la méthode updateChart().
-   * @param value un tableau de Subscription
-   */
-  @Input() set userSubData$(value: Subscription[]) {
-    // On met en pause l'exécution de 2 secondes pour attendre que les données soient bien mises à jour
-    setTimeout(() => {
-      // On met à jour les données du graphique
-      this.subData = value;
-      console.log('Données reçues : ', value);
-
-      // Si les données sont présentes, on met à jour le graphique
-      if (this.subData && this.subData.length > 0) {
-        this.updateChart();
-      }
-    }, 2000);
-  }
+export class DonutChartComponent implements OnChanges {
   public chartOptions!: Partial<ChartOptions> | any;
-  @ViewChild('chart') chart!: ChartComponent;
+  @Input() subData!: Subscription[];
+  series: number[] = [];
+  labels: string[] = [];
+  currentStatus: string = '';
 
-  ngOnInit(): void {}
+  constructor() {}
 
-  /**
-   * Met à jour les données du graphique avec les données de la propriété userSubData$.
-   * @returns void
-   */
-  updateChart() {
-    let labels: string[] = [];
-    let series: number[] = [];
+  ngOnChanges(changes: SimpleChanges) {
+    this.updateChartData();
+  }
 
-    this.subData.forEach((sub) => {
-      labels.push(sub.companyName);
-      series.push(sub.amount);
-    });
-
-    console.log('Labels:', labels);
-    console.log('Series:', series);
+  private updateChartData() {
+    this.series = this.subData.map((sub) => sub.amount);
+    this.labels = this.subData.map((sub) => sub.companyName);
 
     this.chartOptions = {
-      series: series,
+      series: this.series,
+      labels: this.labels,
       chart: {
         width: '30%',
         type: 'donut',
@@ -137,7 +117,6 @@ export class DonutChartComponent implements OnInit {
           },
         },
       },
-      labels: labels,
       dataLabels: {
         enabled: true,
         style: {
