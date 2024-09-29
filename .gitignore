@@ -73,3 +73,4 @@ Thumbs.db
 .firebase
 *-debug.log
 .runtimeconfig.json
+/backend/config/subtrack-backend-cred.json
