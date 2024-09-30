@@ -1,6 +1,6 @@
 from firebase_admin.firestore import DocumentReference, DocumentSnapshot
 
-from .user import User
+from .models import User
 
 class UserMapper:
   def to_user(self, user: dict | DocumentSnapshot) -> User:

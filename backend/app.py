@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_smorest import Api
 
-from routes.users.user_controller import users
+from routes.controller import users
 
 server = Flask(__name__)
 

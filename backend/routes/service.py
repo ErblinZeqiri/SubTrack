@@ -2,9 +2,9 @@ import hashlib
 import random
 import string
 
-from .user import User
-from .user_repository import UserRepository
-from .user_mapper import UserMapper
+from .models import User
+from .repository import UserRepository
+from .mapper import UserMapper
 
 class UserService:
   def __init__(self) -> None:

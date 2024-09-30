@@ -7,8 +7,8 @@ from firebase_admin.firestore import DocumentSnapshot
 
 from config.firestore_db import db
 
-from .user import User
-from .user_mapper import UserMapper
+from .models import User
+from .mapper import UserMapper
 
 class UserRepository:
   def __init__(self) -> None:
