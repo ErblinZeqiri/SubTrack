@@ -46,9 +46,12 @@ class SubscriptionService:
     self.repository = SubscriptionRepository()
     self.mapper = SubscriptionMapper()
 
-  def get_all(self) -> list[Subscription]:
-    return self.repository.get_all()
-  
+  def get_all(self, user_uid: str) -> list[Subscription]:
+      subscriptions = self.repository.get_all(user_uid)
+      if not subscriptions:
+          raise ValueError(f"No subscriptions found for user with ID {user_uid}")
+      return subscriptions
+
   def get_one(self, subscription_id: str) -> Subscription:
     return self.repository.get_one(subscription_id)
   

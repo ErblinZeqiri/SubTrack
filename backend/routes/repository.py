@@ -53,14 +53,17 @@ class SubscriptionRepository:
     self.collection = db.collection(u"subscriptions")
     self.mapper = SubscriptionMapper()
 
-  def get_all(self) -> list[Subscription]:
-    subscriptions = []
-    for subscription in self.collection.get():
-      subscription_data = subscription.to_dict()
-      subscription_obj = self.mapper.to_subscription(subscription_data)
-      subscriptions.append(self.mapper.to_dict(subscription_obj))
-    print("Subscriptions:", subscriptions)
-    return subscriptions
+  def get_all(self, user_uid: str) -> list[Subscription]:
+      subscriptions = self.collection.where("user_uid", "==", user_uid).get()
+      
+      valid_subscriptions = []
+      for doc in subscriptions:
+          subscription_data = doc.to_dict()
+          if "user_uid" not in subscription_data or not isinstance(subscription_data["user_uid"], str):
+              continue  # Ignorer les abonnements invalides ou mal formés
+          valid_subscriptions.append(self.mapper.to_subscription(subscription_data))
+      
+      return valid_subscriptions
 
   def get_one(self, subscription_id: str) -> Subscription:
     subscription = self.collection.document(subscription_id).get()
@@ -74,7 +77,7 @@ class SubscriptionRepository:
     _, subscription_ref = self.collection.add(self.mapper.to_firestore_dict(subscription))
     subscription_ref = subscription_ref.get()
     subscription_dict = self.mapper.to_dict(subscription)
-    subscription_dict['userId'] = g.user_id
+    subscription_dict['user_uid'] = g.user_uid
     subscription_ref.update(subscription_dict)
     print("Subscription Dict:", subscription_dict)
     return self.mapper.to_subscription(subscription_dict)

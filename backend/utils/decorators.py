@@ -21,7 +21,7 @@ def authenticated(func):
 
 
     try:
-      g.user_id = decode_token(token)
+      g.user_uid = decode_token(token)
     except Exception as e:
       return jsonify({"error", str(e)}), 401
 

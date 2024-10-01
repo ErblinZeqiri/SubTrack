@@ -66,7 +66,7 @@ class SubscriptionMapper:
       subscription_dict.get("deadline", ""),
       subscription_dict.get("domain", ""),
       subscription_dict.get("logo", ""),
-      subscription_dict.get("userID", "") 
+      subscription_dict.get("user_uid", "") 
     )
 
   def to_dict(self, subscription: Subscription) -> dict:
@@ -81,7 +81,7 @@ class SubscriptionMapper:
       u"deadline": subscription.deadline,
       u"domain": subscription.domain,
       u"logo": subscription.logo,
-      u"userID": subscription.userID
+      u"user_uid": subscription.user_uid
     }
 
   def to_firestore_dict(self, subscription: Subscription) -> dict:
@@ -96,5 +96,5 @@ class SubscriptionMapper:
       u"deadline": subscription.deadline,
       u"domain": subscription.domain,
       u"logo": subscription.logo,
-      u"userID": subscription.userID
+      u"user_uid": subscription.user_uid
     }

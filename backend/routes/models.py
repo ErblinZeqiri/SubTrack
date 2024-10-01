@@ -31,7 +31,7 @@ class Subscription:
     deadline:str = "",
     domain:str = "",
     logo:str = "",
-    userID:str = "",
+    user_uid:str = "",
     *args, **kwargs
   ) -> None:
     self.uid = uid
@@ -44,7 +44,7 @@ class Subscription:
     self.deadline = deadline
     self.domain = domain
     self.logo = logo
-    self.userID = userID
+    self.user_uid = user_uid
 
   def __repr__(self) -> str:
     return f"Subscription({self.companyName}, {self.uid})"

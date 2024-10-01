@@ -23,7 +23,7 @@ class SubscriptionResponse(Schema):
   deadline = fields.Date()
   domain = fields.String()
   logo = fields.String()
-  userID = fields.String()
+  user_uid  = fields.String()
 
 class LoginResponse(Schema):
   token = fields.String()

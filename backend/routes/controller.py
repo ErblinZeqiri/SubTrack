@@ -2,6 +2,7 @@ import os
 import sys
 from flask.views import MethodView
 from flask_smorest import Blueprint
+from flask import g, jsonify
 
 sys.path.append(os.path.dirname(__file__))
 
@@ -26,10 +27,10 @@ user_mapper = UserMapper()
 @users.route("/")
 @authenticated
 class UserController(MethodView):
-  @users.doc(description="Retrieve a list of all the users of the system")
-  @users.response(status_code=200, schema=UserResponseList, description="Return the list of all the users user")
-  def get(self):
-    return { "users": user_service.get_all() }
+  # @users.doc(description="Retrieve a list of all the users of the system")
+  # @users.response(status_code=200, schema=UserResponseList, description="Return the list of all the users user")
+  # def get(self):
+  #   return { "users": user_service.get_all() }
 
   @users.arguments(CreateUserRequest)
   @users.response(status_code=201, schema=UserResponse)
@@ -54,18 +55,18 @@ class UserController(MethodView):
       return {"token": token}
 
   
-@users.route("/<uid>")
-class SpecificUserController(MethodView):
-  @users.doc(description="Retrieve a specific user given the uid")
-  @users.response(status_code=200, schema=UserResponse, description="Return the specific user")
-  def get(self, uid):
-    return user_service.get_one(uid)
+# @users.route("/<uid>")
+# class SpecificUserController(MethodView):
+#   @users.doc(description="Retrieve a specific user given the uid")
+#   @users.response(status_code=200, schema=UserResponse, description="Return the specific user")
+#   def get(self, uid):
+#     return user_service.get_one(uid)
 
-  def put(self, uid):
-    return f"hello put users with uid {uid}"
+#   def put(self, uid):
+#     return f"hello put users with uid {uid}"
   
-  def delete(self, uid):
-    return f"hello delete users with uid {uid}"
+#   def delete(self, uid):
+#     return f"hello delete users with uid {uid}"
   
 
 # # # Subscriptions # # #
@@ -74,31 +75,39 @@ subscription_service = SubscriptionService()
 subscription_mapper = SubscriptionMapper()
 
 @subscriptions.route("/")
-@authenticated
 class SubscriptionController(MethodView):
-  @subscriptions.doc(description="Retrieve a list of all the subscriptions of the system")
-  @subscriptions.response(status_code=200, description="Return the list of all the subscriptions")
-  def get(self):
-    return subscription_service.get_all()
+    @authenticated
+    @subscriptions.doc(description="Retrieve a list of subscriptions for the logged-in user")
+    @subscriptions.response(status_code=200, description="Return the list of subscriptions for the user")
+    @subscriptions.response(status_code=404, description="No subscriptions found")
+    def get(self):
+        user_id = g.user_uid
+        print("User sadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaID:", user_id)
+        try:
+            subscriptions = subscription_service.get_all(user_id)
+            return jsonify(subscriptions), 200
+        except ValueError as e:
+            return jsonify({"message": str(e)}), 404
 
-  @subscriptions.arguments(CreateSubscriptionRequest)
-  @subscriptions.response(status_code=201, schema=SubscriptionResponse)
-  @subscriptions.response(status_code=422)
-  def post(self, subscription: dict):
-    try:
-      return subscription_service.create_subscription(subscription_mapper.to_subscription(subscription))
-    except ValueError as e:
-      return {"message": str(e)}, 422
-  
-  @subscriptions.route("/<id>")
-  @subscriptions.doc(description="Retrieve a specific subscription given the id")
-  @subscriptions.response(status_code=200, schema=SubscriptionResponse, description="Return the specific subscription")
-  def get(self, id):
-    return subscription_service.get_one(id)
+    @subscriptions.arguments(CreateSubscriptionRequest)
+    @subscriptions.response(status_code=201, schema=SubscriptionResponse)
+    @subscriptions.response(status_code=422)
+    def post(self, subscription: dict):
+        try:
+            return subscription_service.create_subscription(subscription_mapper.to_subscription(subscription))
+        except ValueError as e:
+            return {"message": str(e)}, 422
 
-  
-  def put(self, id):
-    return f"hello put subscriptions with uid {id}"
-  
-  def delete(self, id):
-    return f"hello delete subscriptions with uid {id}"
+    # @subscriptions.route("/<id>")
+    # @subscriptions.doc(description="Retrieve a specific subscription given the id")
+    # @subscriptions.response(status_code=200, schema=SubscriptionResponse, description="Return the specific subscription")
+    # def get(self, id):
+    #     return subscription_service.get_one(id)
+
+    # def put(self, id):
+    #     return f"hello put subscriptions with uid {id}"
+
+    # def delete(self, id):
+    #     return f"hello delete subscriptions with uid {id}"
+    
+subscriptions.add_url_rule('/', view_func=SubscriptionController.as_view('subscription_controller'))

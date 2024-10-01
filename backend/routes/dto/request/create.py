@@ -7,6 +7,12 @@ class CreateUserRequest(Schema):
   fullName = fields.String(required=True)
   password = fields.String(required=True)
 
+
+# # # Login Request # # #
+class LoginRequest(Schema):
+  email = fields.String(required=True, validate=lambda x: "@" in x)
+  password = fields.String(required=True)
+
   
 # # # Subscription Request # # #
 class CreateSubscriptionRequest(Schema):
@@ -19,8 +25,4 @@ class CreateSubscriptionRequest(Schema):
   deadline = fields.Date(required=True)
   domain = fields.String(required=True)
   logo = fields.String(required=True)
-  userID = fields.String(required=True)
-
-class LoginRequest(Schema):
-  email = fields.String(required=True, validate=lambda x: "@" in x)
-  password = fields.String(required=True)
+  user_uid = fields.String(required=True)
