@@ -18,7 +18,7 @@ def create_token(user_uid: str, days=7) -> str:
   payload = {
     "sub": user_uid,
     "iat": datetime.now().timestamp(),
-    "exp": (datetime.now() + timedelta(days=days)).timestamp()
+    "exp": (datetime.now() + timedelta(days=int(days))).timestamp()
   }
   return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 

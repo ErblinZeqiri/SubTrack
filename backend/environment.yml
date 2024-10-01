@@ -1,6 +1,7 @@
 name: subtrack_backend
 channels:
   - conda-forge
+  #- anaconda
   - defaults
 dependencies:
   - _libgcc_mutex=0.1
@@ -64,3 +65,4 @@ dependencies:
   - wheel=0.44.0
   - xz=5.4.6
   - zlib=1.2.13
+  - flask-cors

@@ -1,7 +1,8 @@
 from flask import Flask
 from flask_smorest import Api
 
-from routes.controller import users
+
+from routes.controller import users, subscriptions
 
 server = Flask(__name__)
 
@@ -17,6 +18,7 @@ server.config.from_object(APIConfig)
 
 api = Api(server)
 api.register_blueprint(users)
+api.register_blueprint(subscriptions)
 
 if __name__ == "__main__":
   server.run(debug=True, port=5050, host='0.0.0.0')
