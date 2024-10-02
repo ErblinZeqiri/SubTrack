@@ -54,7 +54,9 @@ class SubscriptionRepository:
     self.mapper = SubscriptionMapper()
 
   def get_all(self, user_uid: str) -> list[Subscription]:
+      print("User UID:", user_uid)
       subscriptions = self.collection.where("user_uid", "==", user_uid).get()
+      print("Subscriptions:", subscriptions)
       
       valid_subscriptions = []
       for doc in subscriptions:
@@ -75,12 +77,11 @@ class SubscriptionRepository:
   
   def create_subscription(self, subscription: Subscription) -> Subscription:
     _, subscription_ref = self.collection.add(self.mapper.to_firestore_dict(subscription))
-    subscription_ref = subscription_ref.get()
-    subscription_dict = self.mapper.to_dict(subscription)
-    subscription_dict['user_uid'] = g.user_uid
-    subscription_ref.update(subscription_dict)
-    print("Subscription Dict:", subscription_dict)
-    return self.mapper.to_subscription(subscription_dict)
+    subscription.id = subscription_ref.id
+    # if subscription.user_uid == '':
+    #   subscription.user_uid = g.user_uid
+    #   subscription_ref.update({'user_uid': subscription.user_uid})
+    return subscription
 
   def update_subscription(self, subscription: Subscription) -> Subscription:
     self.collection.document(subscription.uid).set(self.mapper.to_firestore_dict(subscription))

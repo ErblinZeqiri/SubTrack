@@ -21,7 +21,7 @@ class User:
   
 class Subscription:
   def __init__(self, 
-    uid: str = "", 
+    id: str = "", 
     companyName:str = "", 
     nextPaymentDate:str = "",
     amount:int = 0,
@@ -34,7 +34,7 @@ class Subscription:
     user_uid:str = "",
     *args, **kwargs
   ) -> None:
-    self.uid = uid
+    self.id = id
     self.companyName = companyName
     self.nextPaymentDate = nextPaymentDate
     self.amount = amount
@@ -47,7 +47,7 @@ class Subscription:
     self.user_uid = user_uid
 
   def __repr__(self) -> str:
-    return f"Subscription({self.companyName}, {self.uid})"
+    return f"Subscription({self.companyName}, {self.id})"
 
   def __str__(self) -> str:
     return self.__repr__

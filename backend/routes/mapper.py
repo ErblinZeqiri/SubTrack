@@ -47,16 +47,16 @@ class SubscriptionMapper:
   def to_subscription(self, subscription: dict | DocumentSnapshot | DocumentReference) -> Subscription:
     subscription_dict = {}
     if isinstance(subscription, DocumentReference):
-      subscription_dict.update({"uid" : subscription.id})
+      subscription_dict.update({"id" : subscription.id})
       subscription = subscription.get().to_dict()      
     elif isinstance(subscription, DocumentSnapshot):
-      subscription_dict.update({"uid" : subscription.id})
+      subscription_dict.update({"id" : subscription.id})
       subscription = subscription.to_dict()
 
     subscription_dict.update(subscription)
 
     return Subscription(
-      subscription_dict.get("uid", ""),
+      subscription_dict.get("id", ""),
       subscription_dict.get("companyName", ""),
       subscription_dict.get("nextPaymentDate", ""),
       subscription_dict.get("amount", 0),
@@ -71,7 +71,7 @@ class SubscriptionMapper:
 
   def to_dict(self, subscription: Subscription) -> dict:
     return {
-      u"uid": subscription.uid,
+      u"id": subscription.id,
       u"companyName": subscription.companyName,
       u"nextPaymentDate": subscription.nextPaymentDate,
       u"amount": subscription.amount,
@@ -86,7 +86,6 @@ class SubscriptionMapper:
 
   def to_firestore_dict(self, subscription: Subscription) -> dict:
     return {
-      u"uid": subscription.uid,
       u"companyName": subscription.companyName,
       u"nextPaymentDate": subscription.nextPaymentDate,
       u"amount": subscription.amount,

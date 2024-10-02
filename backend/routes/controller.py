@@ -41,18 +41,22 @@ class UserController(MethodView):
     except ValueError as e:
       return {"message": str(e)}, 422
     
-  @users.arguments(LoginRequest)
-  @users.response(status_code=200, schema=LoginResponse)
-  @users.response(status_code=401)
-  def post(self, login_request: LoginRequest):
-      email = login_request['email']
-      password = login_request['password']
-      user = user_service.login(email, password)
-      if not user:
-        return {"message": "Invalid credentials"}, 401
-      # Login logic here
-      token = create_token(user.uid)
-      return {"token": token}
+
+login = Blueprint("login", "login", url_prefix="/login", description="login routes")
+
+@login.route("/", methods=["POST"])
+@login.arguments(LoginRequest)
+@login.response(status_code=200, schema=LoginResponse)
+@login.response(status_code=401)
+def login_with_email(login_request: LoginRequest):
+    email = login_request['email']
+    password = login_request['password']
+    user = user_service.login(email, password)
+    if not user:
+      return {"message": "Invalid credentials"}, 401
+    # Login logic here
+    token = create_token(user.uid)
+    return {"token": token}
 
   
 # @users.route("/<uid>")
@@ -76,13 +80,13 @@ subscription_mapper = SubscriptionMapper()
 
 @subscriptions.route("/")
 class SubscriptionController(MethodView):
-    @authenticated
     @subscriptions.doc(description="Retrieve a list of subscriptions for the logged-in user")
     @subscriptions.response(status_code=200, description="Return the list of subscriptions for the user")
     @subscriptions.response(status_code=404, description="No subscriptions found")
+    @authenticated
     def get(self):
         user_id = g.user_uid
-        print("User sadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaID:", user_id)
+        print(user_id)
         try:
             subscriptions = subscription_service.get_all(user_id)
             return jsonify(subscriptions), 200
@@ -92,9 +96,11 @@ class SubscriptionController(MethodView):
     @subscriptions.arguments(CreateSubscriptionRequest)
     @subscriptions.response(status_code=201, schema=SubscriptionResponse)
     @subscriptions.response(status_code=422)
+    @authenticated
     def post(self, subscription: dict):
         try:
-            return subscription_service.create_subscription(subscription_mapper.to_subscription(subscription))
+            subscription["user_uid"] = g.user_uid,
+            return subscription_mapper.to_dict(subscription_service.create_subscription(subscription_mapper.to_subscription(subscription)))
         except ValueError as e:
             return {"message": str(e)}, 422
 
@@ -110,4 +116,4 @@ class SubscriptionController(MethodView):
     # def delete(self, id):
     #     return f"hello delete subscriptions with uid {id}"
     
-subscriptions.add_url_rule('/', view_func=SubscriptionController.as_view('subscription_controller'))
+# subscriptions.add_url_rule('/', view_func=SubscriptionController.as_view('subscription_controller'))
