@@ -34,6 +34,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { catchError, tap, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -75,6 +76,7 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   isDataValid: boolean = true;
+  errorMessage: string = '';
 
   constructor(
     private readonly authService: AuthService,
@@ -149,10 +151,20 @@ export class LoginComponent implements OnInit {
       await loading.present();
 
       try {
-        await this.authService.serviceLoginWithemail(
-          this.loginForm.value.email,
-          this.loginForm.value.password
-        );
+        const email = this.loginForm.value.email;
+        const password = this.loginForm.value.password;
+
+        this.authService.serviceLoginWithemail(email, password).subscribe({
+          next: (data) => {
+            if (data.token) {
+              console.log('Login successful');
+              this._router.navigate(['/home']);
+            }
+          },
+          error: (err) => {
+            console.error('Login failed:', err);
+          },
+        });
         this.modalCtrl.dismiss();
       } catch (error) {
         console.error('Login failed:', error);

@@ -49,7 +49,7 @@ export class AccountComponent implements OnInit {
       handler: async () => {
         await this.showLoading();
         setTimeout(async () => {
-          await this.authService.logout();
+          this.authService.logout();
           this._dataService.clearData();
         }, 2500);
       },

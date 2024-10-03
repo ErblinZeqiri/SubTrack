@@ -13,18 +13,23 @@ import {
 } from '@capacitor-firebase/authentication';
 import { doc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
 import { DataService } from '../data/data.service';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { updateProfile } from 'firebase/auth';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   auth: boolean = false;
+  private loginUrl = 'http://127.0.0.1:5050/login/';
+  private logoutUrl = 'http://127.0.0.1:5050/logout/';
+
   constructor(
     private readonly _auth: Auth,
     private readonly _router: Router,
-    private readonly _dataService: DataService
+    private readonly _dataService: DataService,
+    private http: HttpClient
   ) {}
 
   async serviceLoginWithGoogle() {
@@ -58,15 +63,30 @@ export class AuthService {
     }
   }
 
-  async serviceLoginWithemail(email: string, password: string): Promise<void> {
-    const credential = await signInWithEmailAndPassword(
-      this._auth,
-      email,
-      password
-    );
-    if (credential) {
-      this._router.navigate(['/home']);
-    }
+  // async serviceLoginWithemail(email: string, password: string): Promise<void> {
+  //   const credential = await signInWithEmailAndPassword(
+  //     this._auth,
+  //     email,
+  //     password
+  //   );
+  //   if (credential) {
+  //     this._router.navigate(['/home']);
+  //   }
+  // }
+
+  serviceLoginWithemail(email: string, password: string): Observable<any> {
+    const loginData = { email, password };
+    return this.http
+      .post<any>(this.loginUrl, loginData, {
+        withCredentials: true,
+      })
+      .pipe(
+        tap((data) => {
+          console.log(data);
+          localStorage.setItem('token', data.token);
+          this._router.navigate(['/home']);
+        })
+      );
   }
 
   async serviceSigninWithEmail(
@@ -104,16 +124,45 @@ export class AuthService {
     }
   }
 
-  async logout() {
-    await this._auth.signOut();
-    this.auth = false;
-    this._dataService.clearData();
-    await FirebaseAuthentication.signOut();
-    this._router.navigate(['/login']);
+  // async logout() {
+  //   await this._auth.signOut();
+  //   this.auth = false;
+  //   this._dataService.clearData();
+  //   await FirebaseAuthentication.signOut();
+  //   this._router.navigate(['/login']);
+  // }
+
+  logout() {
+    localStorage.removeItem('token');
+
+    return this.http
+      .post<any>(this.logoutUrl, {}, { withCredentials: true })
+      .pipe(
+        tap({
+          next: () => {
+            console.log('Déconnexion effectuée');
+            this._router.navigate(['/login']);
+          },
+          error: (error) => {
+            console.error('Échec de la déconnexion', error);
+            this._router.navigate(['/login']);
+          },
+        })
+      );
   }
 
   isAuthenticated(): Observable<boolean> {
-    return firebaseUser(this._auth).pipe(map((user) => (user ? true : false)));
+    const token = localStorage.getItem('token');
+
+    if (!!token) {
+      // Si un token est présent dans le localStorage, renvoyer un Observable qui retourne true
+      return of(true); // 'of' crée un Observable qui émet une seule valeur
+    }
+
+    // Sinon, vérifier avec Firebase
+    return firebaseUser(this._auth).pipe(
+      map((user) => !!user) // Retourner true si un utilisateur Firebase est authentifié
+    );
   }
 
   getCurrentUser(): Observable<User | null> {
