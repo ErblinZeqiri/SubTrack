@@ -34,8 +34,13 @@
               "src/assets/icons",
               "src/favicon.ico"
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"],
+            "styles": [
+              "src/global.scss",
+              "src/theme/variables.scss"
+            ],
+            "scripts": [
+              "node_modules/apexcharts/dist/apexcharts.min.js"
+            ],
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json"
           },
@@ -77,12 +82,16 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "buildTarget": "app:build:production"
             },
             "development": {
-              "buildTarget": "app:build:development"
+              "buildTarget": "app:build:development",
+              "hmr": true
             },
             "ci": {
               "progress": false
@@ -114,8 +123,13 @@
               "src/assets/icons",
               "src/favicon.ico"
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
+            "styles": [
+              "src/global.scss",
+              "src/theme/variables.scss"
+            ],
+            "scripts": [
+              "node_modules/apexcharts/dist/apexcharts.min.js"
+            ]
           },
           "configurations": {
             "ci": {
@@ -127,7 +141,10 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         },
         "deploy": {
@@ -140,7 +157,9 @@
     }
   },
   "cli": {
-    "schematicCollections": ["@ionic/angular-toolkit"],
+    "schematicCollections": [
+      "@ionic/angular-toolkit"
+    ],
     "analytics": false
   },
   "schematics": {

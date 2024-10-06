@@ -12,6 +12,7 @@ export class AuthService {
   private loginUrl = 'http://127.0.0.1:5050/login/';
   private logoutUrl = 'http://127.0.0.1:5050/logout';
   private isAuthenticatedUrl = 'http://127.0.0.1:5050/isAuthenticated';
+  private userUrl = 'http://127.0.0.1:5050/users';
 
   constructor(
     private readonly _auth: Auth,
@@ -82,6 +83,7 @@ export class AuthService {
 
   isAuthenticated(): Observable<boolean> {
     const token = localStorage.getItem('token');
+    console.log('Token:', token);
     if (!token) {
       return of(false);
     }
@@ -96,6 +98,6 @@ export class AuthService {
   }
 
   getCurrentUser(): Observable<User | null> {
-    return this.http.get<User>('http://localhost:3000/user');
+    return this.http.get<User>(this.userUrl);
   }
 }
