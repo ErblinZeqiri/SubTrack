@@ -150,27 +150,33 @@ export class LoginComponent implements OnInit {
 
       await loading.present();
 
-      try {
-        const email = this.loginForm.value.email;
-        const password = this.loginForm.value.password;
+      const email = this.loginForm.value.email;
+      const password = this.loginForm.value.password;
 
-        this.authService.serviceLoginWithemail(email, password).subscribe({
-          next: (data) => {
-            if (data.token) {
-              console.log('Login successful');
-              this._router.navigate(['/home']);
-            }
-          },
-          error: (err) => {
-            console.error('Login failed:', err);
-          },
-        });
-        this.modalCtrl.dismiss();
+      try {
+        // Essayer de se connecter en utilisant l'email et le mot de passe
+        const login = await this.authService.serviceLoginWithemail(
+          email,
+          password
+        );
+        // Vérifier si le login a été reussi
+        if (login) {
+          const token = login
+          // Vérifier si le token est retourné et si c'est une chaîne
+          if (token && typeof token === 'string') {
+            console.log('Login successful');
+            this._router.navigate(['/home']);
+          } else {
+            console.error('Token non valide');
+          }
+        } else {
+          console.error('Login failed');
+        }
       } catch (error) {
         console.error('Login failed:', error);
-        this.isDataValid = false;
+        this.isDataValid = false; // Gérer l'erreur de validation
       } finally {
-        await loading.dismiss();
+        await loading.dismiss(); // Fermer l'élément de chargement
       }
     }
   }

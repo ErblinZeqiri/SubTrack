@@ -1,20 +1,7 @@
 import { Injectable } from '@angular/core';
-import {
-  Auth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  user as firebaseUser,
-  User,
-} from '@angular/fire/auth';
+import { Auth, user as firebaseUser, User } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import {
-  FirebaseAuthentication,
-  SignInWithOAuthOptions,
-} from '@capacitor-firebase/authentication';
-import { doc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
-import { DataService } from '../data/data.service';
-import { map, Observable, of, tap } from 'rxjs';
-import { updateProfile } from 'firebase/auth';
+import { catchError, firstValueFrom, map, Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -23,70 +10,16 @@ import { HttpClient } from '@angular/common/http';
 export class AuthService {
   auth: boolean = false;
   private loginUrl = 'http://127.0.0.1:5050/login/';
-  private logoutUrl = 'http://127.0.0.1:5050/logout/';
+  private logoutUrl = 'http://127.0.0.1:5050/logout';
+  private isAuthenticatedUrl = 'http://127.0.0.1:5050/isAuthenticated';
 
   constructor(
     private readonly _auth: Auth,
     private readonly _router: Router,
-    private readonly _dataService: DataService,
     private http: HttpClient
   ) {}
-
   async serviceLoginWithGoogle() {
-    try {
-      const options: SignInWithOAuthOptions = {
-        customParameters: [{ key: 'prompt', value: 'select_account' }],
-        scopes: ['profile', 'email'],
-        mode: 'popup',
-      };
-
-      const credential = await FirebaseAuthentication.signInWithGoogle(options);
-      if (credential.user) {
-        const userCredential = {
-          email: credential.user.email,
-          fullName: credential.user.displayName,
-          uid: credential.user.uid,
-        };
-
-        const db = getFirestore();
-        const docRef = doc(db, `users/${credential.user.uid}`);
-        if (!docRef) {
-          await setDoc(docRef, userCredential);
-        }
-
-        this._router.navigate(['/home']);
-      } else {
-        console.error('User data not available');
-      }
-    } catch (error) {
-      console.error('Login failed', error);
-    }
-  }
-
-  // async serviceLoginWithemail(email: string, password: string): Promise<void> {
-  //   const credential = await signInWithEmailAndPassword(
-  //     this._auth,
-  //     email,
-  //     password
-  //   );
-  //   if (credential) {
-  //     this._router.navigate(['/home']);
-  //   }
-  // }
-
-  serviceLoginWithemail(email: string, password: string): Observable<any> {
-    const loginData = { email, password };
-    return this.http
-      .post<any>(this.loginUrl, loginData, {
-        withCredentials: true,
-      })
-      .pipe(
-        tap((data) => {
-          console.log(data);
-          localStorage.setItem('token', data.token);
-          this._router.navigate(['/home']);
-        })
-      );
+    return undefined;
   }
 
   async serviceSigninWithEmail(
@@ -94,43 +27,39 @@ export class AuthService {
     password: string,
     fullName: string
   ) {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        this._auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      updateProfile(user, { displayName: fullName })
-        .then(() => {
-          // Profile updated!
-        })
-        .catch((error) => {
-          // An error occurred
-          console.log(error);
-        });
-
-      if (user) {
-      } else {
-        console.error('User data not available');
-      }
-
-      this._router.navigate(['/home']);
-    } catch (error: any) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error(`Error ${errorCode}: ${errorMessage}`);
-    }
+    return undefined;
   }
 
-  // async logout() {
-  //   await this._auth.signOut();
-  //   this.auth = false;
-  //   this._dataService.clearData();
-  //   await FirebaseAuthentication.signOut();
-  //   this._router.navigate(['/login']);
-  // }
+  async serviceLoginWithemail(
+    email: string,
+    password: string
+  ): Promise<string | undefined> {
+    const loginData = { email, password };
+    try {
+      if (loginData) {
+        // Effectuer la requête de connexion vers le backend
+        const response = await firstValueFrom(
+          this.http.post<{ token: string }>(this.loginUrl, loginData, {
+            withCredentials: true,
+          })
+        );
+        // Vérifier si un token a été retourné
+        if (response) {
+          localStorage.setItem('token', response.token);
+          return response.token; // Retourner le token si tout est correct
+        } else {
+          console.error('Aucun token retourné');
+          return undefined; // Retourner undefined si aucun token n'est reçu
+        }
+      } else {
+        console.error('Email ou mot de passe manquant');
+        return undefined; // Retourner undefined si email ou mot de passe manquant
+      }
+    } catch (error) {
+      console.error('Erreur lors de la connexion:', error);
+      return undefined; // Retourner undefined en cas d'erreur
+    }
+  }
 
   logout() {
     localStorage.removeItem('token');
@@ -153,19 +82,20 @@ export class AuthService {
 
   isAuthenticated(): Observable<boolean> {
     const token = localStorage.getItem('token');
-
-    if (!!token) {
-      // Si un token est présent dans le localStorage, renvoyer un Observable qui retourne true
-      return of(true); // 'of' crée un Observable qui émet une seule valeur
+    if (!token) {
+      return of(false);
     }
 
-    // Sinon, vérifier avec Firebase
-    return firebaseUser(this._auth).pipe(
-      map((user) => !!user) // Retourner true si un utilisateur Firebase est authentifié
-    );
+    // Envoyer le token au backend pour vérifier sa validité
+    return this.http
+      .get(`${this.isAuthenticatedUrl}/`, { headers: { token } })
+      .pipe(
+        map(() => true), // Si la réponse est OK, l'utilisateur est authentifié
+        catchError(() => of(false)) // En cas d'erreur, on considère que l'utilisateur n'est pas authentifié
+      );
   }
 
   getCurrentUser(): Observable<User | null> {
-    return firebaseUser(this._auth);
+    return this.http.get<User>('http://localhost:3000/user');
   }
 }
