@@ -90,10 +90,17 @@ export class AuthService {
 
     // Envoyer le token au backend pour vérifier sa validité
     return this.http
-      .get(`${this.isAuthenticatedUrl}/`, { headers: { token } })
+      .get(`${this.isAuthenticatedUrl}/`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      })
       .pipe(
         map(() => true), // Si la réponse est OK, l'utilisateur est authentifié
-        catchError(() => of(false)) // En cas d'erreur, on considère que l'utilisateur n'est pas authentifié
+        catchError((e) => {
+          console.log('Erreur:', e);
+
+          return of(false);
+        }) // En cas d'erreur, on considère que l'utilisateur n'est pas authentifié
       );
   }
 
