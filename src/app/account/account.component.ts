@@ -11,7 +11,7 @@ import {
   IonLoading,
   IonText,
 } from '@ionic/angular/standalone';
-import { map, Observable, pipe, Subject, tap } from 'rxjs';
+import { lastValueFrom, map, Observable, pipe, Subject, tap } from 'rxjs';
 import { Subscription } from 'src/interfaces/interface';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../services/data/data.service';
@@ -49,8 +49,12 @@ export class AccountComponent implements OnInit {
       handler: async () => {
         await this.showLoading();
         setTimeout(async () => {
-          this.authService.logout();
-          this._dataService.clearData();
+          try {
+            this.authService.logout();
+            this._dataService.clearData();
+          } catch (error) {
+            console.error('Erreur lors de la déconnexion', error);
+          }
         }, 2500);
       },
     },
@@ -66,8 +70,9 @@ export class AccountComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.userData$ = this._auth.getCurrentUser().pipe(
-      tap((e) => console.log('oninit', e)));
+    this.userData$ = this._auth
+      .getCurrentUser()
+      .pipe(tap((e) => console.log('oninit', e)));
   }
 
   async showLoading() {

@@ -34,7 +34,7 @@ export class NotificationsComponent implements OnInit {
     this.userSubData$ = this._auth.getCurrentUser().pipe(
       switchMap((user) => {
         return user
-          ? (this._dataService.loadSubData(user.uid),
+          ? (this._dataService.loadSubData(),
             this._dataService.userSubData$)
           : of([]);
       })

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Auth, user as firebaseUser, User } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { catchError, firstValueFrom, map, Observable, of, tap } from 'rxjs';
+import { catchError, firstValueFrom, map, Observable, of, switchMap, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -63,27 +63,23 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('token');
-
     return this.http
       .post<any>(this.logoutUrl, {}, { withCredentials: true })
       .pipe(
-        tap({
-          next: () => {
-            console.log('Déconnexion effectuée');
-            this._router.navigate(['/login']);
-          },
-          error: (error) => {
-            console.error('Échec de la déconnexion', error);
-            this._router.navigate(['/login']);
-          },
+        tap(() => console.log('Déconnexion effectuée')),
+        switchMap(() => {
+          localStorage.removeItem('token');
+          return this._router.navigate(['/login']);
+        }),
+        catchError((error) => {
+          console.error('Échec de la déconnexion', error);
+          throw error; // Remet l'erreur dans le flux si nécessaire
         })
       );
   }
 
   isAuthenticated(): Observable<boolean> {
     const token = localStorage.getItem('token');
-    console.log('Token:', token);
     if (!token) {
       return of(false);
     }
@@ -104,7 +100,9 @@ export class AuthService {
       );
   }
 
-  getCurrentUser(): Observable<User | null> {
-    return this.http.get<User>(this.userUrl);
-  }
+getCurrentUser(): Observable<User> {
+  return this.http.get(this.userUrl).pipe(
+    tap((data: any) => console.log('Données reçues:', data))
+  )
+}
 }

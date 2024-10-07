@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgOptimizedImage } from '@angular/common';
 import {
+  catchError,
   firstValueFrom,
   from,
   map,
@@ -37,7 +38,6 @@ import {
   IonLoading,
 } from '@ionic/angular/standalone';
 import { DonutChartComponent } from '../donut-chart/donut-chart.component';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule, NgModel } from '@angular/forms';
 
 @Component({
@@ -106,8 +106,7 @@ export class SubListComponent implements OnInit {
     private readonly _router: Router,
     private readonly _auth: AuthService,
     private loadingCtrl: LoadingController,
-    private alertCtrl: AlertController,
-    private httpClient: HttpClient
+    private alertCtrl: AlertController
   ) {}
 
   // Méthode pour gérer la sélection des filtres
@@ -116,24 +115,10 @@ export class SubListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._auth
-      .getCurrentUser()
-      .pipe(
-        switchMap((user) => {
-          if (user && user.uid) {
-            return this._dataService.loadSubData(user.uid);
-          } else {
-            this.noSub = true;
-            return of([]);
-          }
-        })
-      )
-      .pipe(
-        tap((data) => {
-          this.data = data;
-          this.noSub = data.length === 0;
-        })
-      );
+    this._dataService.loadSubData().subscribe((userSubData) => {
+      console.log(userSubData);
+    })
+
   }
 
   async showLoading() {
@@ -174,7 +159,7 @@ export class SubListComponent implements OnInit {
               this._dataService.deleteSub(sub.id);
               const user = await firstValueFrom(this._auth.getCurrentUser());
               if (user) {
-                this._dataService.loadSubData(user.uid);
+                this._dataService.loadSubData();
               }
             } catch (error) {
               console.error('Erreur lors de la suppression:', error);
