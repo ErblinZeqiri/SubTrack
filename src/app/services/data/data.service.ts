@@ -12,19 +12,22 @@ export class DataService {
   userSubData$ = this.userSubDataSubject.asObservable();
   private userDataSubject = new BehaviorSubject<User[]>([]);
   userData$ = this.userDataSubject.asObservable();
-  loadSubDataUrl = 'http://localhost:5050/subscriptions'; // URL vers ton backend Python
+  subscriptionsUrl = 'http://localhost:5050/subscriptions';
+  userUrl = 'http://localhost:5050/users';
 
   constructor(private http: HttpClient) {}
 
   // Charger les données de l'utilisateur via le backend Python
   loadUserData(userID: string): Observable<User[]> {
-    return this.http.get<User[]>(`http://localhost:5050/users/${userID}`);
+    console.log('loadUserData', userID);
+    return this.http.get<User[]>(`${this.userUrl}/${userID}`);
   }
 
   // Charger les abonnements d'un utilisateur via le backend Python
   loadSubData(userID: string): Observable<Subscription[]> {
+    console.log('loadSubData', userID);
     return this.http
-      .get<Subscription[]>(this.loadSubDataUrl, {
+      .get<Subscription[]>(this.subscriptionsUrl, {
         params: { userID },
       })
       .pipe(tap((data) => this.userSubDataSubject.next(data)));
@@ -32,21 +35,21 @@ export class DataService {
 
   loadOneSubData(subId: string): Observable<Subscription> {
     return this.http.get<Subscription>(
-      `http://localhost:5050/subscriptions/${subId}`
+      `${this.subscriptionsUrl}/${subId}`
     );
   }
 
   // Supprimer un abonnement
   deleteSub(subId: string): Observable<void> {
     return this.http.delete<void>(
-      `http://localhost:5050/subscriptions/${subId}`
+      `${this.subscriptionsUrl}/${subId}`
     );
   }
 
   // Ajouter un nouvel abonnement
   addSubscription(sub: Subscription): Observable<Subscription> {
     return this.http.post<Subscription>(
-      'http://localhost:5050/subscriptions',
+      this.subscriptionsUrl,
       sub
     );
   }
@@ -54,7 +57,7 @@ export class DataService {
   // Mettre à jour un abonnement existant
   updateSubscription(subId: string, sub: Subscription): Observable<void> {
     return this.http.put<void>(
-      `http://localhost:5050/subscriptions/${subId}`,
+      `${this.subscriptionsUrl}/${subId}`,
       sub
     );
   }
