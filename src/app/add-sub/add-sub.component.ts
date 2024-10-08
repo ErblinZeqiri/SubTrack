@@ -222,7 +222,12 @@ export class AddSubComponent {
         ...this.addSubscribtionForm.value,
         logo: this.logo,
         domain: this.domain,
-        paymentHistory: [],
+        paymentHistory: [
+          {
+            date: new Date('2023-01-25').toISOString().split('T')[0],
+            amount: 10,
+          },
+        ],
       };
       console.log('Abonnement:', formData);
       this._dataService.addSubscription(formData).subscribe({

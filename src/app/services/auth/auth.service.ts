@@ -86,9 +86,11 @@ export class AuthService {
         map(() => true), // Si la réponse est OK, l'utilisateur est authentifié
         catchError((e) => {
           console.log('Erreur:', e);
-
-          return of(false);
-        }) // En cas d'erreur, on considère que l'utilisateur n'est pas authentifié
+          if (e.status === 401) {
+            this.logout(); // Déconnexion si le token est expiré
+          }
+          return of(false); // En cas d'erreur, considérer comme non authentifié
+        })
       );
   }
 

@@ -24,8 +24,8 @@
         <ng-container *ngIf="sub.paymentHistory && getObjectKeys(sub.paymentHistory).length  > 0; else noHistory">
           @for (payment of getObjectKeys(sub.paymentHistory); track trackByFn ) {
           <li>
-            <div>Date : {{ sub.paymentHistory[payment].date | date : "d.MM.yyyy" }}</div>
-            <div>Prix : {{ sub.paymentHistory[payment].amount }}</div>
+            <!-- <div>Date : {{ sub.paymentHistory[payment].date | date : "d.MM.yyyy" }}</div> -->
+            <!-- <div>Prix : {{ sub.paymentHistory[payment].amount }}</div> -->
           </li>
           <br>
           }

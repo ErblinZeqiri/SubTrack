@@ -8,19 +8,19 @@ export interface User {
 
 export interface Subscription {
   id: string;
-  userID: string;
   companyName: string;
-  domain: string;
-  logo: string;
+  nextPaymentDate: string | null;
   amount: number;
   category: string;
   renewal: string;
-  nextPaymentDate: Date;
-  paymentHistory: { [key: string]: Payment };
-  deadline: Date | string;
+  paymentHistory: Payment[];
+  deadline: string | null;
+  domain: string;
+  logo: string;
+  userID: string;
 }
 
 export interface Payment {
-  amount: number;
   date: Date;
+  amount: number;
 }

@@ -1,5 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
-import { User, Subscription } from '../../../interfaces/interface';
+import { User, Subscription, Payment } from '../../../interfaces/interface';
 import {
   BehaviorSubject,
   catchError,
@@ -32,7 +32,6 @@ export class DataService {
 
   // Charger les abonnements d'un utilisateur via le backend Python
   loadSubData(): Observable<Subscription[]> {
-    const token = localStorage.getItem('token');
     return this.http.get<Subscription[]>(`${this.subscriptionsUrl}/`, {
       headers: { Authorization: `Bearer ${this.token}` },
       withCredentials: true,
@@ -45,12 +44,20 @@ export class DataService {
 
   // Supprimer un abonnement
   deleteSub(subId: string): Observable<void> {
-    return this.http.delete<void>(`${this.subscriptionsUrl}/${subId}`);
+    console.log('deleteSub', subId);
+    return this.http.delete<void>(`${this.subscriptionsUrl}/${subId}`, {
+      headers: { Authorization: `Bearer ${this.token}` },
+      withCredentials: true,
+    });
   }
 
   // Ajouter un nouvel abonnement
   addSubscription(sub: Subscription): Observable<Subscription> {
-    return this.http.post<Subscription>(`${this.subscriptionsUrl}/`, sub);
+    // Envoyez l'objet Subscription mis à jour au backend
+    return this.http.post<Subscription>(`${this.subscriptionsUrl}/`, sub, {
+      headers: { Authorization: `Bearer ${this.token}` },
+      withCredentials: true,
+    });
   }
 
   // Mettre à jour un abonnement existant

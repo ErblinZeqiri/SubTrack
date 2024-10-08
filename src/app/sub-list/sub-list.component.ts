@@ -115,7 +115,16 @@ export class SubListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userSubData$ = this._dataService.loadSubData();
+    this.userSubData$ = this._dataService.loadSubData().pipe(
+      catchError((err) => {
+        if (err.status === 404) {
+          this.noSub = true;
+          return of([]);
+        } else {
+          throw err;
+        }
+      })
+    );
   }
 
   async showLoading() {
@@ -139,6 +148,9 @@ export class SubListComponent implements OnInit {
   }
 
   async deleteSub(sub: Subscription) {
+    console.log('deleteSub', sub.id);
+
+    
     const alert = await this.alertCtrl.create({
       header: 'Confirmer la suppression',
       message: 'Êtes-vous sûr de vouloir supprimer cet abonnement ?',
@@ -154,10 +166,10 @@ export class SubListComponent implements OnInit {
 
             try {
               this._dataService.deleteSub(sub.id);
-              const user = await firstValueFrom(this._auth.getCurrentUser());
-              if (user) {
-                this._dataService.loadSubData();
-              }
+              // const user = await firstValueFrom(this._auth.getCurrentUser());
+              // if (user) {
+              //   this._dataService.loadSubData();
+              // }
             } catch (error) {
               console.error('Erreur lors de la suppression:', error);
             }

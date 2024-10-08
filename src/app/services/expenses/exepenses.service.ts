@@ -25,7 +25,7 @@ export class ExepensesService {
     for (const subscription of subscriptions) {
       const paymentHistory = Object.values(subscription.paymentHistory);
       const nextPaymentDate = new Date(
-        subscription.nextPaymentDate
+        // subscription.nextPaymentDate
       );
 
       let mostRecentPayment: any = null;
@@ -91,7 +91,7 @@ export class ExepensesService {
       });
 
       const nextPaymentDate = new Date(
-        subscription.nextPaymentDate
+        // subscription.nextPaymentDate
       );
 
       let paymentsLeft = 0;
