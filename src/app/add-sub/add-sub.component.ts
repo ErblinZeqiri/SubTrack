@@ -41,7 +41,6 @@ import {
   formatDate,
   registerLocaleData,
 } from '@angular/common';
-import { collection, doc, getFirestore, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { firstValueFrom, Observable } from 'rxjs';
 import localeFrCh from '@angular/common/locales/fr-CH';
@@ -224,15 +223,24 @@ export class AddSubComponent {
         logo: this.logo,
         domain: this.domain,
         paymentHistory: [],
-        userID: currentUser.uid,
       };
-
-      await this._dataService.addSubscription(formData);
-
-      this.resetForm();
-      this._router.navigate(['/home']);
+      console.log('Abonnement:', formData);
+      this._dataService.addSubscription(formData).subscribe({
+        next: (response) => {
+          console.log('Abonnement ajouté avec succès:', response);
+          this.resetForm();
+          this._router.navigate(['/home']);
+        },
+        error: (err) => {
+          console.error("Erreur lors de l'ajout de l'abonnement:", err);
+        },
+        complete: async () => {
+          await loading.dismiss(); // Assurez-vous de cacher le loader après la requête
+        },
+      });
     } else {
       this.isDataValid = false;
+      console.log('Formulaire invalide:', this.addSubscribtionForm.errors);
     }
   }
 }

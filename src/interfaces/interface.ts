@@ -1,7 +1,9 @@
 export interface User {
-  id: string;
+  uid: string;
   fullName: string;
   email: string;
+  password: string;
+  salt: string;
 }
 
 export interface Subscription {

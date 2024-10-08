@@ -21,7 +21,7 @@ export class DataService {
   userData$ = this.userDataSubject.asObservable();
   subscriptionsUrl = 'http://localhost:5050/subscriptions';
   userUrl = 'http://localhost:5050/users';
-
+  token: string | null = localStorage.getItem('token');
   constructor(private http: HttpClient) {}
 
   // Charger les données de l'utilisateur via le backend Python
@@ -32,16 +32,11 @@ export class DataService {
 
   // Charger les abonnements d'un utilisateur via le backend Python
   loadSubData(): Observable<Subscription[]> {
-    return this.http.get<Subscription[]>(this.subscriptionsUrl).pipe(
-      tap((data) => {
-        console.log('Données reçues:', data);
-        this.userSubDataSubject.next(data);
-      }),
-      catchError((error) => {
-        console.error('Erreur lors du chargement des abonnements', error);
-        return of([]);
-      })
-    );
+    const token = localStorage.getItem('token');
+    return this.http.get<Subscription[]>(`${this.subscriptionsUrl}/`, {
+      headers: { Authorization: `Bearer ${this.token}` },
+      withCredentials: true,
+    });
   }
 
   loadOneSubData(subId: string): Observable<Subscription> {
@@ -55,7 +50,7 @@ export class DataService {
 
   // Ajouter un nouvel abonnement
   addSubscription(sub: Subscription): Observable<Subscription> {
-    return this.http.post<Subscription>(this.subscriptionsUrl, sub);
+    return this.http.post<Subscription>(`${this.subscriptionsUrl}/`, sub);
   }
 
   // Mettre à jour un abonnement existant

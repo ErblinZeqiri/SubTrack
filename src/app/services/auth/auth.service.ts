@@ -1,8 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Auth, user as firebaseUser, User } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { catchError, firstValueFrom, map, Observable, of, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  firstValueFrom,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { User } from 'src/interfaces/interface';
 
 @Injectable({
   providedIn: 'root',
@@ -10,15 +18,11 @@ import { HttpClient } from '@angular/common/http';
 export class AuthService {
   auth: boolean = false;
   private loginUrl = 'http://127.0.0.1:5050/login/';
-  private logoutUrl = 'http://127.0.0.1:5050/logout';
   private isAuthenticatedUrl = 'http://127.0.0.1:5050/isAuthenticated';
   private userUrl = 'http://127.0.0.1:5050/users';
+  token: string | null = localStorage.getItem('token');
 
-  constructor(
-    private readonly _auth: Auth,
-    private readonly _router: Router,
-    private http: HttpClient
-  ) {}
+  constructor(private readonly _router: Router, private http: HttpClient) {}
   async serviceLoginWithGoogle() {
     return undefined;
   }
@@ -62,32 +66,20 @@ export class AuthService {
     }
   }
 
-  logout() {
-    return this.http
-      .post<any>(this.logoutUrl, {}, { withCredentials: true })
-      .pipe(
-        tap(() => console.log('Déconnexion effectuée')),
-        switchMap(() => {
-          localStorage.removeItem('token');
-          return this._router.navigate(['/login']);
-        }),
-        catchError((error) => {
-          console.error('Échec de la déconnexion', error);
-          throw error; // Remet l'erreur dans le flux si nécessaire
-        })
-      );
+  logout(): void {
+    localStorage.removeItem('token');
+    this._router.navigate(['/login']);
   }
 
   isAuthenticated(): Observable<boolean> {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (!this.token) {
       return of(false);
     }
 
     // Envoyer le token au backend pour vérifier sa validité
     return this.http
       .get(`${this.isAuthenticatedUrl}/`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${this.token}` },
         withCredentials: true,
       })
       .pipe(
@@ -100,9 +92,12 @@ export class AuthService {
       );
   }
 
-getCurrentUser(): Observable<User> {
-  return this.http.get(this.userUrl).pipe(
-    tap((data: any) => console.log('Données reçues:', data))
-  )
-}
+  getCurrentUser(): Observable<User | null> {
+    return this.http
+      .get<User[]>(`${this.userUrl}/`, {
+        headers: { Authorization: `Bearer ${this.token}` },
+        withCredentials: true,
+      })
+      .pipe(map((response) => response[0] || null));
+  }
 }

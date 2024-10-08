@@ -115,10 +115,7 @@ export class SubListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._dataService.loadSubData().subscribe((userSubData) => {
-      console.log(userSubData);
-    })
-
+    this.userSubData$ = this._dataService.loadSubData();
   }
 
   async showLoading() {
