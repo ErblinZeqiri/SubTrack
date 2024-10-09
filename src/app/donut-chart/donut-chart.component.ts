@@ -57,7 +57,6 @@ export class DonutChartComponent implements OnChanges {
   @Input() subData!: Subscription[];
   series: number[] = [];
   labels: string[] = [];
-  currentStatus: string = '';
 
   constructor() {}
 

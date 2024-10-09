@@ -229,20 +229,18 @@ export class AddSubComponent {
           },
         ],
       };
-      console.log('Abonnement:', formData);
-      this._dataService.addSubscription(formData).subscribe({
-        next: (response) => {
-          console.log('Abonnement ajouté avec succès:', response);
-          this.resetForm();
-          this._router.navigate(['/home']);
-        },
-        error: (err) => {
-          console.error("Erreur lors de l'ajout de l'abonnement:", err);
-        },
-        complete: async () => {
-          await loading.dismiss(); // Assurez-vous de cacher le loader après la requête
-        },
-      });
+      try {
+        const response = await firstValueFrom(
+          this._dataService.addSubscription(formData)
+        );
+        console.log('Abonnement ajouté avec succès:', response);
+        this.resetForm();
+        this._router.navigate(['/home']);
+      } catch (err) {
+        console.error("Erreur lors de l'ajout de l'abonnement:", err);
+      } finally {
+        await loading.dismiss();
+      }
     } else {
       this.isDataValid = false;
       console.log('Formulaire invalide:', this.addSubscribtionForm.errors);

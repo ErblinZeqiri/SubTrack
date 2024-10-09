@@ -50,9 +50,7 @@
   
             <ion-item-options>
               <ion-item-option (click)="updateSub(sub)">Modifier</ion-item-option>
-              <ion-item-option color="danger" (click)="deleteSub(sub)"
-                >Effacer</ion-item-option
-              >
+              <ion-item-option color="danger" (click)="deleteSub(sub)">Effacer</ion-item-option>
             </ion-item-options>
           </ion-item-sliding>
           }
@@ -61,6 +59,7 @@
       <ion-text class="ion-text-center ion-align-items-center">
         <h1 class="flex">Pas d'abonnement enregistré</h1>
       </ion-text>
+      <ion-button expand="block" class="" color="secondary" shape="round" (click)="resetFilter()">Effacer les filtres ?</ion-button>
     }
   </div>
 </ion-content>

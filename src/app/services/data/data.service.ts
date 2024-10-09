@@ -7,9 +7,10 @@ import {
   map,
   Observable,
   of,
+  Subject,
   tap,
 } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -19,9 +20,13 @@ export class DataService {
   userSubData$ = this.userSubDataSubject.asObservable();
   private userDataSubject = new BehaviorSubject<User[]>([]);
   userData$ = this.userDataSubject.asObservable();
-  subscriptionsUrl = 'http://localhost:5050/subscriptions';
-  userUrl = 'http://localhost:5050/users';
+  subscriptionsUrl: string = 'http://localhost:5050/subscriptions';
+  userUrl: string = 'http://localhost:5050/users';
+  filterSubUrl: string = 'http://localhost:5050/subscriptions/filter';
   token: string | null = localStorage.getItem('token');
+  private subscriptionUpdateSource = new Subject<void>();
+  subscriptionUpdated$ = this.subscriptionUpdateSource.asObservable();
+
   constructor(private http: HttpClient) {}
 
   // Charger les données de l'utilisateur via le backend Python
@@ -44,7 +49,6 @@ export class DataService {
 
   // Supprimer un abonnement
   deleteSub(subId: string): Observable<void> {
-    console.log('deleteSub', subId);
     return this.http.delete<void>(`${this.subscriptionsUrl}/${subId}`, {
       headers: { Authorization: `Bearer ${this.token}` },
       withCredentials: true,
@@ -57,12 +61,28 @@ export class DataService {
     return this.http.post<Subscription>(`${this.subscriptionsUrl}/`, sub, {
       headers: { Authorization: `Bearer ${this.token}` },
       withCredentials: true,
-    });
+    }).pipe(
+      tap(() => {
+        this.subscriptionUpdateSource.next();
+      })
+    );
   }
 
   // Mettre à jour un abonnement existant
   updateSubscription(subId: string, sub: Subscription): Observable<void> {
     return this.http.put<void>(`${this.subscriptionsUrl}/${subId}`, sub);
+  }
+
+  getFilteredSubscriptions(category: string, renewal: string): Observable<any> {
+    let params = new HttpParams()
+      .set('category', category)
+      .set('renewal', renewal);
+
+    return this.http.get(`${this.filterSubUrl}`, {
+      headers: { Authorization: `Bearer ${this.token}` },
+      withCredentials: true,
+      params,
+    });
   }
 
   clearData() {
