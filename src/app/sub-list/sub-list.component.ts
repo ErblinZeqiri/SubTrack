@@ -5,6 +5,8 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgOptimizedImage } from '@angular/common';
 import {
+  concat,
+  concatMap,
   firstValueFrom,
   from,
   map,
@@ -35,6 +37,7 @@ import {
   IonSelect,
   IonSelectOption,
   IonLoading,
+  IonButton,
 } from '@ionic/angular/standalone';
 import { DonutChartComponent } from '../donut-chart/donut-chart.component';
 import { HttpClient } from '@angular/common/http';
@@ -44,6 +47,7 @@ import { FormsModule, NgModel } from '@angular/forms';
   selector: 'app-sub-list',
   standalone: true,
   imports: [
+    IonButton,
     IonText,
     IonAlert,
     IonItemOption,
@@ -99,6 +103,7 @@ export class SubListComponent implements OnInit {
   ];
   selectedCategory = 'Tout';
   selectedRenewal = 'Tout';
+  userID!: string;
 
   constructor(
     private readonly _dataService: DataService,
@@ -111,34 +116,63 @@ export class SubListComponent implements OnInit {
 
   // Méthode pour gérer la sélection des filtres
   async onFilterChange() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Chargement...',
+    });
+
+    await loading.present();
     const filters = {
       category: this.selectedCategory,
       renewal: this.selectedRenewal,
+      userID: this.userID,
     };
 
+    console.log(filters);
     const data: any = await firstValueFrom(
       this.httpClient.post(
-        'https://subtrack-330ce.cloudfunctions.net/filterSubscriptions',
+        'https://us-central1-subtrack-330ce.cloudfunctions.net/filterSubscriptions',
         filters
       )
     );
-    this.userSubData$ = of(data); // Mettre à jour les données des abonnements
+
+    if (Array.isArray(data) && data.length === 0) {
+      this.noSub = true;
+    } else {
+      this.userSubData$ = of(data);
+    }
+
+    this.loadingCtrl.dismiss();
   }
 
-  ngOnInit(): void {
-    this.userSubData$ = this._auth.getCurrentUser().pipe(
-      // tap((e) => console.log('oninit', e)),
-      switchMap(async (user) => {
-        if (user) {
-          await this._dataService.loadSubData(user.uid);
-          this.noSub = false;
-        } else {
-          this.noSub = true;
-        }
-      }),
-      switchMap(() => this._dataService.userSubData$)
-    );
+  async ngOnInit(): Promise<void> {
+    const loading = await this.loadingCtrl.create({
+      message: 'Chargement...',
+    });
+
+    await loading.present();
+
+    try {
+      const user = await firstValueFrom(this._auth.getCurrentUser());
+
+      if (user) {
+        this.userID = user.uid;
+        await this._dataService.loadSubData(user.uid);
+        this.noSub = false;
+      } else {
+        this.noSub = true;
+      }
+
+      // Récupérer les données d'abonnement et les transformer en Observable
+      const subsData = await firstValueFrom(this._dataService.userSubData$);
+      this.userSubData$ = of(subsData); // Créer un nouvel Observable à partir des données
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données:', error);
+      this.noSub = true; // Gérer l'erreur si nécessaire
+    } finally {
+      loading.dismiss();
+    }
   }
+
   async showLoading() {
     const loading = await this.loadingCtrl.create({
       message: 'Suppression...',
@@ -153,6 +187,13 @@ export class SubListComponent implements OnInit {
       window.location.reload();
       event.target.complete();
     }, 2000);
+  }
+
+  clearFilters() {
+    this.selectedCategory = 'Tout';
+    this.selectedRenewal = 'Tout';
+    this.onFilterChange();
+    this.noSub = false;
   }
 
   subDetails(sub: Subscription) {
