@@ -150,27 +150,25 @@ export class SubListComponent implements OnInit {
     });
 
     await loading.present();
-
-    try {
-      const user = await firstValueFrom(this._auth.getCurrentUser());
-
-      if (user) {
-        this.userID = user.uid;
-        await this._dataService.loadSubData(user.uid);
-        this.noSub = false;
-      } else {
-        this.noSub = true;
-      }
-
-      // Récupérer les données d'abonnement et les transformer en Observable
-      const subsData = await firstValueFrom(this._dataService.userSubData$);
-      this.userSubData$ = of(subsData); // Créer un nouvel Observable à partir des données
-    } catch (error) {
-      console.error('Erreur lors de la récupération des données:', error);
-      this.noSub = true; // Gérer l'erreur si nécessaire
-    } finally {
-      loading.dismiss();
-    }
+    this._auth
+      .getCurrentUser()
+      .pipe(
+        // tap((e) => console.log('oninit', e)),
+        switchMap(async (user) => {
+          if (user) {
+            this.userID = user.uid;
+            await this._dataService.loadSubData(user.uid);
+            this.noSub = false;
+          } else {
+            this.noSub = true;
+          }
+          this.loadingCtrl.dismiss();
+          return this._dataService.userSubData$;
+        })
+      )
+      .subscribe((subs) => {
+        this.userSubData$ = subs;
+      });
   }
 
   async showLoading() {
