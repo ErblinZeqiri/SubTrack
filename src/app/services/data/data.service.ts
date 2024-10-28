@@ -31,7 +31,6 @@ export class DataService {
 
   // Charger les données de l'utilisateur via le backend Python
   loadUserData(userID: string): Observable<User[]> {
-    console.log('loadUserData', userID);
     return this.http.get<User[]>(`${this.userUrl}/${userID}`);
   }
 
@@ -44,7 +43,10 @@ export class DataService {
   }
 
   loadOneSubData(subId: string): Observable<Subscription> {
-    return this.http.get<Subscription>(`${this.subscriptionsUrl}/${subId}`);
+    return this.http.get<Subscription>(`${this.subscriptionsUrl}/${subId}`, {
+      headers: { Authorization: `Bearer ${this.token}` },
+      withCredentials: true,
+    });
   }
 
   // Supprimer un abonnement
@@ -58,19 +60,33 @@ export class DataService {
   // Ajouter un nouvel abonnement
   addSubscription(sub: Subscription): Observable<Subscription> {
     // Envoyez l'objet Subscription mis à jour au backend
-    return this.http.post<Subscription>(`${this.subscriptionsUrl}/`, sub, {
-      headers: { Authorization: `Bearer ${this.token}` },
-      withCredentials: true,
-    }).pipe(
-      tap(() => {
-        this.subscriptionUpdateSource.next();
+    return this.http
+      .post<Subscription>(`${this.subscriptionsUrl}/`, sub, {
+        headers: { Authorization: `Bearer ${this.token}` },
+        withCredentials: true,
       })
-    );
+      .pipe(
+        tap(() => {
+          this.subscriptionUpdateSource.next();
+        })
+      );
   }
 
   // Mettre à jour un abonnement existant
-  updateSubscription(subId: string, sub: Subscription): Observable<void> {
-    return this.http.put<void>(`${this.subscriptionsUrl}/${subId}`, sub);
+  updateSubscription(
+    subId: string,
+    sub: Subscription
+  ): Observable<Subscription> {
+    return this.http
+      .put<Subscription>(`${this.subscriptionsUrl}/${subId}`, sub, {
+        headers: { Authorization: `Bearer ${this.token}` },
+        withCredentials: true,
+      })
+      .pipe(
+        tap(() => {
+          this.subscriptionUpdateSource.next();
+        })
+      );
   }
 
   getFilteredSubscriptions(category: string, renewal: string): Observable<any> {

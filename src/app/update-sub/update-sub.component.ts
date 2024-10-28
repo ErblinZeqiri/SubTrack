@@ -1,6 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { elementAt, firstValueFrom, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  elementAt,
+  firstValueFrom,
+  map,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Subscription } from 'src/interfaces/interface';
 import { DataService } from '../services/data/data.service';
 import { addIcons } from 'ionicons';
@@ -178,7 +185,7 @@ export class UpdateSubComponent implements OnInit {
       nextPaymentDate: this.nextPaymentDate,
       deadline: this.deadline,
     });
-    
+
     const currentUser = await firstValueFrom(this._auth.getCurrentUser());
 
     if (!currentUser || !currentUser.uid) {
@@ -264,15 +271,22 @@ export class UpdateSubComponent implements OnInit {
         message: 'Connexion...',
       });
 
-      const formData = {
+      const formData: Subscription = {
+        id: this.subId,
         ...this.updateSubscribtionForm.value,
         logo: this.logo,
         domain: this.domain,
-        paymentHistory: [],
+        paymentHistory: [
+          {
+            date: new Date('2023-01-25').toISOString().split('T')[0],
+            amount: 10,
+          },
+        ],
         userID: currentUser.uid,
       };
 
-      await this._dataService.updateSubscription(this.subId, formData);  
+      console.log('formData', formData);
+      this._dataService.updateSubscription(this.subId, formData);
 
       this.resetForm();
       this._router.navigate(['/home']);
