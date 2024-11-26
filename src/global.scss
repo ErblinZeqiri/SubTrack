@@ -24,6 +24,7 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+@import 'theme/variables.scss';
 
 /**
  * Ionic Dark Mode
@@ -37,11 +38,22 @@
 // @import '@ionic/angular/css/palettes/dark.system.css';
 
 ion-datetime {
-    border: 5px solid rgb(189, 189, 189);
-    border-radius: 5%;
+  border: 5px solid rgb(189, 189, 189);
+  border-radius: 5%;
 }
 
 .main-content {
-    padding: 10px;
-    box-sizing: border-box;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+body {
+  color: $primary-color !important;
+  font-family: $font-family !important;
+}
+
+ion-label, ion-title, ion-content, .alert-radio-label {
+    color: $primary-color !important;
+    font-family: $font-family !important;
   }
+  

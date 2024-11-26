@@ -28,6 +28,7 @@ import {
 import { map, Observable, tap } from 'rxjs';
 import { Subscription } from 'src/interfaces/interface';
 import { IonLoading } from '@ionic/angular/standalone';
+import { colorFill } from 'ionicons/icons';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -151,8 +152,10 @@ export class DonutChartComponent implements OnChanges {
         floating: false,
         margin: 30,
         style: {
+          fontFamily: 'Lato, sans-serif',
+          fontWeight: 800,
           fontSize: '16px',
-          color: '#333',
+          fill: '#333',
         },
       },
       legend: {
