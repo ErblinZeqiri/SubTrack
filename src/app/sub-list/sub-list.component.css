@@ -1,22 +1,76 @@
-.logo {
-  flex: 0 1 auto;
-  padding: 1%;
-  height: 80px;
-  width: 80px;
+ion-item.no-border {
+  --border-width: 0;
+  --border-style: none;
+  --ion-item-background: transparent;
+}
+
+.subscription-card {
   display: flex;
-  justify-content: center;
   align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #f0f0f0;
+  transition: transform 0.3s ease-in-out;
 }
 
-.logo img {
+.subscription-logo {
+  flex: 0 0 60px;
+  margin-right: 20px;
+}
+
+.subscription-logo img {
   display: block;
-  max-width: 100%;
-  max-height: 100%;
-  height: auto;
-  object-fit: contain;
-  border-radius: 5%;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
-.flex {
-  margin-top: 50%;
+.subscription-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.subscription-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #043451;
+}
+
+.subscription-price {
+  font-size: 14px;
+  color: #666;
+}
+
+.subscription-details-hint {
+  font-size: 12px;
+  color: #888;
+  margin-left: auto;
+  align-self: center;
+}
+
+.details-link {
+  text-decoration: underline;
+  color: #043451;
+}
+
+.subscription-item-options {
+  height: 100%;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.subscription-item-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100% - 10px);
+  border-radius: 10px;
+}
+
+.item-options-ios.item-options-end {
+  border-bottom-width: 0;
 }
