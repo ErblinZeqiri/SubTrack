@@ -5,7 +5,6 @@ import {
   NgModule,
   OnInit,
   ViewChild,
-  AfterViewInit,
   SimpleChanges,
   OnChanges,
   ChangeDetectorRef,
@@ -25,10 +24,7 @@ import {
   ChartComponent,
   NgApexchartsModule,
 } from 'ng-apexcharts';
-import { map, Observable, tap } from 'rxjs';
-import { Subscription } from 'src/interfaces/interface';
 import { IonLoading } from '@ionic/angular/standalone';
-import { colorFill } from 'ionicons/icons';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -54,28 +50,32 @@ export type ChartOptions = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DonutChartComponent implements OnChanges {
+  @ViewChild('chart') chart!: ChartComponent;
   public chartOptions!: Partial<ChartOptions> | any;
-  @Input() subData!: Subscription[];
+  @Input() subData!: any[];
   series: number[] = [];
   labels: string[] = [];
-  currentStatus: string = '';
+  logoUrls: string[] = [];
 
-  constructor() {}
+  constructor(private cd: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    this.updateChartData();
+    if (changes['subData']) {
+      this.updateChartData();
+    }
   }
 
   private updateChartData() {
     this.series = this.subData.map((sub) => sub.amount);
     this.labels = this.subData.map((sub) => sub.companyName);
+    this.logoUrls = this.subData.map((sub) => sub.logo);
 
     this.chartOptions = {
       series: this.series,
       labels: this.labels,
       chart: {
-        width: '30%',
         type: 'donut',
+        width: '100%',
         dropShadow: {
           enabled: true,
           color: '#111',
@@ -86,7 +86,7 @@ export class DonutChartComponent implements OnChanges {
         },
         animations: {
           enabled: true,
-          easing: 'linear',
+          easing: 'easeinout',
           speed: 500,
           animateGradually: {
             enabled: true,
@@ -94,15 +94,16 @@ export class DonutChartComponent implements OnChanges {
           },
           dynamicAnimation: {
             enabled: true,
-            speed: 350,
+            speed: 1000,
           },
         },
       },
-      stroke: {
-        width: 0,
-      },
       plotOptions: {
         pie: {
+          borderRadius: 10,
+          startAngle: 0,
+          endAngle: 360,
+          expandOnClick: true,
           donut: {
             size: '70%',
             labels: {
@@ -111,17 +112,34 @@ export class DonutChartComponent implements OnChanges {
                 showAlways: true,
                 show: true,
                 label: 'Total',
-                fontSize: '14px',
-                color: '#555',
+                fontSize: '25px',
+                color: '#043451',
+                fontWeight: 700,
+                formatter: (w: any) => {
+                  const total = w.globals.seriesTotals.reduce((a: number, b: number) => a + b, 0);
+                  return `${total} CHF`;
+                },
+              },
+              value: {
+                show: true,
+                fontSize: '25px',
+                formatter: (val: number) => `${val} CHF`,
               },
             },
           },
+          customScale: 1,
         },
+      },
+      stroke: {
+        show: true,
+        lineCap: 'round',
+        width: 2,
       },
       dataLabels: {
         enabled: true,
         style: {
-          fontSize: '12px',
+          fontSize: '14px',
+          colors: ['#f0f0f0'],
         },
         dropShadow: {
           blur: 3,
@@ -144,26 +162,26 @@ export class DonutChartComponent implements OnChanges {
         },
       },
       theme: {
-        palette: 'palette2',
+        palette: 'palette1',
       },
       title: {
         text: 'Résumé de vos abonnements',
         align: 'center',
-        floating: false,
-        margin: 30,
         style: {
-          fontFamily: 'Lato, sans-serif',
+          fontSize: '20px',
+          color: '#043451',
           fontWeight: 800,
-          fontSize: '16px',
-          fill: '#333',
+          fontFamily: 'Lato, sans-serif',
         },
       },
       legend: {
         position: 'bottom',
         horizontalAlign: 'center',
         floating: false,
-        fontSize: '12px',
-        offsetY: 20,
+        fontSize: '14px',
+        labels: {
+          colors: '#043451',
+        },
         itemMargin: {
           horizontal: 10,
           vertical: 5,
@@ -171,51 +189,14 @@ export class DonutChartComponent implements OnChanges {
       },
       responsive: [
         {
-          breakpoint: 500,
+          breakpoint: 768,
           options: {
             chart: {
-              width: '99%',
-            },
-            title: {
-              text: 'Résumé de vos abonnements',
-              align: 'center',
-              margin: 20,
-              style: {
-                fontSize: '14px',
-                color: '#333',
-              },
+              width: '100%',
             },
             legend: {
               position: 'bottom',
               horizontalAlign: 'center',
-              fontSize: '10px',
-              offsetY: 10,
-              itemMargin: {
-                horizontal: 5,
-                vertical: 5,
-              },
-            },
-            plotOptions: {
-              pie: {
-                donut: {
-                  size: '50%',
-                  labels: {
-                    show: true,
-                    total: {
-                      showAlways: true,
-                      show: true,
-                      label: 'Total',
-                      fontSize: '12px',
-                    },
-                  },
-                },
-              },
-            },
-            dataLabels: {
-              enabled: true,
-              style: {
-                fontSize: '10px',
-              },
             },
           },
         },
