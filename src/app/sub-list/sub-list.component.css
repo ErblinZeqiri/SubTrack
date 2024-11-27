@@ -1,7 +1,21 @@
+.filter-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.filter-card {
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  --ion-item-background: #f0f0f0;
+}
+
 ion-item.no-border {
   --border-width: 0;
   --border-style: none;
-  --ion-item-background: transparent;
+  --ion-item-background: #f0f0f0;
+  --ion-border-color: transparent;
 }
 
 .subscription-card {
@@ -73,4 +87,20 @@ ion-item.no-border {
 
 .item-options-ios.item-options-end {
   border-bottom-width: 0;
+}
+
+ion-icon {
+  color: #043451;
+  margin-right: 10px;
+}
+
+ion-select {
+  width: 100%;
+  --padding-start: 10px;
+  --background: #f0f0f0;
+  --border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  align-self: center;
+  --icon-width: 0;
+  --icon-display: none;
 }

@@ -38,24 +38,26 @@ import {
   IonSelectOption,
   IonLoading,
   IonButton,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { DonutChartComponent } from '../donut-chart/donut-chart.component';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule, NgModel } from '@angular/forms';
+import { addIcons } from 'ionicons';
+import { funnelOutline, calendarOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-sub-list',
   standalone: true,
   imports: [
+    IonIcon,
     IonButton,
     IonText,
-    IonAlert,
     IonItemOption,
     IonItemOptions,
     IonItemSliding,
     IonRefresherContent,
     IonRefresher,
-    IonLabel,
     IonItem,
     IonList,
     IonContent,
@@ -63,8 +65,6 @@ import { FormsModule, NgModel } from '@angular/forms';
     IonToolbar,
     IonHeader,
     CommonModule,
-    NgOptimizedImage,
-    RouterLink,
     DonutChartComponent,
     IonSelect,
     IonSelectOption,
@@ -112,7 +112,9 @@ export class SubListComponent implements OnInit {
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private httpClient: HttpClient
-  ) {}
+  ) {
+    addIcons({ funnelOutline, calendarOutline });
+  }
 
   // Méthode pour gérer la sélection des filtres
   async onFilterChange() {

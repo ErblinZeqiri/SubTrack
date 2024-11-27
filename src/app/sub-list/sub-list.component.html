@@ -18,25 +18,27 @@
           <ion-loading trigger="open-loading" message="Loading..." [duration]="3000" spinner="circles"></ion-loading>
         }
 
-        
-        <ion-list>
-          <ion-item>
-            <ion-select aria-label="Category" [(ngModel)]="selectedCategory" (ionChange)="onFilterChange()">
-              <ion-select-option value="Tout">Tout</ion-select-option>
-              @for (category of subscriptionCategories; track category) {
-                <ion-select-option value="{{ category }}">{{ category }}</ion-select-option>
-              }
-            </ion-select>
-          </ion-item>
-          <ion-item>
-            <ion-select aria-label="Renewal" [(ngModel)]="selectedRenewal" (ionChange)="onFilterChange()">
-              <ion-select-option value="Tout">Tout</ion-select-option>
-              @for (renewal of subscriptionRenewal; track renewal) {
-                <ion-select-option value="{{ renewal }}">{{ renewal }}</ion-select-option>
-              }
-            </ion-select>
-          </ion-item>
-        </ion-list>
+        <div class="filter-container">
+  <ion-item class="filter-card no-border">
+    <ion-icon name="funnel-outline" slot="start"></ion-icon>
+    <ion-select aria-label="Catégorie" toggleIcon="none" [(ngModel)]="selectedCategory" (ionChange)="onFilterChange()">
+      <ion-select-option value="Tout">Tout</ion-select-option>
+      @for (category of subscriptionCategories; track category) {
+        <ion-select-option value="{{ category }}">{{ category }}</ion-select-option>
+      }
+    </ion-select>
+  </ion-item>
+  <ion-item class="filter-card no-border">
+    <ion-icon name="calendar-outline" slot="start"></ion-icon>
+    <ion-select aria-label="Renouvellement" toggleIcon="none" [(ngModel)]="selectedRenewal" (ionChange)="onFilterChange()">
+      <ion-select-option value="Tout">Tout</ion-select-option>
+      @for (renewal of subscriptionRenewal; track renewal) {
+        <ion-select-option value="{{ renewal }}">{{ renewal }}</ion-select-option>
+      }
+    </ion-select>
+  </ion-item>
+</div>
+
         <ion-list>
           @for (sub of userSubData$ | async; track sub) {
             <ion-item-sliding>
@@ -64,4 +66,3 @@
       </ion-text>
     }
   </div>
-</ion-content>
