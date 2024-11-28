@@ -105,7 +105,7 @@ export class DonutChartComponent implements OnChanges {
           endAngle: 360,
           expandOnClick: true,
           donut: {
-            size: '70%',
+            size: '60%',
             labels: {
               show: true,
               total: {
