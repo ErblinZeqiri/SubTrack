@@ -19,25 +19,26 @@
         }
 
         <div class="filter-container">
-  <ion-item class="filter-card no-border">
-    <ion-icon name="funnel-outline" slot="start"></ion-icon>
-    <ion-select aria-label="Catégorie" toggleIcon="none" [(ngModel)]="selectedCategory" (ionChange)="onFilterChange()">
-      <ion-select-option value="Tout">Tout</ion-select-option>
-      @for (category of subscriptionCategories; track category) {
-        <ion-select-option value="{{ category }}">{{ category }}</ion-select-option>
-      }
-    </ion-select>
-  </ion-item>
-  <ion-item class="filter-card no-border">
-    <ion-icon name="calendar-outline" slot="start"></ion-icon>
-    <ion-select aria-label="Renouvellement" toggleIcon="none" [(ngModel)]="selectedRenewal" (ionChange)="onFilterChange()">
-      <ion-select-option value="Tout">Tout</ion-select-option>
-      @for (renewal of subscriptionRenewal; track renewal) {
-        <ion-select-option value="{{ renewal }}">{{ renewal }}</ion-select-option>
-      }
-    </ion-select>
-  </ion-item>
-</div>
+          <ion-item class="filter-card no-border">
+            <ion-icon name="funnel-outline" slot="start"></ion-icon>
+            <ion-select aria-label="Catégorie" toggleIcon="none" [(ngModel)]="selectedCategory" (ionChange)="onFilterChange()">
+              <ion-select-option value="Tout">Tout</ion-select-option>
+              @for (category of subscriptionCategories; track category) {
+                <ion-select-option value="{{ category }}">{{ category }}</ion-select-option>
+              }
+            </ion-select>
+          </ion-item>
+          <ion-item class="filter-card no-border">
+            <ion-icon name="calendar-outline" slot="start"></ion-icon>
+            <ion-select aria-label="Renouvellement" toggleIcon="none" [(ngModel)]="selectedRenewal" (ionChange)="onFilterChange()">
+              <ion-select-option value="Tout">Tout</ion-select-option>
+              @for (renewal of subscriptionRenewal; track renewal) {
+                <ion-select-option value="{{ renewal }}">{{ renewal }}</ion-select-option>
+              }
+            </ion-select>
+          </ion-item>
+          <ion-icon size="large" name="close" (click)="resetFilters()"></ion-icon>
+        </div>  
 
         <ion-list>
           @for (sub of userSubData$ | async; track sub) {
@@ -66,3 +67,4 @@
       </ion-text>
     }
   </div>
+</ion-content>

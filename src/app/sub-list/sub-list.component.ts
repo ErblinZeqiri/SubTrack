@@ -44,7 +44,7 @@ import { DonutChartComponent } from '../donut-chart/donut-chart.component';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule, NgModel } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { funnelOutline, calendarOutline } from 'ionicons/icons';
+import { funnelOutline, calendarOutline, closeOutline, close } from 'ionicons/icons';
 
 @Component({
   selector: 'app-sub-list',
@@ -113,10 +113,9 @@ export class SubListComponent implements OnInit {
     private alertCtrl: AlertController,
     private httpClient: HttpClient
   ) {
-    addIcons({ funnelOutline, calendarOutline });
+    addIcons({ funnelOutline, calendarOutline, close });
   }
 
-  // Méthode pour gérer la sélection des filtres
   async onFilterChange() {
     const loading = await this.loadingCtrl.create({
       message: 'Chargement...',
@@ -155,7 +154,6 @@ export class SubListComponent implements OnInit {
     this._auth
       .getCurrentUser()
       .pipe(
-        // tap((e) => console.log('oninit', e)),
         switchMap(async (user) => {
           if (user) {
             this.userID = user.uid;
@@ -194,6 +192,10 @@ export class SubListComponent implements OnInit {
     this.selectedRenewal = 'Tout';
     this.onFilterChange();
     this.noSub = false;
+  }
+
+  resetFilters() {
+    this.clearFilters();
   }
 
   subDetails(sub: Subscription) {
