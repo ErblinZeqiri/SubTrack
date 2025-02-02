@@ -36,8 +36,7 @@
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
             "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"],
-            "serviceWorker": true,
-            "ngswConfigPath": "ngsw-config.json"
+            "allowedCommonJsDependencies": ["apexcharts"]
           },
           "configurations": {
             "production": {
