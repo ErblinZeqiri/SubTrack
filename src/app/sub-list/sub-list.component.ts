@@ -128,7 +128,6 @@ export class SubListComponent implements OnInit {
       userID: this.userID,
     };
 
-    console.log(filters);
     const data: any = await firstValueFrom(
       this.httpClient.post(
         'https://us-central1-subtrack-330ce.cloudfunctions.net/filterSubscriptions',

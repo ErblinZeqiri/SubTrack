@@ -8,11 +8,9 @@ import {
   IonContent,
   IonButton,
   IonAlert,
-  IonLoading,
   IonText,
 } from '@ionic/angular/standalone';
-import { map, Observable, pipe, Subject, tap } from 'rxjs';
-import { Subscription } from 'src/interfaces/interface';
+import { Observable, Subject, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../services/data/data.service';
 import { User } from '@angular/fire/auth';
@@ -22,7 +20,6 @@ import { User } from '@angular/fire/auth';
   standalone: true,
   imports: [
     IonText,
-    IonLoading,
     IonAlert,
     IonButton,
     IonContent,
@@ -66,8 +63,8 @@ export class AccountComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.userData$ = this._auth.getCurrentUser().pipe(
-      tap((e) => console.log('oninit', e)));
+    // this.userData$ = this._auth.getCurrentUser().pipe(
+    //   tap((e) => console.log('oninit', e)));
   }
 
   async showLoading() {

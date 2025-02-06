@@ -29,11 +29,6 @@ import { SubListComponent } from '../sub-list/sub-list.component';
     IonTabButton,
     IonIcon,
     IonTabs,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    SubListComponent,
   ],
 })
 export class HomePage {

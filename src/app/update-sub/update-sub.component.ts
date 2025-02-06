@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { elementAt, firstValueFrom, map, Observable, switchMap, tap } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { Subscription } from 'src/interfaces/interface';
 import { DataService } from '../services/data/data.service';
 import { addIcons } from 'ionicons';
@@ -27,7 +27,6 @@ import {
   IonDatetime,
   IonSelect,
   IonSelectOption,
-  IonButtons,
 } from '@ionic/angular/standalone';
 import {
   Company,
@@ -46,13 +45,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  collection,
-  doc,
-  getFirestore,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore';
 import localeFrCh from '@angular/common/locales/fr-CH';
 import { AuthService } from '../services/auth/auth.service';
 
@@ -71,7 +63,6 @@ registerLocaleData(localeFrCh, 'fr-CH');
     IonRow,
     IonGrid,
     IonButton,
-    IonButtons,
     IonLabel,
     IonAvatar,
     IonText,

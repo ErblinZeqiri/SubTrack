@@ -9,11 +9,9 @@ import { arrowBackOutline } from 'ionicons/icons';
 import {
   IonHeader,
   IonToolbar,
-  IonTabButton,
   IonIcon,
   IonContent,
   IonTitle,
-  IonButtons,
   IonButton,
 } from '@ionic/angular/standalone';
 import { AuthService } from '../services/auth/auth.service';
@@ -23,11 +21,9 @@ import { AuthService } from '../services/auth/auth.service';
   standalone: true,
   imports: [
     IonButton,
-    IonButtons,
     IonTitle,
     IonContent,
     IonIcon,
-    IonTabButton,
     IonToolbar,
     IonHeader,
     CommonModule,

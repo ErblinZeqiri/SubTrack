@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "369263570865",
     "project_id": "subtrack-330ce",
-    "storage_bucket": "subtrack-330ce.appspot.com"
+    "storage_bucket": "subtrack-330ce.firebasestorage.app"
   },
   "client": [
     {
@@ -13,6 +13,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "369263570865-6joddru7jlugqg2eivvfltlir7k02s7q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zeqiri.subtrack",
+            "certificate_hash": "caf70c80a269b7c89c03fc1fbd245a493e71c0b9"
+          }
+        },
         {
           "client_id": "369263570865-72v8au82ps96ks69o0buqcqj7njierj4.apps.googleusercontent.com",
           "client_type": 1,
@@ -37,6 +45,13 @@
             {
               "client_id": "369263570865-o1rt010m9tj1gd0v70roua9cnbm683i4.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "369263570865-9b5t0ghn81q6njig6cc6e81ojgos8o0a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zeqiri.subtrack"
+              }
             }
           ]
         }

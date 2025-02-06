@@ -17,7 +17,6 @@ import {
   IonText,
   IonAvatar,
   IonLabel,
-  IonButtons,
   IonButton,
   IonGrid,
   IonRow,
@@ -28,8 +27,6 @@ import {
   IonDatetime,
   IonDatetimeButton,
   IonModal,
-  IonRadio,
-  IonRadioGroup,
 } from '@ionic/angular/standalone';
 import {
   Company,
@@ -41,7 +38,6 @@ import {
   formatDate,
   registerLocaleData,
 } from '@angular/common';
-import { collection, doc, getFirestore, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { firstValueFrom, Observable } from 'rxjs';
 import localeFrCh from '@angular/common/locales/fr-CH';
@@ -54,15 +50,12 @@ registerLocaleData(localeFrCh, 'fr-CH');
   selector: 'app-add-sub',
   standalone: true,
   imports: [
-    IonRadioGroup,
-    IonRadio,
     IonModal,
     IonDatetimeButton,
     IonCol,
     IonRow,
     IonGrid,
     IonButton,
-    IonButtons,
     IonLabel,
     IonAvatar,
     IonText,
