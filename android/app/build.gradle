@@ -6,6 +6,7 @@ plugins {
 android {
     namespace "com.zeqiri.subtrack"
     compileSdk rootProject.ext.compileSdkVersion
+    buildToolsVersion "35.0.0"
     defaultConfig {
         applicationId "com.zeqiri.subtrack"
         minSdkVersion rootProject.ext.minSdkVersion 
