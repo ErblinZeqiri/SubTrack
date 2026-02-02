@@ -1,30 +1,34 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { User, Subscription } from '../../../interfaces/interface';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { collection, collectionData, doc, docData, documentId, Firestore, query, QueryConstraint, where, onSnapshot } from '@angular/fire/firestore';
+import { BehaviorSubject, Observable, tap, map } from 'rxjs';
+import {
+  collection,
+  collectionData,
+  doc,
+  docData,
+  documentId,
+  Firestore,
+  query,
+  QueryConstraint,
+  where,
+  onSnapshot,
+  Unsubscribe,
+} from '@angular/fire/firestore';
 import { deleteDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DataService {
+export class DataService implements OnDestroy {
   private userSubDataSubject = new BehaviorSubject<Subscription[]>([]);
   userSubData$ = this.userSubDataSubject.asObservable();
   private userDataSubject = new BehaviorSubject<User[]>([]);
   userData$ = this.userDataSubject.asObservable();
 
-  // private _auth!: AuthService;
-  /**
-   * Constructeur du service de données.
-   *
-   * @param _firestore Le service Firestore Angular.
-   * @param injector L'injecteur Angular.
-   */
-  constructor(
-    private readonly _firestore: Firestore,
-    // private injector: Injector
-  ) {}
+  // Stocke la référence d'unsubscribe de onSnapshot pour éviter les memory leaks
+  private unsubscribeSnapshot: Unsubscribe | null = null;
+
+  constructor(private readonly _firestore: Firestore) {}
 
   /**
    * Charge les données d'un utilisateur.
@@ -48,53 +52,51 @@ export class DataService {
   }
 
   /**
-   * Charge les abonnements d'un utilisateur.
+   * Charge les abonnements d'un utilisateur avec écoute real-time.
+   * Utilise onSnapshot pour les changements en temps réel.
    *
    * @param userID L'ID Firebase de l'utilisateur.
    * @returns Un observable qui émet les abonnements de l'utilisateur.
-   *
-   * Note: cette méthode utilise {@link onSnapshot} pour écouter les changements
-   * sur les abonnements de l'utilisateur. La méthode met à jour le subject
-   * `userSubDataSubject` à chaque fois qu'un changement est détecté.
    */
-  async loadSubData(userID: string) {
-    // Réinitialise le subject pour éviter d'avoir des données en double.
-    this.userSubDataSubject.next([]);
+  loadSubData(userID: string): Observable<Subscription[]> {
     if (!userID) {
-      console.error('userID est null ou undefined');
-      return;
+      console.error('❌ userID est null ou undefined');
+      return new Observable((observer) => observer.next([]));
     }
 
-    // Crée une collection Firestore pour les abonnements.
+    // Réinitialise le subject
+    this.userSubDataSubject.next([]);
+
+    // Crée une requête Firestore
     const fbCollection = collection(this._firestore, 'subscriptions');
-    // Crée une clause de recherche pour trouver les abonnements par l'ID de l'utilisateur.
     const byUserId: QueryConstraint = where('userID', '==', userID);
-    // Crée une requête Firestore pour trouver les abonnements.
     const q = query(fbCollection, byUserId);
-    // Écoute les changements sur les abonnements de l'utilisateur.
-    onSnapshot(q, (querySnapshot) => {
-      // Parcours les documents de la requête.
-      querySnapshot.docs.forEach((doc) => {
-        const index = this.userSubDataSubject.value.findIndex(
-          (sub) => sub.id === doc.id
-        );
-        // Si l'abonnement existe déjà, met à jour son contenu.
-        if (index !== -1) {
-          this.userSubDataSubject.value[index] = {
-            ...(doc.data() as Subscription),
-            id: doc.id,
-          } as Subscription;
-        } else {
-          // Sinon, ajoute l'abonnement à la liste.
-          this.userSubDataSubject.value.push({
+
+    // Nettoie l'ancienne subscription avant d'en créer une nouvelle
+    if (this.unsubscribeSnapshot) {
+      this.unsubscribeSnapshot();
+    }
+
+    // Écoute les changements real-time et gère le unsubscribe
+    this.unsubscribeSnapshot = onSnapshot(
+      q,
+      (querySnapshot) => {
+        const subscriptions: Subscription[] = [];
+        querySnapshot.docs.forEach((doc) => {
+          subscriptions.push({
             ...(doc.data() as Subscription),
             id: doc.id,
           });
-        }
-        // Met à jour le subject pour que les composants s'en rendent compte.
-        this.userSubDataSubject.next([...this.userSubDataSubject.value]);
-      });
-    });
+        });
+        this.userSubDataSubject.next(subscriptions);
+      },
+      (error) => {
+        console.error('❌ Erreur loadSubData:', error);
+        this.userSubDataSubject.error(error);
+      },
+    );
+
+    return this.userSubData$;
   }
 
   /**
@@ -126,48 +128,66 @@ export class DataService {
 
   /**
    * Ajoute un abonnement en base de données.
-   *
-   * @param sub L'abonnement à ajouter.
+   * @param sub L'abonnement à ajouter (Firestore crée automatiquement l'ID).
    */
-  async addSubscription(sub: any) {
-    // Crée un document Firestore pour l'abonnement.
-    const newSubRef = doc(collection(this._firestore, 'subscriptions'));
-    // Enregistre l'abonnement en Firestore.
-    await setDoc(newSubRef, sub);
+  async addSubscription(sub: Partial<Subscription>): Promise<string> {
+    try {
+      const newSubRef = doc(collection(this._firestore, 'subscriptions'));
+      await setDoc(newSubRef, sub);
+      console.log('✅ Abonnement créé avec ID:', newSubRef.id);
+      return newSubRef.id;
+    } catch (error) {
+      console.error('❌ Erreur addSubscription:', error);
+      throw error;
+    }
   }
 
   /**
    * Met à jour un abonnement en base de données.
-   *
    * @param subId L'ID de l'abonnement à mettre à jour.
-   * @param sub Les données de l'abonnement mises à jour.
+   * @param sub Les données mises à jour (mise à jour partielle).
    */
-  async updateSubscription(subId: string, sub: any) {
-    // Crée une référence au document Firestore de l'abonnement à mettre à jour.
-    const subRef = doc(this._firestore, `subscriptions/${subId}`);
-    // Met à jour le document Firestore avec les nouvelles données de l'abonnement.
-    await updateDoc(subRef, sub);
+  async updateSubscription(
+    subId: string,
+    sub: Partial<Subscription>,
+  ): Promise<void> {
+    try {
+      const subRef = doc(this._firestore, `subscriptions/${subId}`);
+      await updateDoc(subRef, sub as any); // Firestore utilise 'any' en interne
+      console.log('✅ Abonnement mis à jour:', subId);
+    } catch (error) {
+      console.error('❌ Erreur updateSubscription:', error);
+      throw error;
+    }
   }
 
   /**
-   * Réinitialise les observables de la classe avec des valeurs vides.
-   * Utile pour nettoyer les données en mémoire lorsque l'utilisateur se déconnecte.
+   * Réinitialise les observables avec des valeurs vides.
+   * Utile pour nettoyer les données en mémoire lors de la déconnexion.
    */
-  clearData() {
-    // Réinitialiser les observables avec des valeurs vides
+  clearData(): void {
+    console.log('🧹 DataService: Nettoyage des données');
     this.userSubDataSubject.next([]);
     this.userDataSubject.next([]);
+    this.cleanup();
   }
 
   /**
-   * Lifecycle hook appelé lorsque le composant est détruit.
-   *
-   * Réinitialise les observables de la classe avec des valeurs vides pour éviter
-   * les fuites de mémoire.
+   * Nettoie les écouteurs onSnapshot pour éviter les memory leaks.
+   * À appeler lors de la destruction du service ou du logout.
    */
-  ngOnDestroy() {
-    // Réinitialise les observables avec des valeurs vides pour éviter les fuites de mémoire.
-    this.userDataSubject.next([]); // Réinitialise les données de l'utilisateur.
-    this.userSubDataSubject.next([]); // Réinitialise les abonnements de l'utilisateur.
+  private cleanup(): void {
+    if (this.unsubscribeSnapshot) {
+      this.unsubscribeSnapshot();
+      this.unsubscribeSnapshot = null;
+      console.log('✅ onSnapshot unsubscribed');
+    }
+  }
+
+  /**
+   * Lifecycle hook: nettoyage lors de la destruction du service.
+   */
+  ngOnDestroy(): void {
+    this.cleanup();
   }
 }

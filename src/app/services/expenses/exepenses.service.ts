@@ -1,132 +1,145 @@
 import { Injectable } from '@angular/core';
-import { Subscription } from '../../../interfaces/interface'; // Assurez-vous d'importer l'interface Subscription
+import { Observable, map } from 'rxjs';
+import {
+  Payment,
+  Subscription,
+} from '../../../interfaces/interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExepensesService {
-  expensesMonth: number = 0;
-  expensesYear: number = 0;
-  currentDate: Date = new Date();
-  currentMonth: number = this.currentDate.getMonth() + 1;
-  currentYear: number = this.currentDate.getFullYear();
-
   constructor() {}
 
-  // Calcule des dépenses total par mois
-  getCurrentExpensesMonth(subscriptions: Subscription[]) {
-    this.expensesMonth = 0;
+  // Calcule des dépenses total par mois (Observable)
+  getCurrentExpensesMonth(
+    subscriptions$: Observable<Subscription[]>
+  ): Observable<number> {
+    return subscriptions$.pipe(
+      map((subscriptions) => this.calculateCurrentExpensesMonth(subscriptions))
+    );
+  }
 
-    if (!subscriptions || !Array.isArray(subscriptions)) {
-      console.log("Pas d'abonnements ou subscriptions n'est pas un tableau");
+  // Calcule des dépenses total par année (Observable)
+  getCurrentExpensesYear(
+    subscriptions$: Observable<Subscription[]>
+  ): Observable<number> {
+    return subscriptions$.pipe(
+      map((subscriptions) => this.calculateCurrentExpensesYear(subscriptions))
+    );
+  }
+
+  private calculateCurrentExpensesMonth(subscriptions: Subscription[]): number {
+    if (!Array.isArray(subscriptions) || subscriptions.length === 0) {
       return 0;
     }
 
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    let expensesMonth = 0;
+
     for (const subscription of subscriptions) {
-      const paymentHistory = Object.values(subscription.paymentHistory);
-      const nextPaymentDate = new Date(
-        subscription.nextPaymentDate
-      );
+      const paymentHistory = this.getPaymentHistory(subscription);
+      const nextPaymentDate = new Date(subscription.nextPaymentDate);
 
-      let mostRecentPayment: any = null;
-
-      if (paymentHistory.length > 0) {
-        mostRecentPayment = paymentHistory.reduce((prev, current) => {
-          const prevDate = new Date(prev.date);
-          const currentDate = new Date(current.date);
-          return prevDate > currentDate ? prev : current;
-        });
-      }
-
+      const mostRecentPayment = this.getMostRecentPayment(paymentHistory);
       if (mostRecentPayment) {
         const mostRecentPaymentMonth =
           new Date(mostRecentPayment.date).getMonth() + 1;
-        if (
-          mostRecentPaymentMonth === this.currentMonth &&
-          typeof mostRecentPayment.amount === 'number'
-        ) {
-          this.expensesMonth += mostRecentPayment.amount;
-        } else if (
-          nextPaymentDate.getMonth() + 1 === this.currentMonth &&
-          typeof subscription.amount === 'number'
-        ) {
-          this.expensesMonth += subscription.amount;
+        if (mostRecentPaymentMonth === currentMonth) {
+          expensesMonth += mostRecentPayment.amount;
+          continue;
         }
-      } else if (
-        nextPaymentDate.getMonth() + 1 === this.currentMonth &&
-        typeof subscription.amount === 'number'
-      ) {
-        this.expensesMonth += subscription.amount;
+      }
+
+      if (nextPaymentDate.getMonth() + 1 === currentMonth) {
+        expensesMonth += subscription.amount;
       }
     }
 
-    this.expensesMonth = parseFloat(this.expensesMonth.toFixed(2));
-    return this.expensesMonth;
+    return Number(expensesMonth.toFixed(2));
   }
 
-  // Calcule des dépenses total par année
-  getCurrentExpensesYear(subscriptions: Subscription[]) {
-    this.expensesYear = 0;
-
-    if (!subscriptions || !Array.isArray(subscriptions)) {
-      console.log("Pas d'abonnements ou subscriptions n'est pas un tableau");
+  private calculateCurrentExpensesYear(subscriptions: Subscription[]): number {
+    if (!Array.isArray(subscriptions) || subscriptions.length === 0) {
       return 0;
     }
 
-    for (const subscription of subscriptions) {
-      const paymentHistory = Object.values(subscription.paymentHistory);
-      if (paymentHistory.length === 0) {
-        subscription.amount = 0
-      }
-      paymentHistory.forEach((element: any) => {
-        const paymentHistoryYear = new Date(
-          element.date
-        ).getFullYear();
-        if (
-          paymentHistoryYear === this.currentYear &&
-          typeof element.amount === 'number'
-        ) {
-          this.expensesYear += element.amount;
-        }
-      });
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+    let expensesYear = 0;
 
-      const nextPaymentDate = new Date(
-        subscription.nextPaymentDate
+    for (const subscription of subscriptions) {
+      const paymentHistory = this.getPaymentHistory(subscription);
+      for (const payment of paymentHistory) {
+        const paymentHistoryYear = new Date(payment.date).getFullYear();
+        if (paymentHistoryYear === currentYear) {
+          expensesYear += payment.amount;
+        }
+      }
+
+      const nextPaymentDate = new Date(subscription.nextPaymentDate);
+      const paymentsLeft = this.getPaymentsLeft(
+        subscription.renewal,
+        currentMonth,
+        currentYear,
+        currentDate,
+        nextPaymentDate
       );
 
-      let paymentsLeft = 0;
-
-      switch (subscription.renewal) {
-        case 'monthly':
-          paymentsLeft = 12 - this.currentMonth;
-          break;
-        case 'quarterly':
-          paymentsLeft = Math.ceil((12 - this.currentMonth) / 3);
-          break;
-        case 'semi-annual':
-          paymentsLeft = Math.ceil((12 - this.currentMonth) / 6);
-          break;
-        case 'annual':
-          if (nextPaymentDate.getFullYear() === this.currentYear) {
-            paymentsLeft = 1;
-          }
-          break;
-        case 'weekly':
-          const remainingWeeks = Math.ceil(
-            (new Date(this.currentYear, 11, 31).getTime() -
-              this.currentDate.getTime()) /
-              (1000 * 60 * 60 * 24 * 7)
-          );
-          paymentsLeft = remainingWeeks;
-          break;
-        default:
-          paymentsLeft = 0;
-      }
-
-      this.expensesYear += paymentsLeft * subscription.amount;
+      expensesYear += paymentsLeft * subscription.amount;
     }
 
-    this.expensesYear = parseFloat(this.expensesYear.toFixed(2));
-    return this.expensesYear;
+    return Number(expensesYear.toFixed(2));
+  }
+
+  private getPaymentHistory(subscription: Subscription): Payment[] {
+    return Object.values(subscription.paymentHistory || {});
+  }
+
+  private getMostRecentPayment(payments: Payment[]): Payment | null {
+    if (!payments.length) {
+      return null;
+    }
+
+    return payments.reduce((prev, current) => {
+      const prevDate = new Date(prev.date);
+      const currentDate = new Date(current.date);
+      return prevDate > currentDate ? prev : current;
+    });
+  }
+
+  private getPaymentsLeft(
+    renewal: string,
+    currentMonth: number,
+    currentYear: number,
+    currentDate: Date,
+    nextPaymentDate: Date
+  ): number {
+    switch (renewal) {
+      case 'Mensuel':
+      case 'monthly':
+        return 12 - currentMonth;
+      case 'Trimestriel':
+      case 'quarterly':
+        return Math.ceil((12 - currentMonth) / 3);
+      case 'Semestriel':
+      case 'semi-annual':
+        return Math.ceil((12 - currentMonth) / 6);
+      case 'Annuel':
+      case 'annual':
+        return nextPaymentDate.getFullYear() === currentYear ? 1 : 0;
+      case 'Hebdomadaire':
+      case 'weekly': {
+        const remainingWeeks = Math.ceil(
+          (new Date(currentYear, 11, 31).getTime() - currentDate.getTime()) /
+            (1000 * 60 * 60 * 24 * 7)
+        );
+        return remainingWeeks;
+      }
+      default:
+        return 0;
+    }
   }
 }
