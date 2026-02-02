@@ -38,14 +38,6 @@
           }
         },
         {
-          "client_id": "369263570865-grfa1nipbgvdfveapcujqnfk33393gf8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.zeqiri.subtrack",
-            "certificate_hash": "16ce50f877dfefe1da56e0fdb146fac078e0cccb"
-          }
-        },
-        {
           "client_id": "369263570865-o1rt010m9tj1gd0v70roua9cnbm683i4.apps.googleusercontent.com",
           "client_type": 3
         }
