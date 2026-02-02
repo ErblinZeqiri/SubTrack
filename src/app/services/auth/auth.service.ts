@@ -1,11 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, user as firebaseUser, User } from '@angular/fire/auth';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  user as firebaseUser,
+  User,
+} from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
 import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
 import { DataService } from '../data/data.service';
 import { map, Observable } from 'rxjs';
-import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithCredential, updateProfile } from 'firebase/auth';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithCredential,
+  updateProfile,
+} from 'firebase/auth';
+import { Preferences } from '@capacitor/preferences';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +37,7 @@ export class AuthService {
   constructor(
     private readonly _auth: Auth,
     private readonly _router: Router,
-    private readonly _dataService: DataService
+    private readonly _dataService: DataService,
   ) {
     // Crée un listener qui s'exécute à chaque fois que l'état d'authentification change.
     // Si un utilisateur est connecté, charge les données de l'utilisateur en Firestore.
@@ -67,13 +80,20 @@ export class AuthService {
    */
   async serviceLoginWithGoogle() {
     try {
+      console.log('🚀 Début de serviceLoginWithGoogle()');
+
       // Demande une connexion avec Google via l'API Capacitor-firebase/authentication.
       // La méthode signInWithGoogle() renvoie un objet Credential qui contient
       // un jeton de connexion Google.
       const credential = await FirebaseAuthentication.signInWithGoogle();
 
+      console.log('📦 Credential reçu:', JSON.stringify(credential, null, 2));
+      console.log('👤 credential.user:', credential.user);
+      console.log('🔑 credential.credential:', credential.credential);
+
       if (!credential.user) {
         console.error('❌ Aucun utilisateur récupéré après signInWithGoogle');
+        console.error('📦 Credential complet:', credential);
         return;
       }
 
@@ -81,7 +101,7 @@ export class AuthService {
 
       // Crée un authCredential à partir du jeton de connexion Google.
       const authCredential = GoogleAuthProvider.credential(
-        credential.credential?.idToken
+        credential.credential?.idToken,
       );
       // Appelle signInWithCredential() pour se connecter avec l'authentification Firebase.
       await signInWithCredential(this._auth, authCredential);
@@ -130,7 +150,7 @@ export class AuthService {
     const credential = await signInWithEmailAndPassword(
       this._auth,
       email,
-      password
+      password,
     );
 
     // Vérifie si les informations d'identification ont été récupérées
@@ -151,14 +171,14 @@ export class AuthService {
   async serviceSigninWithEmail(
     email: string,
     password: string,
-    fullName: string
+    fullName: string,
   ) {
     try {
       // Crée un utilisateur Firebase avec l'adresse email et le mot de passe.
       const userCredential = await createUserWithEmailAndPassword(
         this._auth,
         email,
-        password
+        password,
       );
       const user = userCredential.user;
 
@@ -198,7 +218,11 @@ export class AuthService {
     // Déconnecte l'utilisateur de l'API Firebase Authentication.
     await FirebaseAuthentication.signOut();
 
-    console.log('✅ Utilisateur déconnecté');
+    // Efface le cache de Capacitor Storage pour éviter la ré-authentification automatique.
+    // Firebase persiste les sessions dans le storage; il faut les nettoyer manuellement.
+    await Preferences.clear();
+
+    console.log('✅ Utilisateur déconnecté et cache vidé');
 
     // Réinitialise les données de l'utilisateur.
     this._dataService.clearData();
@@ -223,10 +247,10 @@ export class AuthService {
       map((user) => {
         console.log(
           '🚀 Vérification Auth - Utilisateur:',
-          user ? 'authentifié' : 'non authentifié'
+          user ? 'authentifié' : 'non authentifié',
         );
         return !!user;
-      })
+      }),
     );
   }
 
