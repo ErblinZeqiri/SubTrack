@@ -51,18 +51,37 @@ export type ChartOptions = {
 })
 export class DonutChartComponent implements OnChanges {
   @ViewChild('chart') chart!: ChartComponent;
-  public chartOptions!: Partial<ChartOptions>;
+  public chartOptions: Partial<ChartOptions>;
   @Input() subData: Subscription[] = [];
   series: number[] = [];
   labels: string[] = [];
   logoUrls: string[] = [];
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(private cd: ChangeDetectorRef) {
+    this.chartOptions = this.initChartOptions();
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['subData']) {
       this.updateChartData();
     }
+  }
+
+  private initChartOptions(): Partial<ChartOptions> {
+    return {
+      series: [],
+      labels: [],
+      chart: { type: 'donut' } as ApexChart,
+      fill: {} as ApexFill,
+      stroke: {} as ApexStroke,
+      states: {} as ApexStates,
+      legend: {} as ApexLegend,
+      title: {} as ApexTitleSubtitle,
+      theme: {} as ApexTheme,
+      plotOptions: {} as ApexPlotOptions,
+      dataLabels: {} as ApexDataLabels,
+      responsive: [] as ApexResponsive[],
+    };
   }
 
   private updateChartData() {
@@ -86,7 +105,6 @@ export class DonutChartComponent implements OnChanges {
         },
         animations: {
           enabled: true,
-          easing: 'easeinout',
           speed: 500,
           animateGradually: {
             enabled: true,
@@ -97,7 +115,7 @@ export class DonutChartComponent implements OnChanges {
             speed: 1000,
           },
         },
-      },
+      } as ApexChart,
       plotOptions: {
         pie: {
           borderRadius: 10,
@@ -123,18 +141,18 @@ export class DonutChartComponent implements OnChanges {
               value: {
                 show: true,
                 fontSize: '25px',
-                formatter: (val: number) => `${val} CHF`,
+                formatter: (val: string) => `${val} CHF`,
               },
             },
           },
           customScale: 1,
         },
-      },
+      } as ApexPlotOptions,
       stroke: {
         show: true,
         lineCap: 'round',
         width: 2,
-      },
+      } as ApexStroke,
       dataLabels: {
         enabled: true,
         style: {
@@ -145,25 +163,24 @@ export class DonutChartComponent implements OnChanges {
           blur: 3,
           opacity: 0.8,
         },
-      },
+      } as ApexDataLabels,
       fill: {
         type: 'pattern',
         opacity: 1,
         pattern: {
-          enabled: true,
           style: [],
         },
-      },
+      } as ApexFill,
       states: {
         hover: {
           filter: {
             type: 'none',
           },
         },
-      },
+      } as ApexStates,
       theme: {
         palette: 'palette1',
-      },
+      } as ApexTheme,
       title: {
         text: 'Résumé de vos abonnements',
         align: 'center',
@@ -173,7 +190,7 @@ export class DonutChartComponent implements OnChanges {
           fontWeight: 800,
           fontFamily: 'Lato, sans-serif',
         },
-      },
+      } as ApexTitleSubtitle,
       legend: {
         position: 'bottom',
         horizontalAlign: 'center',
@@ -186,7 +203,7 @@ export class DonutChartComponent implements OnChanges {
           horizontal: 10,
           vertical: 5,
         },
-      },
+      } as ApexLegend,
       responsive: [
         {
           breakpoint: 768,
@@ -200,7 +217,7 @@ export class DonutChartComponent implements OnChanges {
             },
           },
         },
-      ],
+      ] as ApexResponsive[],
     };
   }
 }
