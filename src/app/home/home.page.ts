@@ -18,6 +18,9 @@ import {
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { SubListComponent } from '../sub-list/sub-list.component';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -29,10 +32,13 @@ import { SubListComponent } from '../sub-list/sub-list.component';
     IonTabButton,
     IonIcon,
     IonTabs,
+    CommonModule,
   ],
 })
 export class HomePage {
-  constructor() {
+  showTabBar = true;
+
+  constructor(private router: Router) {
     addIcons({
       homeOutline,
       search,
@@ -40,5 +46,13 @@ export class HomePage {
       notificationsOutline,
       personOutline,
     });
+
+    // Cacher la tab bar sur les pages login/signin
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        const url = event.url.split('?')[0];
+        this.showTabBar = !(url === '/login' || url === '/signin');
+      });
   }
 }
