@@ -14,7 +14,6 @@ import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../services/data/data.service';
 import { User } from '@angular/fire/auth';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-account',
@@ -38,7 +37,6 @@ export class AccountComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly loadingCtrl = inject(LoadingController);
   private readonly dataService = inject(DataService);
-  private readonly destroyRef = inject(takeUntilDestroyed);
 
   public alertButtons = [
     {

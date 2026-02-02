@@ -2,8 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  NgModule,
-  OnInit,
   ViewChild,
   SimpleChanges,
   OnChanges,
@@ -21,17 +19,19 @@ import {
   ApexStates,
   ApexTheme,
   ApexTitleSubtitle,
+  ApexFill,
   ChartComponent,
   NgApexchartsModule,
 } from 'ng-apexcharts';
 import { IonLoading } from '@ionic/angular/standalone';
+import { Subscription } from '../../interfaces/interface';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
   responsive: ApexResponsive[];
-  labels: any;
-  fill: any;
+  labels: string[];
+  fill: ApexFill;
   stroke: ApexStroke;
   states: ApexStates;
   legend: ApexLegend;
@@ -51,8 +51,8 @@ export type ChartOptions = {
 })
 export class DonutChartComponent implements OnChanges {
   @ViewChild('chart') chart!: ChartComponent;
-  public chartOptions!: Partial<ChartOptions> | any;
-  @Input() subData!: any[];
+  public chartOptions!: Partial<ChartOptions>;
+  @Input() subData: Subscription[] = [];
   series: number[] = [];
   labels: string[] = [];
   logoUrls: string[] = [];

@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 /**
  * AuthGuard est un guard qui permet de proteger les routes en fonction de si l'utilisateur est authentifi .
@@ -18,7 +19,9 @@ export const authGuard: CanActivateFn = async (route, state) => {
 
   // Demande  l'utilisateur si il est authentifi
   const isLoggedIn = await firstValueFrom(auth.isAuthenticated());
-  console.log('🚦 AuthGuard: isAuthenticated() retourne', isLoggedIn);
+  if (!environment.production) {
+    console.log('🚦 AuthGuard: isAuthenticated() retourne', isLoggedIn);
+  }
 
   // Si l'utilisateur n'est pas authentifi, on le redirige vers la page de connexion
   if (!isLoggedIn) {

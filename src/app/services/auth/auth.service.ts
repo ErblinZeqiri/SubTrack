@@ -19,6 +19,7 @@ import {
   updateProfile,
 } from 'firebase/auth';
 import { Preferences } from '@capacitor/preferences';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -39,14 +40,19 @@ export class AuthService {
     private readonly _router: Router,
     private readonly _dataService: DataService,
   ) {
+    const isDev = !environment.production;
     // Crée un listener qui s'exécute à chaque fois que l'état d'authentification change.
     // Si un utilisateur est connecté, charge les données de l'utilisateur en Firestore.
     const auth = getAuth();
     onAuthStateChanged(auth, async (user) => {
-      console.log('🔄 Firebase Auth State Changed:', user);
+      if (isDev) {
+        console.log('🔄 Firebase Auth State Changed:', user);
+      }
 
       if (!user) {
-        console.warn('⚠️ Aucun utilisateur connecté !');
+        if (isDev) {
+          console.warn('⚠️ Aucun utilisateur connecté !');
+        }
         return;
       }
 
@@ -54,6 +60,9 @@ export class AuthService {
       // Si un utilisateur est trouvé, affiche un message de réussite.
       // Sinon, affiche un message de warning.
       this._dataService.loadUserData(user.uid).subscribe((firestoreUser) => {
+        if (!isDev) {
+          return;
+        }
         if (firestoreUser.length > 0) {
           console.log('✅ Firestore User Loaded:', firestoreUser[0]);
         } else {
@@ -80,16 +89,20 @@ export class AuthService {
    */
   async serviceLoginWithGoogle() {
     try {
-      console.log('🚀 Début de serviceLoginWithGoogle()');
+      if (!environment.production) {
+        console.log('🚀 Début de serviceLoginWithGoogle()');
+      }
 
       // Demande une connexion avec Google via l'API Capacitor-firebase/authentication.
       // La méthode signInWithGoogle() renvoie un objet Credential qui contient
       // un jeton de connexion Google.
       const credential = await FirebaseAuthentication.signInWithGoogle();
 
-      console.log('📦 Credential reçu:', JSON.stringify(credential, null, 2));
-      console.log('👤 credential.user:', credential.user);
-      console.log('🔑 credential.credential:', credential.credential);
+      if (!environment.production) {
+        console.log('📦 Credential reçu:', JSON.stringify(credential, null, 2));
+        console.log('👤 credential.user:', credential.user);
+        console.log('🔑 credential.credential:', credential.credential);
+      }
 
       if (!credential.user) {
         console.error('❌ Aucun utilisateur récupéré après signInWithGoogle');
@@ -97,7 +110,9 @@ export class AuthService {
         return;
       }
 
-      console.log('✅ Google Auth Response:', credential);
+      if (!environment.production) {
+        console.log('✅ Google Auth Response:', credential);
+      }
 
       // Crée un authCredential à partir du jeton de connexion Google.
       const authCredential = GoogleAuthProvider.credential(
@@ -120,17 +135,23 @@ export class AuthService {
       const userSnap = await getDoc(userRef);
 
       if (!userSnap.exists()) {
-        console.log("ℹ️ Création d'un nouvel utilisateur Firestore.");
+        if (!environment.production) {
+          console.log("ℹ️ Création d'un nouvel utilisateur Firestore.");
+        }
         // Crée un nouvel utilisateur Firestore si l'utilisateur n'existe pas.
         await setDoc(userRef, {
           email: firebaseUser.user.email,
           fullName: firebaseUser.user.displayName,
           uid: firebaseUser.user.uid,
         });
-        console.log('✅ Firestore écrit avec succès !');
+        if (!environment.production) {
+          console.log('✅ Firestore écrit avec succès !');
+        }
       }
 
-      console.log('➡️ Redirection vers /home');
+      if (!environment.production) {
+        console.log('➡️ Redirection vers /home');
+      }
       // Redirige vers `/home` si tout s'est bien déroulé.
       this._router.navigate(['/home']);
     } catch (error) {

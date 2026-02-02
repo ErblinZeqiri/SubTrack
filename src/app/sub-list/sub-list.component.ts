@@ -118,20 +118,22 @@ export class SubListComponent implements OnInit {
       userID: this.userID,
     };
 
-    const data: any = await firstValueFrom(
-      this.httpClient.post(
+    const data = await firstValueFrom(
+      this.httpClient.post<Subscription[]>(
         'https://us-central1-subtrack-330ce.cloudfunctions.net/filterSubscriptions',
         filters
       )
     );
 
-    if (Array.isArray(data) && data.length === 0) {
-      this.noSub = true;
-    } else {
-      this.userSubData$ = of(data);
-      this.monthlyExpenses$ = this._expensesService.getCurrentExpensesMonth(this.userSubData$);
-      this.yearlyExpenses$ = this._expensesService.getCurrentExpensesYear(this.userSubData$);
-    }
+    const hasData = Array.isArray(data) && data.length > 0;
+    this.noSub = !hasData;
+    this.userSubData$ = of(hasData ? data : []);
+    this.monthlyExpenses$ = this._expensesService.getCurrentExpensesMonth(
+      this.userSubData$
+    );
+    this.yearlyExpenses$ = this._expensesService.getCurrentExpensesYear(
+      this.userSubData$
+    );
 
     this.loadingCtrl.dismiss();
   }
