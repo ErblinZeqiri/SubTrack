@@ -73,3 +73,9 @@ Thumbs.db
 .firebase
 *-debug.log
 .runtimeconfig.json
+
+# Secrets & local configs
+/src/environments/environment.prod.ts
+/android/app/google-services.json
+/android/local.properties
+/ios/App/App/GoogleService-Info.plist

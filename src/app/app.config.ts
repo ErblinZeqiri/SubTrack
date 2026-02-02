@@ -21,6 +21,7 @@ import {
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,17 +29,7 @@ export const appConfig: ApplicationConfig = {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideFirebaseApp(() =>
-      initializeApp({
-        apiKey: 'AIzaSyBPpboh7pXaboBXRILn2-_dmXxAM7ZOt2s',
-        authDomain: 'subtrack-330ce.firebaseapp.com',
-        projectId: 'subtrack-330ce',
-        storageBucket: 'subtrack-330ce.firebasestorage.app',
-        messagingSenderId: '369263570865',
-        appId: '1:369263570865:web:53efbd01fd38a7ab5b1790',
-        measurementId: 'G-GCQPPGHLW0',
-      })
-    ),
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideZoneChangeDetection({ eventCoalescing: true }),
