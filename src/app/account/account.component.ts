@@ -62,7 +62,6 @@ export class AccountComponent implements OnInit {
   private async logout(): Promise<void> {
     const loading = await this.loadingCtrl.create({
       message: 'Déconnexion...',
-      duration: 2500,
     });
 
     await loading.present();
