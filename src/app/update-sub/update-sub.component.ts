@@ -1,10 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Subscription } from 'src/interfaces/interface';
 import { DataService } from '../services/data/data.service';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
+import {
+  SUBSCRIPTION_CATEGORIES,
+  SUBSCRIPTION_RENEWAL_TYPES,
+  SUBSCRIPTION_DEADLINE_TYPES,
+} from '../constants/subscription.constants';
 import {
   IonContent,
   IonHeader,
@@ -47,6 +52,7 @@ import {
 } from '@angular/forms';
 import localeFrCh from '@angular/common/locales/fr-CH';
 import { AuthService } from '../services/auth/auth.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 registerLocaleData(localeFrCh, 'fr-CH');
 
@@ -91,28 +97,12 @@ export class UpdateSubComponent implements OnInit {
   filteredOptions$!: Observable<Company[]>;
   toggleDropdown: boolean = false;
   selectedOption: Company | null = null;
-  subscriptionCategories: string[] = [
-    'Divertissement',
-    'Indispensable',
-    'Streaming',
-    'Presse',
-    'Fitness',
-    'Jeux',
-    'Cuisine',
-    'Éducation',
-    'Technologie',
-    'Mode',
-    'Finance',
-    'Voyage',
-  ];
-  subscriptionRenewal: string[] = [
-    'Hebdomadaire',
-    'Mensuel',
-    'Trimestriel',
-    'Semestriel',
-    'Annuel',
-  ];
-  subsciptionDeadline: string[] = ['Indéterminée', 'Date de fin'];
+  private readonly destroyRef = inject(DestroyRef);
+  
+  // Use imported constants instead of duplicating
+  readonly subscriptionCategories = SUBSCRIPTION_CATEGORIES;
+  readonly subscriptionRenewal = SUBSCRIPTION_RENEWAL_TYPES;
+  readonly subsciptionDeadline = SUBSCRIPTION_DEADLINE_TYPES;
   today = formatDate(new Date().toISOString(), 'YYYY-MM-dd', 'fr-CH');
   selectedNextPaymentDate: string | null = this.today;
   selectedDeadlineDate: string | null = this.today;
@@ -151,9 +141,9 @@ export class UpdateSubComponent implements OnInit {
     private _route: ActivatedRoute,
     private readonly _dataService: DataService,
     private readonly _router: Router,
-    private companySuggestionsService: CompanySuggestionsService,
+    private readonly companySuggestionsService: CompanySuggestionsService,
     private readonly _auth: AuthService,
-    private loadingCtrl: LoadingController
+    private readonly loadingCtrl: LoadingController
   ) {
     addIcons({
       arrowBackOutline,
@@ -177,8 +167,11 @@ export class UpdateSubComponent implements OnInit {
     }
 
     if (currentUser.uid) {
-      this.subscription$ = this._dataService.loadOneSubData(this.subId);
-      this.subscription$.subscribe((subscription) => {
+      const subscription$ = this._dataService
+        .loadOneSubData(this.subId)
+        .pipe(takeUntilDestroyed(this.destroyRef));
+      this.subscription$ = subscription$;
+      subscription$.subscribe((subscription) => {
         if (subscription) {
           this.updateSubscribtionForm.patchValue({
             companyName: subscription.companyName,
@@ -205,7 +198,9 @@ export class UpdateSubComponent implements OnInit {
 
     if (filteredValue.length > 1) {
       this.filteredOptions$ =
-        this.companySuggestionsService.fetchCompanySuggestions(filteredValue);
+        this.companySuggestionsService
+          .fetchCompanySuggestions(filteredValue)
+          .pipe(takeUntilDestroyed(this.destroyRef));
       this.toggleDropdown = true;
     }
   }

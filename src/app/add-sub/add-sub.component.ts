@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import {
   FormGroup,
   FormsModule,
@@ -6,6 +6,11 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import {
+  SUBSCRIPTION_CATEGORIES,
+  SUBSCRIPTION_RENEWAL_TYPES,
+  SUBSCRIPTION_DEADLINE_TYPES,
+} from '../constants/subscription.constants';
 import {
   IonInput,
   IonHeader,
@@ -43,6 +48,7 @@ import { firstValueFrom, Observable } from 'rxjs';
 import localeFrCh from '@angular/common/locales/fr-CH';
 import { AuthService } from '../services/auth/auth.service';
 import { DataService } from '../services/data/data.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 registerLocaleData(localeFrCh, 'fr-CH');
 
@@ -78,34 +84,17 @@ registerLocaleData(localeFrCh, 'fr-CH');
   styleUrls: ['./add-sub.component.scss'],
 })
 export class AddSubComponent {
-  @ViewChild('ionInputEl', { static: true }) ionInputEl!: IonInput;
   logo = '';
   domain = '';
   filteredOptions$!: Observable<Company[]>;
   toggleDropdown: boolean = false;
   selectedOption: Company | null = null;
-  subscriptionCategories: string[] = [
-    'Divertissement',
-    'Indispensable',
-    'Streaming',
-    'Presse',
-    'Fitness',
-    'Jeux',
-    'Cuisine',
-    'Éducation',
-    'Technologie',
-    'Mode',
-    'Finance',
-    'Voyage',
-  ];
-  subscriptionRenewal: string[] = [
-    'Hebdomadaire',
-    'Mensuel',
-    'Trimestriel',
-    'Semestriel',
-    'Annuel',
-  ];
-  subsciptionDeadline: string[] = ['Indéterminée', 'Date de fin'];
+  private readonly destroyRef = inject(DestroyRef);
+  
+  // Use imported constants instead of duplicating
+  readonly subscriptionCategories = SUBSCRIPTION_CATEGORIES;
+  readonly subscriptionRenewal = SUBSCRIPTION_RENEWAL_TYPES;
+  readonly subsciptionDeadline = SUBSCRIPTION_DEADLINE_TYPES;
   today = formatDate(new Date().toISOString(), 'YYYY-MM-dd', 'fr-CH');
   selectedNextPaymentDate: string | null = this.today;
   selectedDeadlineDate: string | null = this.today;
@@ -141,9 +130,9 @@ export class AddSubComponent {
   );
 
   constructor(
-    private companySuggestionsService: CompanySuggestionsService,
+    private readonly companySuggestionsService: CompanySuggestionsService,
     private readonly _router: Router,
-    private loadingCtrl: LoadingController,
+    private readonly loadingCtrl: LoadingController,
     private readonly _dataService: DataService,
     private readonly _auth: AuthService
   ) {
@@ -163,7 +152,9 @@ export class AddSubComponent {
 
     if (filteredValue.length > 1) {
       this.filteredOptions$ =
-        this.companySuggestionsService.fetchCompanySuggestions(filteredValue);
+        this.companySuggestionsService
+          .fetchCompanySuggestions(filteredValue)
+          .pipe(takeUntilDestroyed(this.destroyRef));
       this.toggleDropdown = true;
     }
   }

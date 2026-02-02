@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { Subscription, User } from '../../interfaces/interface';
 import { ExepensesService } from '../services/expenses/exepenses.service';
+import {
+  SUBSCRIPTION_CATEGORIES,
+  SUBSCRIPTION_RENEWAL_TYPES,
+} from '../constants/subscription.constants';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgOptimizedImage } from '@angular/common';
@@ -45,6 +49,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule, NgModel } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { funnelOutline, calendarOutline, closeOutline, close } from 'ionicons/icons';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-sub-list',
@@ -72,7 +77,7 @@ import { funnelOutline, calendarOutline, closeOutline, close } from 'ionicons/ic
     IonLoading,
   ],
   templateUrl: './sub-list.component.html',
-  styleUrls: ['./sub-list.component.css'],
+  styleUrls: ['./sub-list.component.css', './expenses-summary.css'],
   providers: [ExepensesService],
 })
 export class SubListComponent implements OnInit {
@@ -80,38 +85,23 @@ export class SubListComponent implements OnInit {
   yearlyExpenses$!: Observable<number>;
   userSubData$!: Observable<Subscription[]>;
   noSub: boolean = false;
-  subscriptionCategories: string[] = [
-    'Divertissement',
-    'Indispensable',
-    'Streaming',
-    'Presse',
-    'Fitness',
-    'Jeux',
-    'Cuisine',
-    'Éducation',
-    'Technologie',
-    'Mode',
-    'Finance',
-    'Voyage',
-  ];
-  subscriptionRenewal: string[] = [
-    'Hebdomadaire',
-    'Mensuel',
-    'Trimestriel',
-    'Semestriel',
-    'Annuel',
-  ];
+  
+  // Use imported constants instead of duplicating
+  readonly subscriptionCategories = SUBSCRIPTION_CATEGORIES;
+  readonly subscriptionRenewal = SUBSCRIPTION_RENEWAL_TYPES;
   selectedCategory = 'Tout';
   selectedRenewal = 'Tout';
   userID!: string;
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor(
     private readonly _dataService: DataService,
     private readonly _router: Router,
     private readonly _auth: AuthService,
-    private loadingCtrl: LoadingController,
-    private alertCtrl: AlertController,
-    private httpClient: HttpClient
+    private readonly loadingCtrl: LoadingController,
+    private readonly alertCtrl: AlertController,
+    private readonly httpClient: HttpClient,
+    private readonly _expensesService: ExepensesService
   ) {
     addIcons({ funnelOutline, calendarOutline, close });
   }
@@ -139,6 +129,8 @@ export class SubListComponent implements OnInit {
       this.noSub = true;
     } else {
       this.userSubData$ = of(data);
+      this.monthlyExpenses$ = this._expensesService.getCurrentExpensesMonth(this.userSubData$);
+      this.yearlyExpenses$ = this._expensesService.getCurrentExpensesYear(this.userSubData$);
     }
 
     this.loadingCtrl.dismiss();
@@ -163,10 +155,13 @@ export class SubListComponent implements OnInit {
           }
           this.loadingCtrl.dismiss();
           return this._dataService.userSubData$;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((subs) => {
         this.userSubData$ = subs;
+        this.monthlyExpenses$ = this._expensesService.getCurrentExpensesMonth(this.userSubData$);
+        this.yearlyExpenses$ = this._expensesService.getCurrentExpensesYear(this.userSubData$);
       });
   }
 

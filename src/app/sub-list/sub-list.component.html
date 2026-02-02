@@ -12,6 +12,16 @@
         @if(userSubData$ | async; as subData) {
           @if(subData.length > 0) {
             <app-donut-chart [subData]="subData"></app-donut-chart>
+            <div class="expenses-summary">
+              <div class="expense-card">
+                <span class="expense-label">Dépenses mensuelles</span>
+                <span class="expense-value">{{ (monthlyExpenses$ | async) || 0 }} CHF</span>
+              </div>
+              <div class="expense-card">
+                <span class="expense-label">Dépenses annuelles</span>
+                <span class="expense-value">{{ (yearlyExpenses$ | async) || 0 }} CHF</span>
+              </div>
+            </div>
           }
         }
         @if(!(userSubData$ | async)?.length){

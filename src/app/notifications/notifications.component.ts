@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import {
   IonHeader,
   IonToolbar,
@@ -10,6 +10,7 @@ import { Subscription } from 'src/interfaces/interface';
 import { from, map, Observable, of, switchMap, tap } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-notifications',
@@ -20,6 +21,7 @@ import { CommonModule } from '@angular/common';
 })
 export class NotificationsComponent implements OnInit {
   userSubData$!: Observable<Subscription[]>;
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor(
     private readonly _auth: AuthService,
@@ -34,10 +36,10 @@ export class NotificationsComponent implements OnInit {
     this.userSubData$ = this._auth.getCurrentUser().pipe(
       switchMap((user) => {
         return user
-          ? (this._dataService.loadSubData(user.uid),
-            this._dataService.userSubData$)
+          ? this._dataService.loadSubData(user.uid)
           : of([]);
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef)
     );
   }
 }

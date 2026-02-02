@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   IonContent,
@@ -16,10 +16,8 @@ import {
   imports: [IonCol, IonRow, IonButton, IonText, IonImg, IonContent],
   standalone: true,
 })
-export class Page404Component implements OnInit {
+export class Page404Component {
   constructor(private readonly _router: Router) {}
-
-  ngOnInit() {}
 
   goHome() {
     this._router.navigate(['home']);

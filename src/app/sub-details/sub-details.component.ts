@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable, of, switchMap } from 'rxjs';
 import { DataService } from '../services/data/data.service';
@@ -6,6 +6,7 @@ import { Subscription } from '../../interfaces/interface';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   IonHeader,
   IonToolbar,
@@ -35,6 +36,7 @@ export class SubDetailsComponent implements OnInit {
   subscription$!: Observable<Subscription | undefined>;
   userSubData$!: Observable<Subscription[]>;
   private subId: string = this._route.snapshot.params['id'];
+  private readonly destroyRef = inject(DestroyRef);
   constructor(
     private _route: ActivatedRoute,
     private readonly _dataService: DataService,
@@ -48,7 +50,9 @@ export class SubDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.subId) {
-      this.subscription$ = this._dataService.loadOneSubData(this.subId);
+      this.subscription$ = this._dataService
+        .loadOneSubData(this.subId)
+        .pipe(takeUntilDestroyed(this.destroyRef));
     }
   }
 
