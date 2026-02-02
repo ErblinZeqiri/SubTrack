@@ -170,17 +170,14 @@ export class SubListComponent implements OnInit {
   async showLoading() {
     const loading = await this.loadingCtrl.create({
       message: 'Suppression...',
-      duration: 3000,
     });
 
     loading.present();
   }
 
   handleRefresh(event: any) {
-    setTimeout(() => {
-      window.location.reload();
-      event.target.complete();
-    }, 2000);
+    window.location.reload();
+    event.target.complete();
   }
 
   clearFilters() {
