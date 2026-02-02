@@ -26,19 +26,32 @@
 -keepattributes EnclosingMethod
 -keepattributes InnerClasses
 
-# Keep Firebase classes
+# Keep all Firebase classes and methods
 -keep class com.google.firebase.** { *; }
+-keep interface com.google.firebase.** { *; }
+-keep enum com.google.firebase.** { *; }
+-keepclassmembers class com.google.firebase.** { *; }
+
+# Keep all Google Play Services
 -keep class com.google.android.gms.** { *; }
+-keep interface com.google.android.gms.** { *; }
+-keepclassmembers class com.google.android.gms.** { *; }
+
 -dontwarn com.google.firebase.**
 -dontwarn com.google.android.gms.**
 
-# Keep Firestore specific classes
--keep class com.google.firebase.firestore.** { *; }
--keepclassmembers class com.google.firebase.firestore.** { *; }
-
-# Keep authentication classes
--keep class com.google.firebase.auth.** { *; }
-
-# Capacitor
+# Capacitor - keep all plugins and WebView bridge
 -keep class com.getcapacitor.** { *; }
+-keepclassmembers class com.getcapacitor.** { *; }
 -keep @com.getcapacitor.annotation.CapacitorPlugin class * { *; }
+-keep class * extends com.getcapacitor.Plugin { *; }
+
+# WebView JavaScript interface
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+
+# Keep native methods
+-keepclasseswithmembernames class * {
+    native <methods>;
+}

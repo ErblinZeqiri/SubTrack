@@ -207,7 +207,7 @@ export class UpdateSubComponent implements OnInit {
 
   selectOption(option: Company) {
     this.selectedCompany.setValue(option.name);
-    this.logo = option.logo;
+    this.logo = this.companySuggestionsService.getLogoUrl(option);
     this.domain = option.domain;
     this.toggleDropdown = false;
   }

@@ -55,7 +55,12 @@
             <ion-item-sliding>
               <ion-item class="subscription-card no-border">
                 <div class="subscription-logo">
-                  <img src="{{ sub.logo }}" alt="{{ sub.companyName }}" />
+                  <img
+                    [src]="getLogoUrl(sub)"
+                    alt="{{ sub.companyName }}"
+                    referrerpolicy="no-referrer"
+                    (error)="onImageError($event)"
+                  />
                 </div>
                 <div class="subscription-info">
                   <span class="subscription-name">{{ sub.companyName }}</span>

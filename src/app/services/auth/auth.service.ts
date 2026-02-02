@@ -266,11 +266,14 @@ export class AuthService {
     return firebaseUser(this._auth).pipe(
       // Si un utilisateur est retourné, renvoie true, sinon false.
       map((user) => {
-        console.log(
-          '🚀 Vérification Auth - Utilisateur:',
-          user ? 'authentifié' : 'non authentifié',
-        );
-        return !!user;
+        const isAuth = !!user;
+        if (!environment.production) {
+          console.log(
+            '🚀 Vérification Auth - Utilisateur:',
+            user ? `authentifié (${user.email})` : 'non authentifié',
+          );
+        }
+        return isAuth;
       }),
     );
   }

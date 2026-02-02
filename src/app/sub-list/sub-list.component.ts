@@ -232,4 +232,21 @@ export class SubListComponent implements OnInit {
   updateSub(sub: Subscription) {
     this._router.navigate(['/update', sub.id]);
   }
+
+  getLogoUrl(sub: Subscription): string {
+    if (sub.logo) {
+      return sub.logo;
+    }
+    if (sub.domain) {
+      return `https://logo.clearbit.com/${sub.domain}`;
+    }
+    // Fallback: générer un domaine à partir du nom
+    const domainGuess = sub.companyName?.toLowerCase().replace(/\s+/g, '') + '.com';
+    return `https://logo.clearbit.com/${domainGuess}`;
+  }
+
+  onImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = 'assets/icon/favicon.png';
+  }
 }

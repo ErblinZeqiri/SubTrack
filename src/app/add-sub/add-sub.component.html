@@ -34,7 +34,11 @@
         { @for (option of filteredOptions; track option) {
         <ion-item (click)="selectOption(option)">
           <ion-avatar slot="start">
-            <img [src]="option.logo" alt="{{ option.name }} logo" />
+            <img
+              [src]="option.logo"
+              alt="{{ option.name }} logo"
+              referrerpolicy="no-referrer"
+            />
           </ion-avatar>
           <ion-label>{{ option.name }}</ion-label>
         </ion-item>
