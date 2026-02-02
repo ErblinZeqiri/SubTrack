@@ -1,3 +1,20 @@
+ion-content {
+  --background: #ffffff;
+}
+
+ion-content::part(scroll) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+}
+
+.main-content {
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+}
+
 .formField {
   margin-bottom: 10px;
   padding: 5px;
@@ -14,6 +31,8 @@ ion-img {
 
 .image-container {
   display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 h5 {
