@@ -56,6 +56,12 @@ export class DonutChartComponent implements OnChanges {
   series: number[] = [];
   labels: string[] = [];
   logoUrls: string[] = [];
+  
+  // Variables pour l'interactivité
+  selectedSegmentIndex: number | null = null;
+  centerText = { title: '', subtitle: '' };
+  originalSeries: number[] = [];
+  originalFillColors: string[] = [];
 
   constructor(private cd: ChangeDetectorRef) {
     this.chartOptions = this.initChartOptions();
@@ -85,9 +91,36 @@ export class DonutChartComponent implements OnChanges {
   }
 
   private updateChartData() {
-    this.series = this.subData.map((sub) => sub.amount);
-    this.labels = this.subData.map((sub) => sub.companyName);
-    this.logoUrls = this.subData.map((sub) => sub.logo);
+    // Trier par montant décroissant
+    const sortedSubs = [...this.subData].sort((a, b) => b.amount - a.amount);
+    
+    // Garder les 5 plus gros, regrouper le reste en "Autres"
+    const topSubs = sortedSubs.slice(0, 5);
+    const otherSubs = sortedSubs.slice(5);
+    
+    this.series = topSubs.map((sub) => sub.amount);
+    this.labels = topSubs.map((sub) => sub.companyName);
+    this.logoUrls = topSubs.map((sub) => sub.logo);
+    
+    // Ajouter "Autres" si nécessaire
+    if (otherSubs.length > 0) {
+      const otherTotal = otherSubs.reduce((sum, sub) => sum + sub.amount, 0);
+      this.series.push(otherTotal);
+      this.labels.push('Autres');
+      this.logoUrls.push('');
+    }
+
+    // Sauvegarder les couleurs originales pour reset
+    this.originalFillColors = ['#7C3AED', '#A78BFA', '#6366F1', '#8B5CF6', '#C4B5FD', '#94A3B8'];
+    this.originalSeries = [...this.series];
+
+    // Initialiser le texte du centre
+    const total = this.getTotalAmount();
+    this.centerText = {
+      title: `${Math.round(total)} CHF`,
+      subtitle: 'Abonnements actifs'
+    };
+    this.selectedSegmentIndex = null;
 
     this.chartOptions = {
       series: this.series,
@@ -96,53 +129,31 @@ export class DonutChartComponent implements OnChanges {
         type: 'donut',
         width: '100%',
         dropShadow: {
-          enabled: true,
-          color: '#111',
-          top: -1,
-          left: 3,
-          blur: 3,
-          opacity: 0.2,
+          enabled: false,
         },
         animations: {
           enabled: true,
-          speed: 500,
+          speed: 800,
           animateGradually: {
             enabled: true,
             delay: 150,
           },
           dynamicAnimation: {
             enabled: true,
-            speed: 1000,
+            speed: 1200,
           },
         },
       } as ApexChart,
       plotOptions: {
         pie: {
-          borderRadius: 10,
+          borderRadius: 8,
           startAngle: 0,
           endAngle: 360,
-          expandOnClick: true,
+          expandOnClick: false,
           donut: {
-            size: '60%',
+            size: '75%',
             labels: {
-              show: true,
-              total: {
-                showAlways: true,
-                show: true,
-                label: 'Total',
-                fontSize: '25px',
-                color: '#7C3AED',
-                fontWeight: 700,
-                formatter: (w: any) => {
-                  const total = w.globals.seriesTotals.reduce((a: number, b: number) => a + b, 0);
-                  return `${total} CHF`;
-                },
-              },
-              value: {
-                show: true,
-                fontSize: '25px',
-                formatter: (val: string) => `${val} CHF`,
-              },
+              show: false,
             },
           },
           customScale: 1,
@@ -150,28 +161,23 @@ export class DonutChartComponent implements OnChanges {
       } as ApexPlotOptions,
       stroke: {
         show: true,
-        lineCap: 'round',
-        width: 2,
+        width: 1.5,
+        colors: ['rgba(255, 255, 255, 0.12)'],
       } as ApexStroke,
       dataLabels: {
-        enabled: true,
-        style: {
-          fontSize: '14px',
-          colors: ['#ffffff'],
-        },
-        dropShadow: {
-          blur: 3,
-          opacity: 0.8,
-        },
+        enabled: false,
       } as ApexDataLabels,
       fill: {
-        type: 'pattern',
+        type: 'solid',
         opacity: 1,
-        pattern: {
-          style: [],
-        },
+        colors: ['#7C3AED', '#A78BFA', '#6366F1', '#8B5CF6', '#C4B5FD', '#94A3B8'],
       } as ApexFill,
       states: {
+        active: {
+          filter: {
+            type: 'none',
+          },
+        },
         hover: {
           filter: {
             type: 'none',
@@ -182,27 +188,10 @@ export class DonutChartComponent implements OnChanges {
         palette: 'palette1',
       } as ApexTheme,
       title: {
-        text: 'Résumé de vos abonnements',
-        align: 'center',
-        style: {
-          fontSize: '20px',
-          color: '#F1F5F9',
-          fontWeight: 800,
-          fontFamily: 'Lato, sans-serif',
-        },
+        text: '',
       } as ApexTitleSubtitle,
       legend: {
-        position: 'bottom',
-        horizontalAlign: 'center',
-        floating: false,
-        fontSize: '14px',
-        labels: {
-          colors: '#F1F5F9',
-        },
-        itemMargin: {
-          horizontal: 10,
-          vertical: 5,
-        },
+        show: false,
       } as ApexLegend,
       responsive: [
         {
@@ -212,12 +201,67 @@ export class DonutChartComponent implements OnChanges {
               width: '100%',
             },
             legend: {
-              position: 'bottom',
-              horizontalAlign: 'center',
+              show: false,
             },
           },
         },
       ] as ApexResponsive[],
     };
+  }
+
+  // Méthodes pour la légende personnalisée
+  getChipColor(index: number): string {
+    const colors = ['#7C3AED', '#A78BFA', '#6366F1', '#8B5CF6', '#C4B5FD', '#64748B'];
+    return colors[index] || colors[colors.length - 1];
+  }
+
+  getPercentage(index: number): string {
+    const total = this.series.reduce((sum, val) => sum + val, 0);
+    const percent = (this.series[index] / total) * 100;
+    return percent.toFixed(0);
+  }
+
+  getTotalAmount(): number {
+    return this.series.reduce((sum, val) => sum + val, 0);
+  }
+
+  // Méthode pour gérer le tap sur une chip
+  onChipTap(index: number) {
+    if (this.selectedSegmentIndex === index) {
+      // Double tap = reset
+      this.resetSegmentHighlight();
+    } else {
+      this.selectedSegmentIndex = index;
+      this.updateSegmentHighlight();
+    }
+  }
+
+  private updateSegmentHighlight() {
+    if (this.selectedSegmentIndex === null) return;
+
+    const total = this.getTotalAmount();
+    const selectedAmount = this.series[this.selectedSegmentIndex];
+    const selectedLabel = this.labels[this.selectedSegmentIndex];
+    const percent = Math.round((selectedAmount / total) * 100);
+
+    // Mettre à jour le texte central
+    this.centerText = {
+      title: `${Math.round(selectedAmount)} CHF`,
+      subtitle: `${percent}% - ${selectedLabel}`
+    };
+
+    // On ne modifie plus les couleurs - la CSS du brightness gère l'effet visuel
+    this.cd.markForCheck();
+  }
+
+  resetSegmentHighlight() {
+    this.selectedSegmentIndex = null;
+    this.centerText = {
+      title: `${Math.round(this.getTotalAmount())} CHF`,
+      subtitle: 'Abonnements actifs'
+    };
+
+    // On ne restore pas les couleurs - elles n'ont jamais été changées
+    this.cd.markForCheck();
   }
 }
