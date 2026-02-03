@@ -23,10 +23,7 @@
           </ion-input>
           <ion-text
             color="danger"
-            [hidden]="
-              selectedCompany.valid ||
-              (!selectedCompany.touched && !selectedCompany.valid)
-            "
+            *ngIf="(showErrors || selectedCompany.touched) && selectedCompany.invalid"
           >
             Ce champ est obligatoire.
           </ion-text>
@@ -57,7 +54,7 @@
           ></ion-input>
           <ion-text
             color="danger"
-            [hidden]="amount.valid || (!amount.touched && !amount.valid)"
+            *ngIf="(showErrors || amount.touched) && amount.invalid"
           >
             Ce champ est obligatoire.
           </ion-text>
@@ -80,10 +77,7 @@
 
           <ion-text
             color="danger"
-            [hidden]="
-              selectedCategory.valid ||
-              (!selectedCategory.touched && !selectedCategory.valid)
-            "
+            *ngIf="(showErrors || selectedCategory.touched) && selectedCategory.invalid"
           >
             Ce champ est obligatoire.
           </ion-text>
@@ -104,10 +98,7 @@
           </ion-select>
           <ion-text
             color="danger"
-            [hidden]="
-              selectedRenewal.valid ||
-              (!selectedRenewal.touched && !selectedRenewal.valid)
-            "
+            *ngIf="(showErrors || selectedRenewal.touched) && selectedRenewal.invalid"
           >
             Ce champ est obligatoire.
           </ion-text>
@@ -137,12 +128,20 @@
             </ng-template>
           </ion-modal>
         </ion-item>
+        <ion-text
+          color="danger"
+          *ngIf="(showErrors || nextPaymentDate.touched) && nextPaymentDate.invalid"
+        >
+          Ce champ est obligatoire.
+        </ion-text>
         
         <ion-item>
           <ion-select
             labelPlacement="floating"
             label="Echéance :"
             name="selectedDeadline"
+            formControlName="selectedDeadline"
+            [formControl]="selectedDeadline"
             (ionChange)="openDateModal($event)"
             #itemElem
           >
@@ -153,6 +152,12 @@
             }
           </ion-select>
         </ion-item>
+        <ion-text
+          color="danger"
+          *ngIf="(showErrors || selectedDeadline.touched) && selectedDeadline.invalid"
+        >
+          Ce champ est obligatoire.
+        </ion-text>
         <ion-item [ngClass]="status ? 'ion-show' : 'ion-hide'">
           <ion-label>Date d'échéance :</ion-label>
           <ion-datetime-button
@@ -178,7 +183,17 @@
             </ng-template>
           </ion-modal>
         </ion-item>
-        <ion-text color="danger" [hidden]="isDataValid">
+        <ion-text
+          color="danger"
+          *ngIf="status && (showErrors || deadline.touched) && deadline.invalid"
+        >
+          Ce champ est obligatoire.
+        </ion-text>
+        <br />
+        <ion-text
+          color="danger"
+          *ngIf="showErrors && addSubscribtionForm.invalid"
+        >
           Veuillez remplir tous les champs.
         </ion-text>
       </ion-list>

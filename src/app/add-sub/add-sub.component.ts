@@ -99,6 +99,7 @@ export class AddSubComponent {
   selectedNextPaymentDate: string | null = this.today;
   selectedDeadlineDate: string | null = this.today;
   isDataValid: boolean = true;
+  showErrors: boolean = false;
   status: boolean = false;
   indetermineeValue: string = 'Indéterminée';
 
@@ -142,6 +143,7 @@ export class AddSubComponent {
       category: this.selectedCategory,
       renewal: this.selectedRenewal,
       nextPaymentDate: this.nextPaymentDate,
+      selectedDeadline: this.selectedDeadline,
       deadline: this.deadline,
     });
   }
@@ -175,6 +177,8 @@ export class AddSubComponent {
 
   resetForm() {
     this.addSubscribtionForm.reset();
+    this.addSubscribtionForm.markAsPristine();
+    this.addSubscribtionForm.markAsUntouched();
     this.logo = '';
     this.domain = '';
     const formData = this.addSubscribtionForm.value;
@@ -183,10 +187,13 @@ export class AddSubComponent {
     this.selectedDeadlineDate;
     this.deadline;
     this.status = false;
+    this.isDataValid = true;
+    this.showErrors = false;
   }
 
   openDateModal($event: any) {
     const value = $event.detail.value;
+    this.selectedDeadline.setValue(value);
     this.status = value === 'Date de fin';
     if (value === this.subsciptionDeadline[0]) {
       this.deadline.setValue(this.subsciptionDeadline[0]);
@@ -206,6 +213,7 @@ export class AddSubComponent {
 
     if (this.addSubscribtionForm.valid) {
       this.isDataValid = true;
+      this.showErrors = false;
       const loading = await this.loadingCtrl.create({
         message: 'Connexion...',
       });
@@ -223,7 +231,9 @@ export class AddSubComponent {
       this.resetForm();
       this._router.navigate(['/home']);
     } else {
+      this.addSubscribtionForm.markAllAsTouched();
       this.isDataValid = false;
+      this.showErrors = true;
     }
   }
 }

@@ -13,3 +13,9 @@ ion-datetime::part(calendar),
 ion-datetime::part(content) {
 	border-radius: 16px;
 }
+
+ion-text[color='danger'] {
+	display: block;
+	margin-top: 6px;
+	pointer-events: none;
+}
