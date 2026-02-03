@@ -49,6 +49,21 @@ ion-datetime {
   box-sizing: border-box;
 }
 
+// Réduit la taille de la tab bar et des icônes
+ion-tab-bar {
+  height: 45px;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  min-height: 45px;
+}
+
+ion-tab-button {
+  font-size: 10px;
+  
+  ion-icon {
+    font-size: 20px;
+  }
+}
+
 body {
   color: $primary-color !important;
   font-family: $font-family !important;
