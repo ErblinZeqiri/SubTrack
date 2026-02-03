@@ -13,8 +13,10 @@ import {
   where,
   onSnapshot,
   Unsubscribe,
+  deleteDoc,
+  setDoc,
+  updateDoc,
 } from '@angular/fire/firestore';
-import { deleteDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',

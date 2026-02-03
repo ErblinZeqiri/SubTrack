@@ -1,23 +1,20 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import {
   Auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   user as firebaseUser,
   User,
-} from '@angular/fire/auth';
-import { Router } from '@angular/router';
-import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
-import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
-import { DataService } from '../data/data.service';
-import { map, Observable } from 'rxjs';
-import {
-  getAuth,
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithCredential,
   updateProfile,
-} from 'firebase/auth';
+} from '@angular/fire/auth';
+import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
+import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
+import { DataService } from '../data/data.service';
+import { map, Observable } from 'rxjs';
 import { Preferences } from '@capacitor/preferences';
 import { environment } from '../../../environments/environment';
 
@@ -37,14 +34,15 @@ export class AuthService {
    */
   constructor(
     private readonly _auth: Auth,
+    private readonly _firestore: Firestore,
     private readonly _router: Router,
-    private readonly _dataService: DataService,
+    private readonly _injector: Injector,
   ) {
     const isDev = !environment.production;
     // Crée un listener qui s'exécute à chaque fois que l'état d'authentification change.
     // Si un utilisateur est connecté, charge les données de l'utilisateur en Firestore.
-    const auth = getAuth();
-    onAuthStateChanged(auth, async (user) => {
+    // Utilise l'instance Auth injectée par Angular Fire au lieu de getAuth()
+    onAuthStateChanged(this._auth, async (user) => {
       if (isDev) {
         console.log('🔄 Firebase Auth State Changed:', user);
       }
@@ -59,7 +57,8 @@ export class AuthService {
       // Charge les données de l'utilisateur en Firestore.
       // Si un utilisateur est trouvé, affiche un message de réussite.
       // Sinon, affiche un message de warning.
-      this._dataService.loadUserData(user.uid).subscribe((firestoreUser) => {
+      const dataService = this._injector.get(DataService);
+      dataService.loadUserData(user.uid).subscribe((firestoreUser) => {
         if (!isDev) {
           return;
         }
@@ -130,8 +129,7 @@ export class AuthService {
       }
 
       // Charge les données de l'utilisateur en Firestore.
-      const db = getFirestore();
-      const userRef = doc(db, `users/${firebaseUser.user.uid}`);
+      const userRef = doc(this._firestore, `users/${firebaseUser.user.uid}`);
       const userSnap = await getDoc(userRef);
 
       if (!userSnap.exists()) {
@@ -246,7 +244,8 @@ export class AuthService {
     console.log('✅ Utilisateur déconnecté et cache vidé');
 
     // Réinitialise les données de l'utilisateur.
-    this._dataService.clearData();
+    const dataService = this._injector.get(DataService);
+    dataService.clearData();
 
     // Redirige vers la page de connexion.
     this._router.navigate(['/login']);
