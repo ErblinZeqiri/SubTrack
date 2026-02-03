@@ -29,7 +29,7 @@
         }
 
         <div class="filter-container">
-          <ion-item class="filter-card no-border">
+          <ion-item class="filter-card no-border" [class.filter-active]="selectedCategory !== 'Tout'">
             <ion-icon name="funnel-outline" slot="start"></ion-icon>
             <ion-select aria-label="Catégorie" toggleIcon="none" [(ngModel)]="selectedCategory" (ionChange)="onFilterChange()">
               <ion-select-option value="Tout">Tout</ion-select-option>
@@ -38,7 +38,7 @@
               }
             </ion-select>
           </ion-item>
-          <ion-item class="filter-card no-border">
+          <ion-item class="filter-card no-border" [class.filter-active]="selectedRenewal !== 'Tout'">
             <ion-icon name="calendar-outline" slot="start"></ion-icon>
             <ion-select aria-label="Renouvellement" toggleIcon="none" [(ngModel)]="selectedRenewal" (ionChange)="onFilterChange()">
               <ion-select-option value="Tout">Tout</ion-select-option>
@@ -47,7 +47,7 @@
               }
             </ion-select>
           </ion-item>
-          <ion-icon size="large" name="close" (click)="resetFilters()"></ion-icon>
+          <ion-icon *ngIf="hasActiveFilters" size="large" name="close" (click)="resetFilters()" aria-label="Effacer les filtres" class="reset-filters-icon"></ion-icon>
         </div>  
 
         <ion-list>

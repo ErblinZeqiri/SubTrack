@@ -94,6 +94,10 @@ export class SubListComponent implements OnInit {
   userID!: string;
   private readonly destroyRef = inject(DestroyRef);
 
+  get hasActiveFilters(): boolean {
+    return this.selectedCategory !== 'Tout' || this.selectedRenewal !== 'Tout';
+  }
+
   constructor(
     private readonly _dataService: DataService,
     private readonly _router: Router,

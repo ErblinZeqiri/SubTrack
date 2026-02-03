@@ -10,6 +10,20 @@
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   --ion-item-background: #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.filter-card.filter-active {
+  --ion-item-background: #043451;
+  box-shadow: 0 3px 8px rgba(4, 52, 81, 0.3);
+}
+
+.filter-card.filter-active ion-icon,
+.filter-card.filter-active ion-select {
+  --color: #ffffff;
+  color: #ffffff;
+  --background: #043451;
+  --placeholder-color: #ffffff;
 }
 
 .reset-button {
@@ -103,6 +117,15 @@ ion-item.no-border {
 ion-icon {
   color: #043451;
   margin-right: 10px;
+}
+
+.reset-filters-icon {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.reset-filters-icon:hover {
+  transform: scale(1.1);
 }
 
 ion-select {
