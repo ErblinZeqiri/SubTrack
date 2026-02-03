@@ -40,7 +40,7 @@
 // @import '@ionic/angular/css/palettes/dark.system.css';
 
 .main-content {
-  padding: 10px;
+  padding: 16px;
   box-sizing: border-box;
 }
 
@@ -49,10 +49,14 @@ ion-tab-bar {
   height: 45px;
   padding-bottom: env(safe-area-inset-bottom, 0);
   min-height: 45px;
+  --background: var(--app-bg);
+  border-top: 1px solid var(--app-border);
 }
 
 ion-tab-button {
   font-size: 10px;
+  --color: var(--app-text-muted);
+  --color-selected: var(--ion-color-primary);
   
   ion-icon {
     font-size: 20px;
@@ -63,15 +67,29 @@ ion-tab-button {
 ion-header ion-toolbar {
   --min-height: 45px;
   min-height: 45px;
+  --background: transparent;
+  --border-color: transparent;
 }
 
 body {
-  color: $primary-color !important;
+  color: var(--app-text) !important;
   font-family: $font-family !important;
+  background: var(--app-bg);
+}
+
+ion-content {
+  --background: var(--app-bg);
+  color: var(--app-text);
 }
 
 ion-label, ion-title, ion-content, .alert-radio-label {
-    color: $primary-color !important;
-    font-family: $font-family !important;
-  }
+  color: var(--app-text) !important;
+  font-family: $font-family !important;
+}
+
+ion-title {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
   

@@ -75,15 +75,17 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     IonSelectOption,
     FormsModule,
     IonLoading,
+    RouterLink,
   ],
   templateUrl: './sub-list.component.html',
-  styleUrls: ['./sub-list.component.css', './expenses-summary.css'],
+  styleUrls: ['./sub-list.component.css', './expenses-summary.css', './sub-list-dark.component.css'],
   providers: [ExepensesService],
 })
 export class SubListComponent implements OnInit {
   monthlyExpenses$!: Observable<number>;
   yearlyExpenses$!: Observable<number>;
   userSubData$!: Observable<Subscription[]>;
+  totalAmount$!: Observable<number>;
   noSub: boolean = false;
   
   // Use imported constants instead of duplicating
@@ -175,6 +177,9 @@ export class SubListComponent implements OnInit {
       const hasData = Array.isArray(data) && data.length > 0;
       this.noSub = !hasData;
       this.userSubData$ = of(hasData ? data : []);
+      this.totalAmount$ = this.userSubData$.pipe(
+        map((subs) => this.calculateTotal(subs))
+      );
       this.monthlyExpenses$ = this._expensesService.getCurrentExpensesMonth(
         this.userSubData$
       );
@@ -214,9 +219,16 @@ export class SubListComponent implements OnInit {
       )
       .subscribe((subs) => {
         this.userSubData$ = subs;
+        this.totalAmount$ = this.userSubData$.pipe(
+          map((items) => this.calculateTotal(items))
+        );
         this.monthlyExpenses$ = this._expensesService.getCurrentExpensesMonth(this.userSubData$);
         this.yearlyExpenses$ = this._expensesService.getCurrentExpensesYear(this.userSubData$);
       });
+  }
+
+  private calculateTotal(subs: Subscription[]): number {
+    return subs.reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
   }
 
   async showLoading() {

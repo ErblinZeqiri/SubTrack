@@ -10,8 +10,14 @@
   <div class="main-content">
     @if(!noSub) {
         @if(userSubData$ | async; as subData) {
+          <section class="hero">
+            <div class="total-amount">{{ (totalAmount$ | async) || 0 }} CHF</div>
+            <div class="total-caption">Abonnements actifs</div>
+          </section>
           @if(subData.length > 0) {
-            <app-donut-chart [subData]="subData"></app-donut-chart>
+            <section class="summary-section">
+              <app-donut-chart [subData]="subData"></app-donut-chart>
+            </section>
             <div class="expenses-summary">
               <div class="expense-card">
                 <span class="expense-label">Dépenses mensuelles</span>
@@ -29,10 +35,11 @@
         }
 
         <div class="filter-container">
-          <ion-item class="filter-card no-border" [class.filter-active]="selectedCategories.length > 0">
-            <ion-icon name="funnel-outline" slot="start"></ion-icon>
+          <div class="filter-pill" [class.active]="selectedCategories.length > 0">
+            <ion-icon name="funnel-outline"></ion-icon>
+            <span class="filter-label">Catégorie</span>
             @if (categoryFilterCount > 0) {
-              <span class="filter-count">{{ categoryFilterCount }}</span>
+              <span class="filter-badge">{{ categoryFilterCount }}</span>
             }
             <ion-select 
               aria-label="Catégorie" 
@@ -46,11 +53,12 @@
                 <ion-select-option value="{{ category }}">{{ category }}</ion-select-option>
               }
             </ion-select>
-          </ion-item>
-          <ion-item class="filter-card no-border" [class.filter-active]="selectedRenewals.length > 0">
-            <ion-icon name="calendar-outline" slot="start"></ion-icon>
+          </div>
+          <div class="filter-pill" [class.active]="selectedRenewals.length > 0">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span class="filter-label">Renouvellement</span>
             @if (renewalFilterCount > 0) {
-              <span class="filter-count">{{ renewalFilterCount }}</span>
+              <span class="filter-badge">{{ renewalFilterCount }}</span>
             }
             <ion-select 
               aria-label="Renouvellement" 
@@ -64,8 +72,10 @@
                 <ion-select-option value="{{ renewal }}">{{ renewal }}</ion-select-option>
               }
             </ion-select>
-          </ion-item>
-          <ion-icon *ngIf="hasActiveFilters" size="large" name="close" (click)="resetFilters()" aria-label="Effacer les filtres" class="reset-filters-icon"></ion-icon>
+          </div>
+          @if (hasActiveFilters) {
+            <button type="button" class="reset-filters-button" (click)="resetFilters()">× Réinitialiser</button>
+          }
         </div>  
 
         <ion-list>
@@ -82,9 +92,13 @@
                 </div>
                 <div class="subscription-info">
                   <span class="subscription-name">{{ sub.companyName }}</span>
-                  <span class="subscription-price">{{ sub.amount }}.- / {{ sub.renewal }}</span>
+                  <span class="subscription-meta">Catégorie : {{ sub.category }}</span>
                 </div>
-                <span class="subscription-details-hint"><a (click)="subDetails(sub)" class="details-link">Détails</a></span>
+                <div class="subscription-amount">
+                  <span class="amount">{{ sub.amount }}.-</span>
+                  <span class="period">/ {{ sub.renewal }}</span>
+                </div>
+                <button type="button" class="details-link" (click)="subDetails(sub)">Détails</button>
               </ion-item>
               <ion-item-options side="end" class="subscription-item-options">
                 <ion-item-option (click)="updateSub(sub)" class="subscription-item-option" color="primary">Modifier</ion-item-option>
@@ -95,10 +109,11 @@
         </ion-list>
     } @else {
       <div class="filter-container">
-        <ion-item class="filter-card no-border" [class.filter-active]="selectedCategories.length > 0">
-          <ion-icon name="funnel-outline" slot="start"></ion-icon>
+        <div class="filter-pill" [class.active]="selectedCategories.length > 0">
+          <ion-icon name="funnel-outline"></ion-icon>
+          <span class="filter-label">Catégorie</span>
           @if (categoryFilterCount > 0) {
-            <span class="filter-count">{{ categoryFilterCount }}</span>
+            <span class="filter-badge">{{ categoryFilterCount }}</span>
           }
           <ion-select 
             aria-label="Catégorie" 
@@ -112,11 +127,12 @@
               <ion-select-option value="{{ category }}">{{ category }}</ion-select-option>
             }
           </ion-select>
-        </ion-item>
-        <ion-item class="filter-card no-border" [class.filter-active]="selectedRenewals.length > 0">
-          <ion-icon name="calendar-outline" slot="start"></ion-icon>
+        </div>
+        <div class="filter-pill" [class.active]="selectedRenewals.length > 0">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <span class="filter-label">Renouvellement</span>
           @if (renewalFilterCount > 0) {
-            <span class="filter-count">{{ renewalFilterCount }}</span>
+            <span class="filter-badge">{{ renewalFilterCount }}</span>
           }
           <ion-select 
             aria-label="Renouvellement" 
@@ -130,11 +146,14 @@
               <ion-select-option value="{{ renewal }}">{{ renewal }}</ion-select-option>
             }
           </ion-select>
-        </ion-item>
-        <ion-icon *ngIf="hasActiveFilters" size="large" name="close" (click)="resetFilters()" aria-label="Effacer les filtres" class="reset-filters-icon"></ion-icon>
+        </div>
+        @if (hasActiveFilters) {
+          <button type="button" class="reset-filters-button" (click)="resetFilters()">× Réinitialiser</button>
+        }
       </div>
       <ion-text class="ion-text-center ion-align-items-center">
-        <h1 class="flex">Pas d'abonnement enregistré</h1>
+        <h1 class="flex">Aucun abonnement pour le moment</h1>
+        <ion-button class="empty-cta" routerLink="/add">+ Ajouter mon premier abonnement</ion-button>
       </ion-text>
     }
   </div>

@@ -10,5 +10,24 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 /* @import '@ionic/angular/css/palettes/dark.class.css'; */
-$primary-color: #043451;
-$font-family: 'Lato', cursive;
+
+$font-family: 'Inter', 'Lato', sans-serif;
+
+:root {
+	--ion-font-family: #{$font-family};
+
+	--app-bg: #0F1117;
+	--app-surface: #171B22;
+	--app-border: #2A3340;
+	--app-text: #F1F5F9;
+	--app-text-muted: #94A3B8;
+
+	--ion-background-color: var(--app-bg);
+	--ion-text-color: var(--app-text);
+
+	--ion-color-primary: #7C3AED;
+	--ion-color-primary-contrast: #0F1117;
+	--ion-color-secondary: #6366F1;
+	--ion-color-success: #10B981;
+	--ion-color-danger: #F87171;
+}
