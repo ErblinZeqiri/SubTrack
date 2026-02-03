@@ -12,6 +12,7 @@
             labelPlacement="floating"
             label="Rechercher une marque :"
             (ionInput)="onInput($event)"
+              (ionBlur)="closeDropdown()"
             #ionInputEl
             placeholder="Min 2 caractères"
             formControlName="companyName"

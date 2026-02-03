@@ -166,6 +166,13 @@ export class AddSubComponent {
     this.toggleDropdown = false;
   }
 
+  closeDropdown() {
+    // Petit délai pour permettre le clic sur une option avant la fermeture
+    setTimeout(() => {
+      this.toggleDropdown = false;
+    }, 200);
+  }
+
   resetForm() {
     this.addSubscribtionForm.reset();
     this.logo = '';
