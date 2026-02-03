@@ -64,6 +64,12 @@ ion-tab-button {
   }
 }
 
+// Aligne la hauteur de la barre du haut avec celle du bas
+ion-header ion-toolbar {
+  --min-height: 45px;
+  min-height: 45px;
+}
+
 body {
   color: $primary-color !important;
   font-family: $font-family !important;
