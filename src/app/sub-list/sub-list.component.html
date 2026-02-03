@@ -29,19 +29,37 @@
         }
 
         <div class="filter-container">
-          <ion-item class="filter-card no-border" [class.filter-active]="selectedCategory !== 'Tout'">
+          <ion-item class="filter-card no-border" [class.filter-active]="selectedCategories.length > 0">
             <ion-icon name="funnel-outline" slot="start"></ion-icon>
-            <ion-select aria-label="Catégorie" toggleIcon="none" [(ngModel)]="selectedCategory" (ionChange)="onFilterChange()">
-              <ion-select-option value="Tout">Tout</ion-select-option>
+            @if (categoryFilterCount > 0) {
+              <span class="filter-count">{{ categoryFilterCount }}</span>
+            }
+            <ion-select 
+              aria-label="Catégorie" 
+              toggleIcon="none" 
+              multiple="true"
+              [(ngModel)]="tempSelectedCategories" 
+              (ionDismiss)="onCategoryDismiss()"
+              interface="popover"
+              class="filter-select-hidden">
               @for (category of subscriptionCategories; track category) {
                 <ion-select-option value="{{ category }}">{{ category }}</ion-select-option>
               }
             </ion-select>
           </ion-item>
-          <ion-item class="filter-card no-border" [class.filter-active]="selectedRenewal !== 'Tout'">
+          <ion-item class="filter-card no-border" [class.filter-active]="selectedRenewals.length > 0">
             <ion-icon name="calendar-outline" slot="start"></ion-icon>
-            <ion-select aria-label="Renouvellement" toggleIcon="none" [(ngModel)]="selectedRenewal" (ionChange)="onFilterChange()">
-              <ion-select-option value="Tout">Tout</ion-select-option>
+            @if (renewalFilterCount > 0) {
+              <span class="filter-count">{{ renewalFilterCount }}</span>
+            }
+            <ion-select 
+              aria-label="Renouvellement" 
+              toggleIcon="none"
+              multiple="true"
+              [(ngModel)]="tempSelectedRenewals" 
+              (ionDismiss)="onRenewalDismiss()"
+              interface="popover"
+              class="filter-select-hidden">
               @for (renewal of subscriptionRenewal; track renewal) {
                 <ion-select-option value="{{ renewal }}">{{ renewal }}</ion-select-option>
               }
@@ -76,9 +94,47 @@
           }
         </ion-list>
     } @else {
+      <div class="filter-container">
+        <ion-item class="filter-card no-border" [class.filter-active]="selectedCategories.length > 0">
+          <ion-icon name="funnel-outline" slot="start"></ion-icon>
+          @if (categoryFilterCount > 0) {
+            <span class="filter-count">{{ categoryFilterCount }}</span>
+          }
+          <ion-select 
+            aria-label="Catégorie" 
+            toggleIcon="none" 
+            multiple="true"
+            [(ngModel)]="tempSelectedCategories" 
+            (ionDismiss)="onCategoryDismiss()"
+            interface="popover"
+            class="filter-select-hidden">
+            @for (category of subscriptionCategories; track category) {
+              <ion-select-option value="{{ category }}">{{ category }}</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+        <ion-item class="filter-card no-border" [class.filter-active]="selectedRenewals.length > 0">
+          <ion-icon name="calendar-outline" slot="start"></ion-icon>
+          @if (renewalFilterCount > 0) {
+            <span class="filter-count">{{ renewalFilterCount }}</span>
+          }
+          <ion-select 
+            aria-label="Renouvellement" 
+            toggleIcon="none"
+            multiple="true"
+            [(ngModel)]="tempSelectedRenewals" 
+            (ionDismiss)="onRenewalDismiss()"
+            interface="popover"
+            class="filter-select-hidden">
+            @for (renewal of subscriptionRenewal; track renewal) {
+              <ion-select-option value="{{ renewal }}">{{ renewal }}</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+        <ion-icon *ngIf="hasActiveFilters" size="large" name="close" (click)="resetFilters()" aria-label="Effacer les filtres" class="reset-filters-icon"></ion-icon>
+      </div>
       <ion-text class="ion-text-center ion-align-items-center">
         <h1 class="flex">Pas d'abonnement enregistré</h1>
-        <ion-button expand="block" (click)="clearFilters()">Effacer les filtres</ion-button>
       </ion-text>
     }
   </div>

@@ -11,7 +11,7 @@ export const filterSubscriptions = functions.https.onRequest(
   async (req, res): Promise<void> => {
     // Utiliser cors pour gérer les requêtes cross-origin
     corsHandler(req, res, async () => {
-      const { category, renewal, userID } = req.body;
+      const { categories, renewals, userID } = req.body;
 
       if (!userID) {
         res.status(400).send('Missing userID');
@@ -24,19 +24,37 @@ export const filterSubscriptions = functions.https.onRequest(
           .collection('subscriptions')
           .where('userID', '==', userID);
 
-        if (category && category !== 'Tout') {
-          query = query.where('category', '==', category);
+        // Si aucun filtre n'est appliqué, retourner tous les abonnements
+        if ((!categories || categories.length === 0) && (!renewals || renewals.length === 0)) {
+          const snapshot = await query.get();
+          const subscriptions = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          res.status(200).send(subscriptions);
+          return;
         }
 
-        if (renewal && renewal !== 'Tout') {
-          query = query.where('renewal', '==', renewal);
-        }
-
+        // Récupérer tous les documents et filtrer côté serveur pour supporter multiple sélection
         const snapshot = await query.get();
-        const subscriptions = snapshot.docs.map((doc) => ({
+        let subscriptions = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
+
+        // Filtrer par catégories si spécifié
+        if (categories && categories.length > 0) {
+          subscriptions = subscriptions.filter((sub: any) => 
+            categories.includes(sub.category)
+          );
+        }
+
+        // Filtrer par renouvellements si spécifié
+        if (renewals && renewals.length > 0) {
+          subscriptions = subscriptions.filter((sub: any) => 
+            renewals.includes(sub.renewal)
+          );
+        }
 
         res.status(200).send(subscriptions);
       } catch (error) {

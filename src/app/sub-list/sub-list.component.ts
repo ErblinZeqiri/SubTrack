@@ -89,13 +89,23 @@ export class SubListComponent implements OnInit {
   // Use imported constants instead of duplicating
   readonly subscriptionCategories = SUBSCRIPTION_CATEGORIES;
   readonly subscriptionRenewal = SUBSCRIPTION_RENEWAL_TYPES;
-  selectedCategory = 'Tout';
-  selectedRenewal = 'Tout';
+  selectedCategories: string[] = [];
+  selectedRenewals: string[] = [];
+  tempSelectedCategories: string[] = [];
+  tempSelectedRenewals: string[] = [];
   userID!: string;
   private readonly destroyRef = inject(DestroyRef);
 
   get hasActiveFilters(): boolean {
-    return this.selectedCategory !== 'Tout' || this.selectedRenewal !== 'Tout';
+    return this.selectedCategories.length > 0 || this.selectedRenewals.length > 0;
+  }
+
+  get categoryFilterCount(): number {
+    return this.selectedCategories.length;
+  }
+
+  get renewalFilterCount(): number {
+    return this.selectedRenewals.length;
   }
 
   constructor(
@@ -110,36 +120,72 @@ export class SubListComponent implements OnInit {
     addIcons({ funnelOutline, calendarOutline, close });
   }
 
-  async onFilterChange() {
+  onFilterSelectionChange() {
+    // Ne fait rien, juste pour mettre à jour les variables temporaires
+  }
+
+  async onCategoryDismiss() {
+    if (this.areSameSelections(this.tempSelectedCategories, this.selectedCategories)) {
+      return;
+    }
+    this.selectedCategories = [...this.tempSelectedCategories];
+    await this.applyFilters();
+  }
+
+  async onRenewalDismiss() {
+    if (this.areSameSelections(this.tempSelectedRenewals, this.selectedRenewals)) {
+      return;
+    }
+    this.selectedRenewals = [...this.tempSelectedRenewals];
+    await this.applyFilters();
+  }
+
+  private areSameSelections(first: string[], second: string[]): boolean {
+    if (first.length !== second.length) {
+      return false;
+    }
+    const firstSet = new Set(first);
+    if (firstSet.size !== second.length) {
+      return false;
+    }
+    return second.every((value) => firstSet.has(value));
+  }
+
+  async applyFilters() {
     const loading = await this.loadingCtrl.create({
       message: 'Chargement...',
     });
 
     await loading.present();
-    const filters = {
-      category: this.selectedCategory,
-      renewal: this.selectedRenewal,
-      userID: this.userID,
-    };
+    
+    try {
+      const filters = {
+        categories: this.selectedCategories,
+        renewals: this.selectedRenewals,
+        userID: this.userID,
+      };
 
-    const data = await firstValueFrom(
-      this.httpClient.post<Subscription[]>(
-        'https://us-central1-subtrack-330ce.cloudfunctions.net/filterSubscriptions',
-        filters
-      )
-    );
+      const data = await firstValueFrom(
+        this.httpClient.post<Subscription[]>(
+          'https://us-central1-subtrack-330ce.cloudfunctions.net/filterSubscriptions',
+          filters
+        )
+      );
 
-    const hasData = Array.isArray(data) && data.length > 0;
-    this.noSub = !hasData;
-    this.userSubData$ = of(hasData ? data : []);
-    this.monthlyExpenses$ = this._expensesService.getCurrentExpensesMonth(
-      this.userSubData$
-    );
-    this.yearlyExpenses$ = this._expensesService.getCurrentExpensesYear(
-      this.userSubData$
-    );
-
-    this.loadingCtrl.dismiss();
+      const hasData = Array.isArray(data) && data.length > 0;
+      this.noSub = !hasData;
+      this.userSubData$ = of(hasData ? data : []);
+      this.monthlyExpenses$ = this._expensesService.getCurrentExpensesMonth(
+        this.userSubData$
+      );
+      this.yearlyExpenses$ = this._expensesService.getCurrentExpensesYear(
+        this.userSubData$
+      );
+    } catch (error) {
+      console.error('Erreur lors du filtrage:', error);
+    } finally {
+      await loading.dismiss();
+    }
   }
 
   async ngOnInit(): Promise<void> {
@@ -148,6 +194,8 @@ export class SubListComponent implements OnInit {
     });
 
     await loading.present();
+    this.tempSelectedCategories = [...this.selectedCategories];
+    this.tempSelectedRenewals = [...this.selectedRenewals];
     this._auth
       .getCurrentUser()
       .pipe(
@@ -185,8 +233,8 @@ export class SubListComponent implements OnInit {
       if (user) {
         await this._dataService.loadSubData(user.uid);
         // Réappliquer les filtres si nécessaire
-        if (this.selectedCategory !== 'Tout' || this.selectedRenewal !== 'Tout') {
-          await this.onFilterChange();
+        if (this.selectedCategories.length > 0 || this.selectedRenewals.length > 0) {
+          await this.applyFilters();
         }
       }
     } catch (error) {
@@ -196,10 +244,12 @@ export class SubListComponent implements OnInit {
     }
   }
 
-  clearFilters() {
-    this.selectedCategory = 'Tout';
-    this.selectedRenewal = 'Tout';
-    this.onFilterChange();
+  async clearFilters() {
+    this.selectedCategories = [];
+    this.selectedRenewals = [];
+    this.tempSelectedCategories = [];
+    this.tempSelectedRenewals = [];
+    await this.applyFilters();
     this.noSub = false;
   }
 
