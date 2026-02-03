@@ -175,9 +175,21 @@ export class SubListComponent implements OnInit {
     loading.present();
   }
 
-  handleRefresh(event: any) {
-    window.location.reload();
-    event.target.complete();
+  async handleRefresh(event: any) {
+    try {
+      const user = await firstValueFrom(this._auth.getCurrentUser());
+      if (user) {
+        await this._dataService.loadSubData(user.uid);
+        // Réappliquer les filtres si nécessaire
+        if (this.selectedCategory !== 'Tout' || this.selectedRenewal !== 'Tout') {
+          await this.onFilterChange();
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors du rafraîchissement:', error);
+    } finally {
+      event.target.complete();
+    }
   }
 
   clearFilters() {
