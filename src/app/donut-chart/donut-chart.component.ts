@@ -131,7 +131,7 @@ export class DonutChartComponent implements OnChanges {
                 show: true,
                 label: 'Total',
                 fontSize: '25px',
-                color: '#043451',
+                color: '#7C3AED',
                 fontWeight: 700,
                 formatter: (w: any) => {
                   const total = w.globals.seriesTotals.reduce((a: number, b: number) => a + b, 0);
@@ -157,7 +157,7 @@ export class DonutChartComponent implements OnChanges {
         enabled: true,
         style: {
           fontSize: '14px',
-          colors: ['#f0f0f0'],
+          colors: ['#ffffff'],
         },
         dropShadow: {
           blur: 3,
@@ -186,7 +186,7 @@ export class DonutChartComponent implements OnChanges {
         align: 'center',
         style: {
           fontSize: '20px',
-          color: '#043451',
+          color: '#F1F5F9',
           fontWeight: 800,
           fontFamily: 'Lato, sans-serif',
         },
@@ -197,7 +197,7 @@ export class DonutChartComponent implements OnChanges {
         floating: false,
         fontSize: '14px',
         labels: {
-          colors: '#043451',
+          colors: '#F1F5F9',
         },
         itemMargin: {
           horizontal: 10,
