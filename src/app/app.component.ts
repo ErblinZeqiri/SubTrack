@@ -23,15 +23,15 @@ export class AppComponent {
     }
 
     try {
-      // Status Bar (barre du haut)
+      // Status Bar (barre du haut) - Dark mode
       await StatusBar.setOverlaysWebView({ overlay: false });
-      await StatusBar.setBackgroundColor({ color: '#ffffff' });
-      await StatusBar.setStyle({ style: Style.Light });
+      await StatusBar.setBackgroundColor({ color: '#0F1117' });
+      await StatusBar.setStyle({ style: Style.Dark });
 
-      // Navigation Bar (barre du bas)
+      // Navigation Bar (barre du bas) - Dark mode
       await NavigationBar.setNavigationBarColor({
-        color: '#ffffff',
-        darkButtons: true
+        color: '#0F1117',
+        darkButtons: false
       });
     } catch (error) {
       console.error('Erreur configuration barres système :', error);

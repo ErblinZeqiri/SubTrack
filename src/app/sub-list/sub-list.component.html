@@ -10,10 +10,6 @@
   <div class="main-content">
     @if(!noSub) {
         @if(userSubData$ | async; as subData) {
-          <section class="hero">
-            <div class="total-amount">{{ (totalAmount$ | async) || 0 }} CHF</div>
-            <div class="total-caption">Abonnements actifs</div>
-          </section>
           @if(subData.length > 0) {
             <section class="summary-section">
               <app-donut-chart [subData]="subData"></app-donut-chart>
