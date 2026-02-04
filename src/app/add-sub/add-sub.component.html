@@ -67,6 +67,8 @@
             name="selectedCategory"
             formControlName="category"
             [formControl]="selectedCategory"
+            okText="Valider"
+            cancelText="Annuler"
           >
             @for (category of subscriptionCategories; track category) {
             <ion-select-option value="{{ category }}">{{
@@ -89,6 +91,8 @@
             name="selectedRenewal"
             formControlName="renewal"
             [formControl]="selectedRenewal"
+            okText="Valider"
+            cancelText="Annuler"
           >
             @for (renewal of subscriptionRenewal; track renewal) {
             <ion-select-option value="{{ renewal }}">{{
@@ -109,7 +113,7 @@
             datetime="nextPaymentDatetime"
             slot="end"
           ></ion-datetime-button>
-          <ion-modal [keepContentsMounted]="true">
+          <ion-modal [keepContentsMounted]="true" [backdropDismiss]="true" class="datetime-modal">
             <ng-template>
               <ion-datetime
                 id="nextPaymentDatetime"
@@ -144,6 +148,8 @@
             [formControl]="selectedDeadline"
             (ionChange)="openDateModal($event)"
             #itemElem
+            okText="Valider"
+            cancelText="Annuler"
           >
             @for (deadline of subsciptionDeadline; track deadline) {
             <ion-select-option value="{{ deadline }}"> {{
@@ -164,7 +170,7 @@
             datetime="deadlineDatetime"
             slot="end"
           ></ion-datetime-button>
-          <ion-modal [keepContentsMounted]="true">
+          <ion-modal [keepContentsMounted]="true" [backdropDismiss]="true" class="datetime-modal">
             <ng-template>
               <ion-datetime
                 id="deadlineDatetime"
