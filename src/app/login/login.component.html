@@ -14,7 +14,7 @@
       <ion-list>
         <ion-item>
           <ion-input
-            labelPlacement="floating"
+            labelPlacement="fixed"
             label="Email :"
             type="email"
             placeholder="exemple@exemple.com"
@@ -25,14 +25,14 @@
         </ion-item> 
         <ion-text
           color="danger"
-          [hidden]="email.valid || (!email.touched && !email.valid)"
+          *ngIf="email.invalid && email.touched"
         >
           Ajoutez une adresse email valide.
         </ion-text>
 
         <ion-item>
           <ion-input
-            labelPlacement="floating"
+            labelPlacement="fixed"
             label="Mot de passe :"
             type="password"
             placeholder=""
@@ -45,16 +45,14 @@
         </ion-item>
         <ion-text
           color="danger"
-          [hidden]="
-            password.valid || (!password.touched && !password.valid)
-          "
+          *ngIf="password.invalid && password.touched"
         >
           Mauvais mot de passe.
         </ion-text>
         <br>
 
-        <ion-text color="danger" [hidden]="isDataValid">
-          Mauvaise données de connexion.
+        <ion-text color="danger" *ngIf="!isDataValid && email.valid && password.valid">
+          Mauvaises données de connexion.
         </ion-text>
 
         <ion-button id="open-loading" expand="block" type="submit"

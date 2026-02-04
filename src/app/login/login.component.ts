@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth/auth.service';
+import { CommonModule } from '@angular/common';
 import {
   LoadingController,
   IonContent,
@@ -30,6 +31,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.scss'],
   standalone: true,
   imports: [
+    CommonModule,
     IonText,
     IonInput,
     IonImg,
@@ -70,6 +72,14 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     addIcons({ logoGoogle, logInOutline, personAddOutline });
+    this.resetForm();
+  }
+
+  private resetForm() {
+    this.loginForm.reset();
+    this.email.reset();
+    this.password.reset();
+    this.isDataValid = true;
   }
 
   enterAnimation = (baseEl: HTMLElement) => {
@@ -109,6 +119,7 @@ export class LoginComponent implements OnInit {
 
     try {
       await this.authService.serviceLoginWithGoogle();
+      this.resetForm();
     } catch (error) {
       console.error('Login failed', error);
     } finally {
@@ -132,6 +143,7 @@ export class LoginComponent implements OnInit {
           this.loginForm.value.email,
           this.loginForm.value.password
         );
+        this.resetForm();
         this.modalCtrl.dismiss();
       } catch (error) {
         console.error('Login failed:', error);

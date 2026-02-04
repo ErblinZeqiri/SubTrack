@@ -15,7 +15,7 @@
       <ion-list>
         <ion-item>
           <ion-input
-            labelPlacement="floating"
+            labelPlacement="fixed"
             label="Nom et prénom :"
             type="text"
             placeholder="John Doe"
@@ -23,55 +23,55 @@
             formControlName="fullName"
             [formControl]="fullName"
           ></ion-input>
-          <ion-text
-            color="danger"
-            [hidden]="fullName.valid || (!fullName.touched && !fullName.valid)"
-          >
-            Ajoutez un nom et un prénom valide.
-          </ion-text>
         </ion-item>
+        <ion-text
+          color="danger"
+          *ngIf="fullName.invalid && fullName.touched"
+        >
+          Ajoutez un nom et un prénom valide.
+        </ion-text>
 
-          <ion-item>
-            <ion-input
-              labelPlacement="floating"
-              label="Email :"
-              type="email"
-              placeholder="exemple@exemple.com"
-              name="email"
-              formControlName="email"
-              [formControl]="email"
-            ></ion-input>
-            <ion-text
-              color="danger"
-              [hidden]="email.valid || (!email.touched && !email.valid)"
-            >
-              Ajoutez une adresse email valide.
-            </ion-text>
-          </ion-item>
+        <ion-item>
+          <ion-input
+            labelPlacement="fixed"
+            label="Email :"
+            type="email"
+            placeholder="exemple@exemple.com"
+            name="email"
+            formControlName="email"
+            [formControl]="email"
+          ></ion-input>
+        </ion-item>
+        <ion-text
+          color="danger"
+          *ngIf="email.invalid && email.touched"
+        >
+          Ajoutez une adresse email valide.
+        </ion-text>
 
-          <ion-item>
-            <ion-input
-              labelPlacement="floating"
-              label="Mot de passe :"
-              type="password"
-              placeholder=""
-              name="password"
-              formControlName="password"
-              [formControl]="password"
-            >
-              <ion-input-password-toggle slot="end"></ion-input-password-toggle>
-            </ion-input>
-            <ion-text
-              color="danger"
-              [hidden]="password.valid || (!password.touched && !password.valid)"
-            >
-              Mauvais mot de passe.
-            </ion-text>
-          </ion-item>
-        </ion-list>
+        <ion-item>
+          <ion-input
+            labelPlacement="fixed"
+            label="Mot de passe :"
+            type="password"
+            placeholder=""
+            name="password"
+            formControlName="password"
+            [formControl]="password"
+          >
+            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+          </ion-input>
+        </ion-item>
+        <ion-text
+          color="danger"
+          *ngIf="password.invalid && password.touched"
+        >
+          Mauvais mot de passe.
+        </ion-text>
+      </ion-list>
 
-      <ion-text color="danger" [hidden]="isDataValid">
-        Mauvaise données de connexion.
+      <ion-text color="danger" *ngIf="!isDataValid && fullName.valid && email.valid && password.valid">
+        Mauvaises données de connexion.
       </ion-text>
 
       <ion-button id="open-loading" expand="block" type="submit"
