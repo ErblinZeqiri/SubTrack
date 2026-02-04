@@ -37,6 +37,7 @@ import { CommonModule } from '@angular/common';
 })
 export class HomePage {
   showTabBar = true;
+  selectedTab = 'home';
 
   constructor(private router: Router) {
     addIcons({
@@ -47,12 +48,21 @@ export class HomePage {
       personOutline,
     });
 
-    // Cacher la tab bar sur les pages login/signin
+    // Cacher la tab bar sur les pages login/signin et mettre à jour le tab sélectionné
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         const url = event.url.split('?')[0];
         this.showTabBar = !(url === '/login' || url === '/signin');
+        
+        // Mettre à jour le tab sélectionné en fonction de l'URL
+        if (url === '/home' || url.startsWith('/home/')) {
+          this.selectedTab = 'home';
+        } else if (url === '/add') {
+          this.selectedTab = 'add';
+        } else if (url === '/account') {
+          this.selectedTab = 'account';
+        }
       });
   }
 }
