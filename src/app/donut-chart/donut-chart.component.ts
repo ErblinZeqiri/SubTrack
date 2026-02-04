@@ -53,6 +53,7 @@ export class DonutChartComponent implements OnChanges {
   @ViewChild('chart') chart!: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
   @Input() subData: Subscription[] = [];
+  @Input() isFirstLoad: boolean = true;
   series: number[] = [];
   labels: string[] = [];
   logoUrls: string[] = [];
@@ -132,15 +133,14 @@ export class DonutChartComponent implements OnChanges {
           enabled: false,
         },
         animations: {
-          enabled: true,
+          enabled: this.isFirstLoad,
           speed: 800,
           animateGradually: {
-            enabled: true,
+            enabled: this.isFirstLoad,
             delay: 150,
           },
           dynamicAnimation: {
-            enabled: true,
-            speed: 1200,
+            enabled: false,
           },
         },
       } as ApexChart,

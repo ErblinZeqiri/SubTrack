@@ -88,6 +88,7 @@ export class SubListComponent implements OnInit {
   userSubData$!: Observable<Subscription[]>;
   totalAmount$!: Observable<number>;
   noSub: boolean = false;
+  isFirstLoad: boolean = true;
   
   // Use imported constants instead of duplicating
   readonly subscriptionCategories = SUBSCRIPTION_CATEGORIES;
@@ -122,15 +123,18 @@ export class SubListComponent implements OnInit {
   ) {
     addIcons({ funnelOutline, calendarOutline, close });
     
-    // Recharger les données quand on revient sur /home
+    // Recharger les données seulement quand on navigue VERS /home depuis add-sub
+    let previousUrl: string | null = null;
     this._router.events
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-        filter((event) => event.url === '/home' || event.url.startsWith('/home')),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe(() => {
-        this.loadData();
+      .subscribe((event) => {
+        if ((event.url === '/home' || event.url.startsWith('/home')) && previousUrl === '/add-sub') {
+          this.loadData();
+        }
+        previousUrl = event.url;
       });
   }
 
