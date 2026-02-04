@@ -5,7 +5,7 @@ import {
   SUBSCRIPTION_CATEGORIES,
   SUBSCRIPTION_RENEWAL_TYPES,
 } from '../constants/subscription.constants';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgOptimizedImage } from '@angular/common';
 import {
@@ -18,6 +18,7 @@ import {
   of,
   switchMap,
   tap,
+  filter,
 } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { AuthService } from '../services/auth/auth.service';
@@ -120,6 +121,17 @@ export class SubListComponent implements OnInit {
     private readonly _expensesService: ExepensesService
   ) {
     addIcons({ funnelOutline, calendarOutline, close });
+    
+    // Recharger les données quand on revient sur /home
+    this._router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        filter((event) => event.url === '/home' || event.url.startsWith('/home')),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.loadData();
+      });
   }
 
   onFilterSelectionChange() {
@@ -194,6 +206,10 @@ export class SubListComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    await this.loadData();
+  }
+
+  private async loadData() {
     const loading = await this.loadingCtrl.create({
       message: 'Chargement...',
     });

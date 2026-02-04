@@ -92,4 +92,148 @@ ion-title {
   font-weight: 600;
   letter-spacing: 0.2px;
 }
+
+// Loading spinner dark mode
+ion-loading {
+  --background: var(--app-surface);
+  --spinner-color: var(--ion-color-primary);
+  color: var(--app-text);
+  
+  &::part(content) {
+    background: var(--app-surface);
+    color: var(--app-text);
+  }
+}
+
+.loading-wrapper {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  
+  .loading-spinner {
+    color: var(--ion-color-primary) !important;
+  }
+}
+
+// Alert/Select popups dark mode avec backdrop flou
+ion-alert {
+  --background: var(--app-surface);
+  --backdrop-opacity: 0.6;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  
+  &::part(backdrop) {
+    background: rgba(15, 17, 23, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+
+.alert-wrapper {
+  background: var(--app-surface) !important;
+  border-radius: 16px !important;
+  border: 1px solid var(--app-border) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+  
+  .alert-title {
+    color: var(--app-text) !important;
+    font-weight: 600 !important;
+  }
+  
+  .alert-message {
+    color: var(--app-text-muted) !important;
+  }
+  
+  .alert-radio-group,
+  .alert-checkbox-group {
+    border-color: var(--app-border) !important;
+    
+    .alert-radio-label,
+    .alert-checkbox-label {
+      color: var(--app-text) !important;
+    }
+    
+    .alert-radio-icon,
+    .alert-checkbox-icon {
+      border-color: var(--app-border) !important;
+    }
+    
+    [aria-checked="true"] .alert-radio-icon,
+    [aria-checked="true"] .alert-checkbox-icon {
+      border-color: var(--ion-color-primary) !important;
+      background: var(--ion-color-primary) !important;
+    }
+  }
+  
+  .alert-button-group {
+    border-color: var(--app-border) !important;
+    
+    button {
+      font-weight: 600 !important;
+      text-transform: none !important;
+      font-size: 15px !important;
+      border-radius: 12px !important;
+      
+      // Bouton Annuler
+      &.alert-button-role-cancel {
+        color: var(--app-text-muted) !important;
+        background: transparent !important;
+        
+        &:hover {
+          color: #ef4444 !important;
+          background: rgba(239, 68, 68, 0.1) !important;
+        }
+      }
+      
+      // Bouton OK/Valider
+      &:not(.alert-button-role-cancel) {
+        color: white !important;
+        background: linear-gradient(135deg, var(--ion-color-primary) 0%, #6d28d9 100%) !important;
+        font-weight: 700 !important;
+        
+        &:hover {
+          background: linear-gradient(135deg, #6d28d9 0%, var(--ion-color-primary) 100%) !important;
+          box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3) !important;
+        }
+      }
+    }
+  }
+}
+
+// Action Sheet dark mode
+ion-action-sheet {
+  --background: var(--app-surface);
+  --backdrop-opacity: 0.6;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  
+  &::part(backdrop) {
+    background: rgba(15, 17, 23, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+
+.action-sheet-wrapper {
+  background: var(--app-surface) !important;
+  border-radius: 16px 16px 0 0 !important;
+  border-top: 1px solid var(--app-border) !important;
+  
+  .action-sheet-title {
+    color: var(--app-text) !important;
+  }
+  
+  .action-sheet-button {
+    color: var(--app-text) !important;
+    
+    &.action-sheet-selected {
+      color: var(--ion-color-primary) !important;
+      font-weight: 600 !important;
+    }
+    
+    &[role="cancel"] {
+      color: #ef4444 !important;
+      font-weight: 600 !important;
+    }
+  }
+}
   
