@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import {
   LoadingController,
   IonHeader,
@@ -26,7 +27,7 @@ import { AuthService } from '../services/auth/auth.service';
   templateUrl: './signin.component.html',
   standalone: true,
   styleUrls: ['./signin.component.scss'],
-  imports: [IonList, IonItem, 
+  imports: [CommonModule, IonList, IonItem, 
     IonButton,
     IonText,
     IonInput,
@@ -73,6 +74,15 @@ export class SigninComponent implements OnInit {
 
   ngOnInit() {
     addIcons({ arrowBackOutline });
+    this.resetForm();
+  }
+
+  private resetForm() {
+    this.signinFrom.reset();
+    this.fullName.reset();
+    this.email.reset();
+    this.password.reset();
+    this.isDataValid = true;
   }
 
   back() {
@@ -95,6 +105,7 @@ export class SigninComponent implements OnInit {
         this.signinFrom.value.password,
         this.signinFrom.value.fullName
       );
+      this.resetForm();
 
       await loading.dismiss();
     }
