@@ -12,7 +12,7 @@
         @if(userSubData$ | async; as subData) {
           @if(subData.length > 0) {
             <section class="summary-section">
-              <app-donut-chart [subData]="subData"></app-donut-chart>
+              <app-donut-chart [subData]="subData" [isFirstLoad]="isFirstLoad"></app-donut-chart>
             </section>
             <div class="expenses-summary">
               <div class="expense-card">
