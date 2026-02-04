@@ -3,3 +3,70 @@ ion-toolbar ion-icon {
   height: 4vh;
   width: 4vw;
 }
+
+ion-content {
+  --background: var(--app-bg);
+}
+
+ion-list {
+  background: transparent;
+  padding: 0;
+}
+
+ion-item {
+  --background: var(--app-surface);
+  --border-color: var(--app-border);
+  --color: var(--app-text);
+  --highlight-color-focused: var(--ion-color-primary);
+  
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border: 1px solid var(--app-border);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: rgba(124, 58, 237, 0.3);
+  }
+  
+  &.ion-focused {
+    border-color: var(--ion-color-primary);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  }
+  
+  ion-input {
+    --color: var(--app-text);
+    --placeholder-color: var(--app-text-muted);
+  }
+}
+
+// Fix label size for floating labels
+ion-input[labelPlacement="floating"] {
+  ion-label {
+    font-size: 14px !important;
+    color: var(--app-text-muted) !important;
+  }
+}
+
+ion-input-password-toggle {
+  --color: var(--app-text-muted);
+}
+
+ion-text[color='danger'] {
+  display: block;
+  margin-top: 6px;
+  margin-bottom: 8px;
+  padding-left: 4px;
+  font-size: 13px;
+  color: #ef4444;
+}
+
+ion-button {
+  --border-radius: 12px;
+  height: 48px;
+  font-weight: 500;
+  text-transform: none;
+  
+  &[type='submit'] {
+    --color: white;
+  }
+}

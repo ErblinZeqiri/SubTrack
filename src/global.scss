@@ -67,8 +67,9 @@ ion-tab-button {
 ion-header ion-toolbar {
   --min-height: 45px;
   min-height: 45px;
-  --background: transparent;
-  --border-color: transparent;
+  --background: var(--app-surface);
+  --color: var(--app-text);
+  --border-color: var(--app-border);
 }
 
 body {
