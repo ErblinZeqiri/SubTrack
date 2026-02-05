@@ -83,6 +83,75 @@ ion-content {
   color: var(--app-text);
 }
 
+// Datetime & Picker dark mode
+ion-datetime {
+  --wheel-fade-background-rgb: 23, 27, 34;
+  --wheel-fade-background: var(--app-surface);
+  --wheel-highlight-background: rgba(124, 58, 237, 0.18);
+  --wheel-highlight-border-radius: 12px;
+  --calendar-background: var(--app-surface);
+  --calendar-day-text-color: var(--app-text);
+  --calendar-day-text-color-active: #fff;
+  --calendar-day-background: transparent;
+  --calendar-day-background-hover: rgba(124, 58, 237, 0.12);
+}
+
+ion-datetime::part(month-year-button-active) {
+  background: rgba(124, 58, 237, 0.18);
+  color: #fff;
+}
+
+ion-datetime::part(month-year-picker) {
+  background: var(--app-surface);
+}
+
+ion-picker {
+  --background: var(--app-surface);
+  --toolbar-background: var(--app-surface);
+  --toolbar-border-color: var(--app-border);
+  --button-color: var(--app-text);
+  --column-text-color: var(--app-text);
+  --column-text-color-rgb: 226, 232, 240;
+  --highlight-background: transparent;
+  --highlight-border-radius: 0;
+  --fade-background-rgb: 23, 27, 34;
+  --fade-background: var(--app-surface);
+}
+
+ion-picker::part(wrapper),
+ion-picker::part(container),
+ion-picker::part(columns),
+ion-picker::part(column),
+ion-picker::part(options) {
+  background: var(--app-surface);
+  box-shadow: none;
+}
+
+ion-picker::part(column) {
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+ion-picker::part(option) {
+  color: var(--app-text);
+}
+
+ion-picker::part(selected) {
+  color: #fff;
+  background: transparent;
+  box-shadow: none;
+}
+
+ion-datetime::part(wheel) {
+  background: var(--app-surface);
+}
+
+ion-datetime::part(wheel-item),
+ion-datetime::part(wheel-item-active) {
+  background: var(--app-surface);
+  box-shadow: none;
+}
+
 ion-label, ion-title, ion-content, .alert-radio-label {
   color: var(--app-text) !important;
   font-family: $font-family !important;

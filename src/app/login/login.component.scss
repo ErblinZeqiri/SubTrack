@@ -102,6 +102,14 @@ ion-button {
   }
 }
 
+.google-button {
+  --color: #ffffff;
+}
+
+.google-button ion-icon {
+  color: #ffffff;
+}
+
 ion-img {
   height: auto;
   width: 100%;

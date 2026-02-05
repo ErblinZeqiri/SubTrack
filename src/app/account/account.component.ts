@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { AuthService } from '../services/auth/auth.service';
 import {
   LoadingController,
@@ -33,6 +33,7 @@ import { User } from '@angular/fire/auth';
 })
 export class AccountComponent implements OnInit {
   userData$: Observable<User | null>;
+  @ViewChild(IonAlert) alertRef?: IonAlert;
 
   private readonly authService = inject(AuthService);
   private readonly loadingCtrl = inject(LoadingController);
@@ -46,7 +47,11 @@ export class AccountComponent implements OnInit {
     {
       text: 'Oui',
       role: 'confirm',
-      handler: () => this.logout(),
+      handler: () => {
+        this.alertRef?.dismiss();
+        this.logout();
+        return false;
+      },
     },
   ];
 
@@ -68,9 +73,10 @@ export class AccountComponent implements OnInit {
 
     try {
       await this.authService.logout();
-      this.dataService.clearData();
     } catch (error) {
       console.error('❌ Erreur déconnexion:', error);
+    } finally {
+      await loading.dismiss();
     }
   }
 }
