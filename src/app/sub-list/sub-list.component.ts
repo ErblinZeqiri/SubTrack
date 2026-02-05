@@ -36,6 +36,7 @@ import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { funnelOutline, calendarOutline, close } from 'ionicons/icons';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-sub-list',
@@ -84,6 +85,8 @@ export class SubListComponent implements OnInit {
   tempSelectedRenewals: string[] = [];
   userID!: string;
   private readonly destroyRef = inject(DestroyRef);
+  private readonly logoBaseUrl = 'https://img.logo.dev';
+  private readonly logoDevToken = environment.logoDevToken;
 
   get hasActiveFilters(): boolean {
     return this.selectedCategories.length > 0 || this.selectedRenewals.length > 0;
@@ -315,14 +318,41 @@ export class SubListComponent implements OnInit {
 
   getLogoUrl(sub: Subscription): string {
     if (sub.logo) {
+      if (sub.logo.includes('logo.clearbit.com')) {
+        const extractedDomain = this.extractDomainFromUrl(sub.logo);
+        return extractedDomain ? this.buildLogoDevUrl(extractedDomain) : '';
+      }
+      if (sub.logo.includes('img.logo.dev') && !sub.logo.includes('token=')) {
+        const extractedDomain = this.extractDomainFromUrl(sub.logo);
+        return extractedDomain ? this.buildLogoDevUrl(extractedDomain) : '';
+      }
       return sub.logo;
     }
     if (sub.domain) {
-      return `https://logo.clearbit.com/${sub.domain}`;
+      return this.buildLogoDevUrl(sub.domain);
     }
     // Fallback: générer un domaine à partir du nom
     const domainGuess = sub.companyName?.toLowerCase().replace(/\s+/g, '') + '.com';
-    return `https://logo.clearbit.com/${domainGuess}`;
+    return this.buildLogoDevUrl(domainGuess);
+  }
+
+  private buildLogoDevUrl(domain: string): string {
+    if (!this.logoDevToken) {
+      return '';
+    }
+
+    const safeDomain = domain.trim().toLowerCase();
+    return `${this.logoBaseUrl}/${safeDomain}?token=${this.logoDevToken}&format=webp&retina=true&size=128`;
+  }
+
+  private extractDomainFromUrl(url: string): string | null {
+    try {
+      const cleanedUrl = url.split('?')[0];
+      const lastSegment = cleanedUrl.split('/').pop();
+      return lastSegment ? lastSegment.trim().toLowerCase() : null;
+    } catch {
+      return null;
+    }
   }
 
   onImageError(event: Event) {

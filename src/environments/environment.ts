@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  logoDevToken: 'pk_B5BGYc7ARIOuH6WCYJ2ntQ',
   firebaseConfig: {
     apiKey: 'AIzaSyBPpboh7pXaboBXRILn2-_dmXxAM7ZOt2s',
     authDomain: 'subtrack-330ce.firebaseapp.com',
