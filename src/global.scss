@@ -83,39 +83,75 @@ ion-content {
   color: var(--app-text);
 }
 
-// Datetime & Picker dark mode
+// ===== DATETIME & PICKER STYLES =====
 ion-datetime {
-  --wheel-fade-background-rgb: 23, 27, 34;
-  --wheel-fade-background: var(--app-surface);
-  --wheel-highlight-background: rgba(124, 58, 237, 0.18);
-  --wheel-highlight-border-radius: 12px;
-  --calendar-background: var(--app-surface);
-  --calendar-day-text-color: var(--app-text);
-  --calendar-day-text-color-active: #fff;
-  --calendar-day-background: transparent;
-  --calendar-day-background-hover: rgba(124, 58, 237, 0.12);
+  --background: #171B22 !important;
+  --calendar-background: #171B22 !important;
+  --wheel-fade-background: transparent !important;
+  --wheel-fade-background-rgb: 23, 27, 34 !important;
+  --calendar-day-text-color: #F1F5F9 !important;
+  --calendar-day-text-color-active: #FFFFFF !important;
+  --calendar-day-background: transparent !important;
+  --calendar-day-background-active: #7C3AED !important;
+  --calendar-day-background-hover: rgba(124, 58, 237, 0.12) !important;
+  --wheel-highlight-background: #7C3AED !important;
+  --wheel-highlight-border-radius: 12px !important;
+  --highlight-background: #7C3AED !important;
+  --highlight-border-radius: 12px !important;
+  --color: #F1F5F9 !important;
+  color: #F1F5F9 !important;
 }
 
-ion-datetime::part(month-year-button-active) {
-  background: rgba(124, 58, 237, 0.18);
-  color: #fff;
-}
-
+ion-datetime::part(background),
+ion-datetime::part(calendar),
+ion-datetime::part(calendar-body),
 ion-datetime::part(month-year-picker) {
-  background: var(--app-surface);
+  background: #171B22 !important;
+  color: #F1F5F9 !important;
 }
 
+ion-datetime::part(month-year-button),
+ion-datetime::part(month-year-button-active) {
+  background: transparent !important;
+  color: #F1F5F9 !important;
+  font-weight: 500 !important;
+}
+
+ion-datetime::part(wheel) {
+  background: #171B22 !important;
+}
+
+ion-datetime::part(wheel-item) {
+  background: transparent !important;
+  color: #F1F5F9 !important;
+  font-weight: 400 !important;
+  text-align: center !important;
+  border-radius: 12px !important;
+}
+
+ion-datetime::part(wheel-item-active) {
+  background: transparent !important;
+  color: #F1F5F9 !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  text-align: center !important;
+}
+
+// ===== ION-PICKER STYLES =====
 ion-picker {
-  --background: var(--app-surface);
-  --toolbar-background: var(--app-surface);
-  --toolbar-border-color: var(--app-border);
-  --button-color: var(--app-text);
-  --column-text-color: var(--app-text);
-  --column-text-color-rgb: 226, 232, 240;
-  --highlight-background: transparent;
-  --highlight-border-radius: 0;
-  --fade-background-rgb: 23, 27, 34;
-  --fade-background: var(--app-surface);
+  --background: #171B22 !important;
+  --toolbar-background: #171B22 !important;
+  --toolbar-border-color: #2A3340 !important;
+  --button-color: #F1F5F9 !important;
+  --column-text-color: #F1F5F9 !important;
+  --column-text-color-rgb: 241, 245, 249 !important;
+  --color: #F1F5F9 !important;
+  --fade-background: transparent !important;
+  --fade-background-rgb: 23, 27, 34 !important;
+  --highlight-background: #7C3AED !important;
+  --highlight-border-radius: 12px !important;
+  color: #F1F5F9 !important;
+  background: #171B22 !important;
 }
 
 ion-picker::part(wrapper),
@@ -123,33 +159,127 @@ ion-picker::part(container),
 ion-picker::part(columns),
 ion-picker::part(column),
 ion-picker::part(options) {
-  background: var(--app-surface);
-  box-shadow: none;
+  background: #171B22 !important;
 }
 
+ion-picker::part(columns),
 ion-picker::part(column) {
-  mask-image: none;
-  -webkit-mask-image: none;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
 }
 
 ion-picker::part(option) {
-  color: var(--app-text);
+  color: #F1F5F9 !important;
+  background: transparent !important;
+  font-size: 16px !important;
+  border-radius: 12px !important;
 }
 
 ion-picker::part(selected) {
-  color: #fff;
-  background: transparent;
-  box-shadow: none;
+  color: #FFFFFF !important;
+  background: #7C3AED !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  padding: 8px 16px !important;
+  margin: 0 8px !important;
 }
 
-ion-datetime::part(wheel) {
-  background: var(--app-surface);
+ion-picker::part(highlight) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+// ===== PICKER COLUMN OPTIONS (Shadow DOM) =====
+::ng-deep ion-picker {
+  .picker-opts,
+  .picker-col,
+  ion-picker-column,
+  ion-picker-column-option,
+  .picker-item {
+    text-align: center !important;
+  }
+
+  .picker-opts {
+    border-radius: 12px !important;
+  }
+
+  .picker-item {
+    border-radius: 12px !important;
+    background: transparent !important;
+  }
+	
+  .picker-item.picker-item-active {
+    border-radius: 12px !important;
+    background: #7C3AED !important;
+    color: #FFFFFF !important;
+  }
+	
+  .picker-item-highlight {
+    display: none !important;
+    background: transparent !important;
+  }
+
+  .picker-highlight {
+    background: #7C3AED !important;
+    border-radius: 12px !important;
+  }
 }
 
-ion-datetime::part(wheel-item),
-ion-datetime::part(wheel-item-active) {
-  background: var(--app-surface);
-  box-shadow: none;
+::ng-deep ion-picker-column-option button {
+  text-align: center !important;
+  justify-content: center !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  
+  span,
+  div,
+  * {
+    text-align: center !important;
+    width: 100% !important;
+  }
+}
+
+::ng-deep ion-picker-column[aria-label*="year"] ion-picker-column-option button {
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+ion-picker-column-option {
+  --ion-color-base: transparent !important;
+  --ion-color-contrast: #F1F5F9 !important;
+}
+
+ion-datetime ion-picker-column-option.ion-color-primary,
+ion-datetime .ion-color-primary {
+  --ion-color-base: #7C3AED !important;
+  --ion-color-base-rgb: 124, 58, 237 !important;
+  --ion-color-contrast: #FFFFFF !important;
+  --ion-color-contrast-rgb: 255, 255, 255 !important;
+  --ion-color-shade: #6D28D9 !important;
+  --ion-color-tint: #8B5CF6 !important;
+}
+
+ion-picker-column-option::part(wheel-item),
+ion-picker-column-option::part(wheel-item-active) {
+  border-radius: 12px !important;
+  background: transparent !important;
+  background-clip: padding-box !important;
+  box-shadow: none !important;
+  outline: none !important;
+  border: none !important;
+  text-align: center !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+ion-picker-column-option::part(wheel-item-active) {
+  color: #F1F5F9 !important;
+  font-weight: 600 !important;
 }
 
 ion-label, ion-title, ion-content, .alert-radio-label {
