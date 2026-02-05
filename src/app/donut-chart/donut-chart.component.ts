@@ -57,6 +57,7 @@ export class DonutChartComponent implements OnChanges {
   series: number[] = [];
   labels: string[] = [];
   logoUrls: string[] = [];
+  allSubscriptions: Subscription[] = []; // Tous les abonnements pour les chips
   
   // Variables pour l'interactivité
   selectedSegmentIndex: number | null = null;
@@ -71,6 +72,12 @@ export class DonutChartComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['subData']) {
       this.updateChartData();
+      // Désactiver les animations après le premier chargement
+      if (this.isFirstLoad) {
+        setTimeout(() => {
+          this.isFirstLoad = false;
+        }, 1200);
+      }
     }
   }
 
@@ -95,31 +102,24 @@ export class DonutChartComponent implements OnChanges {
     // Trier par montant décroissant
     const sortedSubs = [...this.subData].sort((a, b) => b.amount - a.amount);
     
-    // Garder les 5 plus gros, regrouper le reste en "Autres"
-    const topSubs = sortedSubs.slice(0, 5);
-    const otherSubs = sortedSubs.slice(5);
+    // Afficher TOUS les abonnements (pas seulement top 5)
+    this.series = sortedSubs.map((sub) => sub.amount);
+    this.labels = sortedSubs.map((sub) => sub.companyName);
+    this.logoUrls = sortedSubs.map((sub) => sub.logo);
     
-    this.series = topSubs.map((sub) => sub.amount);
-    this.labels = topSubs.map((sub) => sub.companyName);
-    this.logoUrls = topSubs.map((sub) => sub.logo);
-    
-    // Ajouter "Autres" si nécessaire
-    if (otherSubs.length > 0) {
-      const otherTotal = otherSubs.reduce((sum, sub) => sum + sub.amount, 0);
-      this.series.push(otherTotal);
-      this.labels.push('Autres');
-      this.logoUrls.push('');
-    }
+    // Sauvegarder TOUS les abonnements triés pour les chips
+    this.allSubscriptions = sortedSubs;
 
-    // Sauvegarder les couleurs originales pour reset
-    this.originalFillColors = ['#7C3AED', '#A78BFA', '#6366F1', '#8B5CF6', '#C4B5FD', '#94A3B8'];
+    // Générer les couleurs pour tous les abonnements
+    const baseColors = ['#7C3AED', '#A78BFA', '#6366F1', '#8B5CF6', '#C4B5FD', '#94A3B8'];
+    const allColors = sortedSubs.map((_, index) => baseColors[index % baseColors.length]);
+    this.originalFillColors = allColors;
     this.originalSeries = [...this.series];
 
     // Initialiser le texte du centre
-    const total = this.getTotalAmount();
     this.centerText = {
-      title: `${Math.round(total)} CHF`,
-      subtitle: 'Abonnements actifs'
+      title: `${this.allSubscriptions.length}`,
+      subtitle: `Abonnement${this.allSubscriptions.length > 1 ? 's' : ''}`
     };
     this.selectedSegmentIndex = null;
 
@@ -165,12 +165,27 @@ export class DonutChartComponent implements OnChanges {
         colors: ['rgba(255, 255, 255, 0.12)'],
       } as ApexStroke,
       dataLabels: {
-        enabled: false,
+        enabled: true,
+        formatter: (val: number) => {
+          return Math.round(val) + '%';
+        },
+        style: {
+          fontSize: '11px',
+          fontWeight: '600',
+          colors: ['#fff']
+        },
+        dropShadow: {
+          enabled: true,
+          top: 1,
+          left: 1,
+          blur: 2,
+          opacity: 0.5
+        }
       } as ApexDataLabels,
       fill: {
         type: 'solid',
         opacity: 1,
-        colors: ['#7C3AED', '#A78BFA', '#6366F1', '#8B5CF6', '#C4B5FD', '#94A3B8'],
+        colors: allColors,
       } as ApexFill,
       states: {
         active: {
@@ -207,28 +222,19 @@ export class DonutChartComponent implements OnChanges {
         },
       ] as ApexResponsive[],
     };
-  }
 
-  // Méthodes pour la légende personnalisée
-  getChipColor(index: number): string {
-    const colors = ['#7C3AED', '#A78BFA', '#6366F1', '#8B5CF6', '#C4B5FD', '#64748B'];
-    return colors[index] || colors[colors.length - 1];
-  }
-
-  getPercentage(index: number): string {
-    const total = this.series.reduce((sum, val) => sum + val, 0);
-    const percent = (this.series[index] / total) * 100;
-    return percent.toFixed(0);
+    // Force change detection pour OnPush strategy
+    this.cd.markForCheck();
   }
 
   getTotalAmount(): number {
-    return this.series.reduce((sum, val) => sum + val, 0);
+    return this.subData.reduce((sum, sub) => sum + sub.amount, 0);
   }
 
-  // Méthode pour gérer le tap sur une chip
-  onChipTap(index: number) {
+  // Méthode pour gérer le click sur une chip
+  onChipClick(index: number) {
     if (this.selectedSegmentIndex === index) {
-      // Double tap = reset
+      // Double click = reset
       this.resetSegmentHighlight();
     } else {
       this.selectedSegmentIndex = index;
@@ -240,28 +246,75 @@ export class DonutChartComponent implements OnChanges {
     if (this.selectedSegmentIndex === null) return;
 
     const total = this.getTotalAmount();
-    const selectedAmount = this.series[this.selectedSegmentIndex];
-    const selectedLabel = this.labels[this.selectedSegmentIndex];
-    const percent = Math.round((selectedAmount / total) * 100);
+    const selectedSub = this.allSubscriptions[this.selectedSegmentIndex];
+    const percent = Math.round((selectedSub.amount / total) * 100);
 
     // Mettre à jour le texte central
     this.centerText = {
-      title: `${Math.round(selectedAmount)} CHF`,
-      subtitle: `${percent}% - ${selectedLabel}`
+      title: selectedSub.companyName,
+      subtitle: `${Math.round(selectedSub.amount)} CHF \u2022 ${percent}%`
     };
 
-    // On ne modifie plus les couleurs - la CSS du brightness gère l'effet visuel
+    // Créer l'effet de mise en avant: réduire l'opacité des autres segments SANS animation
+    const baseColors = ['#7C3AED', '#A78BFA', '#6366F1', '#8B5CF6', '#C4B5FD', '#94A3B8'];
+    const highlightedColors = baseColors.map((color, index) => {
+      if (index === this.selectedSegmentIndex) {
+        return color; // Couleur pleine pour le segment sélectionné
+      }
+      return color + '40'; // 40 = 25% d'opacité pour les autres
+    });
+
+    const currentOptions = this.chartOptions;
+    this.chartOptions = {
+      ...currentOptions,
+      chart: {
+        ...currentOptions.chart,
+        animations: {
+          enabled: false,
+        }
+      } as ApexChart,
+      fill: {
+        ...currentOptions.fill,
+        colors: highlightedColors,
+      }
+    };
+
     this.cd.markForCheck();
   }
 
   resetSegmentHighlight() {
     this.selectedSegmentIndex = null;
     this.centerText = {
-      title: `${Math.round(this.getTotalAmount())} CHF`,
-      subtitle: 'Abonnements actifs'
+      title: `${this.allSubscriptions.length}`,
+      subtitle: `Abonnement${this.allSubscriptions.length > 1 ? 's' : ''}`
     };
 
-    // On ne restore pas les couleurs - elles n'ont jamais été changées
+    // Réinitialiser les couleurs originales sans animation
+    const currentOptions = this.chartOptions;
+    this.chartOptions = {
+      ...currentOptions,
+      chart: {
+        ...currentOptions.chart,
+        animations: {
+          enabled: false,
+        }
+      } as ApexChart,
+      fill: {
+        ...currentOptions.fill,
+        colors: this.originalFillColors,
+      }
+    };
+
     this.cd.markForCheck();
+  }
+
+  getChipColor(index: number): string {
+    const colors = ['#7C3AED', '#A78BFA', '#6366F1', '#8B5CF6', '#C4B5FD', '#94A3B8'];
+    return colors[index % colors.length];
+  }
+
+  getPercentage(amount: number): number {
+    const total = this.getTotalAmount();
+    return Math.round((amount / total) * 100);
   }
 }

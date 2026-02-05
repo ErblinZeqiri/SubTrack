@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
-import { Subscription, User } from '../../interfaces/interface';
+import { Subscription } from '../../interfaces/interface';
 import { ExepensesService } from '../services/expenses/exepenses.service';
 import {
   SUBSCRIPTION_CATEGORIES,
@@ -7,19 +7,7 @@ import {
 } from '../constants/subscription.constants';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { NgOptimizedImage } from '@angular/common';
-import {
-  concat,
-  concatMap,
-  firstValueFrom,
-  from,
-  map,
-  Observable,
-  of,
-  switchMap,
-  tap,
-  filter,
-} from 'rxjs';
+import { firstValueFrom, map, Observable, of, switchMap, filter } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { AuthService } from '../services/auth/auth.service';
 import {
@@ -29,13 +17,11 @@ import {
   IonContent,
   IonList,
   IonItem,
-  IonLabel,
   IonRefresher,
   IonRefresherContent,
   IonItemSliding,
   IonItemOptions,
   IonItemOption,
-  IonAlert,
   LoadingController,
   AlertController,
   IonText,
@@ -46,10 +32,9 @@ import {
   IonIcon,
 } from '@ionic/angular/standalone';
 import { DonutChartComponent } from '../donut-chart/donut-chart.component';
-import { HttpClient } from '@angular/common/http';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { funnelOutline, calendarOutline, closeOutline, close } from 'ionicons/icons';
+import { funnelOutline, calendarOutline, close } from 'ionicons/icons';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -79,7 +64,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     RouterLink,
   ],
   templateUrl: './sub-list.component.html',
-  styleUrls: ['./sub-list.component.css', './expenses-summary.css', './sub-list-dark.component.css'],
+  styleUrls: ['./sub-list.component.css', './sub-list-dark.component.css'],
   providers: [ExepensesService],
 })
 export class SubListComponent implements OnInit {
@@ -118,7 +103,6 @@ export class SubListComponent implements OnInit {
     private readonly _auth: AuthService,
     private readonly loadingCtrl: LoadingController,
     private readonly alertCtrl: AlertController,
-    private readonly httpClient: HttpClient,
     private readonly _expensesService: ExepensesService
   ) {
     addIcons({ funnelOutline, calendarOutline, close });
@@ -170,29 +154,30 @@ export class SubListComponent implements OnInit {
   }
 
   async applyFilters() {
-    const loading = await this.loadingCtrl.create({
-      message: 'Chargement...',
-    });
-
-    await loading.present();
-    
+    // Pas besoin de loading - filtrage instantan\u00e9 local
     try {
-      const filters = {
-        categories: this.selectedCategories,
-        renewals: this.selectedRenewals,
-        userID: this.userID,
-      };
+      // R\u00e9cup\u00e9rer toutes les donn\u00e9es utilisateur une seule fois
+      const allSubs = await firstValueFrom(this._dataService.userSubData$);
 
-      const data = await firstValueFrom(
-        this.httpClient.post<Subscription[]>(
-          'https://us-central1-subtrack-330ce.cloudfunctions.net/filterSubscriptions',
-          filters
-        )
-      );
+      let filteredSubs: Subscription[] = [...allSubs];
 
-      const hasData = Array.isArray(data) && data.length > 0;
+      // Filtrer par cat\u00e9gorie localement
+      if (this.selectedCategories.length > 0) {
+        filteredSubs = filteredSubs.filter(sub => 
+          this.selectedCategories.includes(sub.category)
+        );
+      }
+
+      // Filtrer par renouvellement localement
+      if (this.selectedRenewals.length > 0) {
+        filteredSubs = filteredSubs.filter(sub => 
+          this.selectedRenewals.includes(sub.renewal)
+        );
+      }
+
+      const hasData = filteredSubs.length > 0;
       this.noSub = !hasData;
-      this.userSubData$ = of(hasData ? data : []);
+      this.userSubData$ = of(hasData ? filteredSubs : []);
       this.totalAmount$ = this.userSubData$.pipe(
         map((subs) => this.calculateTotal(subs))
       );
@@ -204,8 +189,8 @@ export class SubListComponent implements OnInit {
       );
     } catch (error) {
       console.error('Erreur lors du filtrage:', error);
-    } finally {
-      await loading.dismiss();
+      // En cas d'erreur, recharger toutes les donn\u00e9es
+      this.loadData();
     }
   }
 

@@ -200,6 +200,36 @@ ion-alert {
   }
 }
 
+// Popover & Select dark mode
+ion-popover {
+  --background: var(--app-surface);
+  --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+  ion-item {
+    --background: var(--app-surface);
+    --color: var(--app-text);
+    --border-color: var(--app-border);
+  }
+
+  ion-checkbox {
+    --background: var(--app-bg);
+    --background-checked: var(--ion-color-primary);
+    --border-color: var(--app-border);
+    --border-color-checked: var(--ion-color-primary);
+    --checkmark-color: #fff;
+    --size: 20px;
+
+    &::part(container) {
+      border-width: 2px;
+      border-radius: 4px;
+    }
+  }
+
+  ion-label {
+    color: var(--app-text);
+  }
+}
+
 // Action Sheet dark mode
 ion-action-sheet {
   --background: var(--app-surface);
