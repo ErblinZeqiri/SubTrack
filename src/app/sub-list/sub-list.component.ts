@@ -201,12 +201,23 @@ export class SubListComponent implements OnInit {
     await this.loadData();
   }
 
-  private async loadData() {
-    const loading = await this.loadingCtrl.create({
-      message: 'Chargement...',
-    });
+  async ionViewWillEnter(): Promise<void> {
+    await this.loadData(false);
+    if (this.selectedCategories.length > 0 || this.selectedRenewals.length > 0) {
+      await this.applyFilters();
+    }
+  }
 
-    await loading.present();
+  private async loadData(showLoading = true) {
+    const loading = showLoading
+      ? await this.loadingCtrl.create({
+          message: 'Chargement...',
+        })
+      : null;
+
+    if (loading) {
+      await loading.present();
+    }
     this.tempSelectedCategories = [...this.selectedCategories];
     this.tempSelectedRenewals = [...this.selectedRenewals];
     this._auth
@@ -220,7 +231,9 @@ export class SubListComponent implements OnInit {
           } else {
             this.noSub = true;
           }
-          this.loadingCtrl.dismiss();
+          if (loading) {
+            await loading.dismiss();
+          }
           return this._dataService.userSubData$;
         }),
         takeUntilDestroyed(this.destroyRef)

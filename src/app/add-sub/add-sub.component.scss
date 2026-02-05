@@ -41,13 +41,6 @@ ion-item {
     border-color: var(--ion-color-primary);
     box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
   }
-  
-  ion-label {
-    color: var(--app-text-muted) !important;
-    font-size: 14px;
-  }
-  
-  ion-input,
   ion-select {
     --color: var(--app-text);
     --placeholder-color: var(--app-text-muted);
