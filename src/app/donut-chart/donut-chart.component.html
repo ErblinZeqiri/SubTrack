@@ -26,15 +26,19 @@
     <div class="center-label">{{ centerText.subtitle }}</div>
   </div>
   
-  <!-- Légende personnalisée sous forme de chips scrollables -->
+  <!-- Légende personnalisée sous forme de chips scrollables - tous les abonnements -->
   <div class="legend-chips">
-    @for (label of labels; track $index) {
-      <div class="chip" [class.active]="selectedSegmentIndex === $index" (click)="onChipTap($index)">
-        <span class="chip-color" [style.background-color]="getChipColor($index)"></span>
-        <span class="chip-name">{{ label }}</span>
-        <span class="chip-amount">{{ series[$index] | number:'1.0-0' }} CHF</span>
-        <span class="chip-percent">{{ getPercentage($index) }}%</span>
-      </div>
+    @if (allSubscriptions && allSubscriptions.length > 0) {
+      @for (sub of allSubscriptions; track $index) {
+        <div class="chip" (click)="onChipClick($index)" [class.selected]="selectedSegmentIndex === $index">
+          <div class="chip-color" [style.background-color]="getChipColor($index)"></div>
+          <span class="chip-name">{{ sub.companyName }}</span>
+          <span class="chip-amount">{{ sub.amount | number:'1.0-0' }} CHF</span>
+          <span class="chip-percent">{{ getPercentage(sub.amount) }}%</span>
+        </div>
+      }
+    } @else {
+      <span style="color: var(--app-text-muted); font-size: 12px;">No subscriptions</span>
     }
   </div>
 </div>
