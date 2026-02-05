@@ -58,65 +58,90 @@ ion-item {
   }
 }
 
-// Calendar/datetime styling
+// ===== DATETIME MODAL & CALENDAR STYLES =====
 ion-modal.datetime-modal {
-  --backdrop-opacity: 0.6;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  --backdrop-opacity: 0.6 !important;
+  --ion-background-color: #0F1117 !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
   
   &::part(backdrop) {
-    background: rgba(15, 17, 23, 0.8);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(15, 17, 23, 0.8) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+  
+  &::part(content) {
+    --background: #171B22 !important;
+    background: #171B22 !important;
+    border-radius: 16px !important;
   }
 }
 
-ion-modal::part(content) {
-  --background: transparent;
-  border-radius: 16px;
+/* Styles pour datetime dans la modal */
+ion-modal.datetime-modal ion-datetime {
+  --background: #171B22 !important;
+  --calendar-background: #171B22 !important;
+  --color: #F1F5F9 !important;
+  color: #F1F5F9 !important;
 }
 
-ion-datetime {
-  --background: var(--app-surface);
-  --ion-color-base: var(--app-text) !important;
-  color: var(--app-text);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--app-border);
-}
-
+/* Parts du datetime */
 ion-datetime::part(background) {
-  background: var(--app-surface);
+  background: #171B22 !important;
+  color: #F1F5F9 !important;
+}
+
+ion-datetime::part(header) {
+  background: #171B22 !important;
 }
 
 ion-datetime::part(calendar) {
-  border-radius: 16px;
-  background: var(--app-surface);
-  color: var(--app-text);
+  background: #171B22 !important;
+  color: #F1F5F9 !important;
+  border-radius: 16px !important;
+}
+
+ion-datetime::part(calendar-body) {
+  background: #171B22 !important;
 }
 
 ion-datetime::part(month-year-button),
 ion-datetime::part(calendar-day),
-ion-datetime::part(time-button),
-ion-datetime::part(wheel-item) {
-  color: var(--app-text);
-  background: transparent;
+ion-datetime::part(time-button) {
+  color: #F1F5F9 !important;
+  background: transparent !important;
+  font-weight: 500 !important;
 }
 
 ion-datetime::part(calendar-day):hover {
-  background: rgba(124, 58, 237, 0.1);
-  color: var(--app-text);
+  background: rgba(124, 58, 237, 0.1) !important;
+  color: #F1F5F9 !important;
 }
 
 ion-datetime::part(calendar-day-active),
 ion-datetime::part(calendar-day-today) {
-  background: var(--ion-color-primary) !important;
-  color: white !important;
+  background: #7C3AED !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
 }
 
 ion-datetime::part(active) {
-  background: var(--ion-color-primary) !important;
-  color: white !important;
+  background: transparent !important;
+  color: #F1F5F9 !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  text-align: center !important;
+  box-shadow: none !important;
+}
+
+ion-datetime::part(month-year-button-active) {
+  background: transparent !important;
+  color: #F1F5F9 !important;
+}
+
+ion-datetime::part(month-year-picker) {
+  background: #171B22 !important;
 }
 
 // Boutons du calendrier (Annuler/Valider) - TRÈS VISIBLE
