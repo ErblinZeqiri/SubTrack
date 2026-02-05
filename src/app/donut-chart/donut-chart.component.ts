@@ -256,12 +256,11 @@ export class DonutChartComponent implements OnChanges {
     };
 
     // Créer l'effet de mise en avant: réduire l'opacité des autres segments SANS animation
-    const baseColors = ['#7C3AED', '#A78BFA', '#6366F1', '#8B5CF6', '#C4B5FD', '#94A3B8'];
-    const highlightedColors = baseColors.map((color, index) => {
+    const highlightedColors = this.originalFillColors.map((color, index) => {
       if (index === this.selectedSegmentIndex) {
         return color; // Couleur pleine pour le segment sélectionné
       }
-      return color + '40'; // 40 = 25% d'opacité pour les autres
+      return this.applyOpacity(color, '40'); // 40 = 25% d'opacité pour les autres
     });
 
     const currentOptions = this.chartOptions;
@@ -280,6 +279,26 @@ export class DonutChartComponent implements OnChanges {
     };
 
     this.cd.markForCheck();
+  }
+
+  private applyOpacity(color: string, alphaHex: string): string {
+    const trimmed = color.trim();
+    if (trimmed.startsWith('#')) {
+      if (trimmed.length === 7) {
+        return `${trimmed}${alphaHex}`;
+      }
+      if (trimmed.length === 9) {
+        return `${trimmed.slice(0, 7)}${alphaHex}`;
+      }
+      return trimmed;
+    }
+    if (trimmed.startsWith('rgba(')) {
+      return trimmed.replace(/rgba\(([^)]+),\s*[^)]+\)/, `rgba($1, 0.25)`);
+    }
+    if (trimmed.startsWith('rgb(')) {
+      return trimmed.replace(/rgb\(([^)]+)\)/, `rgba($1, 0.25)`);
+    }
+    return trimmed;
   }
 
   resetSegmentHighlight() {
