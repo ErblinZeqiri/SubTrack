@@ -306,22 +306,27 @@ export class SubListComponent implements OnInit {
         {
           text: 'Oui',
           handler: async () => {
-            await this.showLoading();
-
+            const loading = await this.loadingCtrl.create({ message: 'Suppression...' });
+            await loading.present();
             try {
               await this._dataService.deleteSub(sub);
               const user = await firstValueFrom(this._auth.getCurrentUser());
               if (user) {
-                await this._dataService.loadSubData(user.uid);
+                // Recharge la liste et force la mise à jour des totaux
+                this.userSubData$ = this._dataService.loadSubData(user.uid);
+                this.monthlyExpenses$ = this._expensesService.getCurrentExpensesMonth(this.userSubData$);
+                this.yearlyExpenses$ = this._expensesService.getCurrentExpensesYear(this.userSubData$);
+                this.totalAmount$ = this.userSubData$.pipe(map((items) => this.calculateTotal(items)));
               }
             } catch (error) {
               console.error('Erreur lors de la suppression:', error);
+            } finally {
+              await loading.dismiss();
             }
           },
         },
       ],
     });
-
     await alert.present();
   }
 
