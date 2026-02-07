@@ -103,6 +103,10 @@ export class DonutChartComponent implements OnChanges {
   private updateChartData() {
     // Trier par montant décroissant
     const sortedSubs = [...this.subData].sort((a, b) => b.amount - a.amount);
+
+    // Calculer les montants mensuels et annuels
+    this.monthlyAmount = sortedSubs.reduce((sum, sub) => sum + (sub.renewal === 'Mensuel' ? sub.amount : 0), 0);
+    this.annualAmount = sortedSubs.reduce((sum, sub) => sum + (sub.renewal === 'Annuel' ? sub.amount : 0), 0);
     
     // Afficher TOUS les abonnements (pas seulement top 5)
     this.series = sortedSubs.map((sub) => sub.amount);
@@ -338,13 +342,5 @@ export class DonutChartComponent implements OnChanges {
   getPercentage(amount: number): number {
     const total = this.getTotalAmount();
     return Math.round((amount / total) * 100);
-  }
-
-  navigateToAddSub() {
-    // TODO: Naviguer vers la page d'ajout d'abonnement
-    // Exemple avec Angular Router :
-    // this.router.navigate(['/add-sub']);
-    // Pour l'instant, simple alert
-    alert('Naviguer vers l’ajout d’abonnement');
   }
 }

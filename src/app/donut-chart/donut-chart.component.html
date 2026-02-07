@@ -25,32 +25,25 @@
     <div class="center-amount">{{ centerText.title }}</div>
     <div class="center-label">{{ centerText.subtitle }}</div>
   </div>
-
   <!-- Ultra-compact chiffres mensuels/annuels -->
-  <div class="monthly-annual-row">
+  <div class="monthly-annual-row spend-summary-compact">
+    <div style="text-align:center; font-weight:700; font-size:18px; margin-bottom:8px;">Dépenses</div>
     <div class="row">
       <div>
-        <span class="label">Dépenses</span>
-        <span class="sub-label">ce mois</span>
+        <span class="label">Ce mois</span>
       </div>
       <span class="value">
-        {{ monthlyAmount | number:'1.0-0' }} CHF
+        <strong>{{ monthlyAmount | number:'1.0-0' }} CHF</strong>
       </span>
     </div>
     <div class="row">
       <div>
-        <span class="label">Dépenses</span>
-        <span class="sub-label">cette année</span>
+        <span class="label">Cette année</span>
       </div>
       <span class="value">
-        {{ annualAmount | number:'1.0-0' }} CHF
+        <strong>{{ annualAmount | number:'1.0-0' }} CHF</strong>
       </span>
     </div>
-    <ng-container *ngIf="monthlyAmount === 0 && annualAmount === 0">
-      <div class="empty-msg">
-        <button class="add-btn" (click)="navigateToAddSub()">Ajouter un abonnement</button>
-      </div>
-    </ng-container>
   </div>
   
   <!-- Légende personnalisée sous forme de chips scrollables - tous les abonnements -->
