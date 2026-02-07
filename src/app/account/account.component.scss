@@ -1,0 +1,18 @@
+ion-button {
+  --border-radius: 12px;
+  height: 48px;
+  font-weight: 500;
+  text-transform: none;
+}
+
+// Style spécifique bouton déconnexion
+::ng-deep ion-button#present-alert {
+  --background: var(--ion-color-primary) !important;
+  --color: white !important;
+  --border-radius: 16px !important;
+}
+
+/* Dans global styles ou avec :host */
+ion-button.button-full::part(native) {
+  border-radius: 16px !important;
+}
