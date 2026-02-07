@@ -1,3 +1,76 @@
+@use 'theme/variables' as *;
+
+.empty-msg {
+  font-size: 15px;
+  color: #64748B;
+  margin-top: 16px;
+  text-align: center;
+  font-weight: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.add-btn {
+  background: #7C3AED;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 6px 16px;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(124,58,237,0.12);
+}
+.add-btn:hover {
+  background: #6D28D9;
+}
+
+/* Ultra-compact row pour chiffres mensuels/annuels sous le donut */
+.monthly-annual-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  padding: 24px 20px;
+  font-size: 16px;
+  color: #94A3B8;
+  background: rgba(30, 41, 59, 0.4);
+  border-radius: 16px;
+  margin: 24px 24px 0 24px;
+  gap: 20px;
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    margin-bottom: 0;
+  }
+  .label {
+    font-weight: 600;
+    color: #64748B;
+    font-size: 18px;
+    margin-bottom: 2px;
+  }
+  .value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #7C3AED;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .sub-label {
+    font-size: 14px;
+    color: #94A3B8;
+    margin-left: 6px;
+    font-weight: 400;
+  }
+}
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
@@ -8,7 +81,6 @@
  * For more information on global stylesheets, visit the documentation:
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
-@use 'theme/variables' as *;
 
 
 /* Core CSS required for Ionic components to work properly */

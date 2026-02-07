@@ -58,6 +58,8 @@ export class DonutChartComponent implements OnChanges {
   labels: string[] = [];
   logoUrls: string[] = [];
   allSubscriptions: Subscription[] = []; // Tous les abonnements pour les chips
+  monthlyAmount: number = 0;
+  annualAmount: number = 0;
   
   // Variables pour l'interactivité
   selectedSegmentIndex: number | null = null;
@@ -303,9 +305,10 @@ export class DonutChartComponent implements OnChanges {
 
   resetSegmentHighlight() {
     this.selectedSegmentIndex = null;
+    // Centrer le total des abonnements dans le donut
     this.centerText = {
       title: `${this.allSubscriptions.length}`,
-      subtitle: `Abonnement${this.allSubscriptions.length > 1 ? 's' : ''}`
+      subtitle: `Total abonnements`
     };
 
     // Réinitialiser les couleurs originales sans animation
@@ -335,5 +338,13 @@ export class DonutChartComponent implements OnChanges {
   getPercentage(amount: number): number {
     const total = this.getTotalAmount();
     return Math.round((amount / total) * 100);
+  }
+
+  navigateToAddSub() {
+    // TODO: Naviguer vers la page d'ajout d'abonnement
+    // Exemple avec Angular Router :
+    // this.router.navigate(['/add-sub']);
+    // Pour l'instant, simple alert
+    alert('Naviguer vers l’ajout d’abonnement');
   }
 }
