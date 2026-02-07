@@ -104,9 +104,83 @@ export class DonutChartComponent implements OnChanges {
     // Trier par montant décroissant
     const sortedSubs = [...this.subData].sort((a, b) => b.amount - a.amount);
 
-    // Calculer les montants mensuels et annuels
-    this.monthlyAmount = sortedSubs.reduce((sum, sub) => sum + (sub.renewal === 'Mensuel' ? sub.amount : 0), 0);
-    this.annualAmount = sortedSubs.reduce((sum, sub) => sum + (sub.renewal === 'Annuel' ? sub.amount : 0), 0);
+    // Calculer les montants mensuels : inclure tous les abonnements dont nextPaymentDate tombe dans le mois actuel
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    this.monthlyAmount = sortedSubs.reduce((sum, sub) => {
+      if (!sub.nextPaymentDate) return sum;
+      const paymentDate = new Date(sub.nextPaymentDate);
+      if (
+        paymentDate.getMonth() === currentMonth &&
+        paymentDate.getFullYear() === currentYear
+      ) {
+        return sum + sub.amount;
+      }
+      return sum;
+    }, 0);
+    this.annualAmount = sortedSubs.reduce((sum, sub) => {
+      // Si deadline est indéterminée ou null, on compte sur 12 mois
+      let endDate: Date | null = null;
+      if (sub.deadline && sub.deadline !== 'indetermine' && sub.deadline !== 'indéterminé') {
+        endDate = new Date(sub.deadline);
+      }
+      const now = new Date();
+      const endOfYear = new Date(now.getFullYear(), 11, 31);
+      const lastDate = endDate && endDate < endOfYear ? endDate : endOfYear;
+      // Calcule le nombre de paiements restants jusqu'à la fin de l'année ou la deadline
+      let count = 0;
+      let freq = 0;
+      switch (sub.renewal) {
+        case 'Mensuel':
+          freq = 1;
+          break;
+        case 'Annuel':
+          freq = 12;
+          break;
+        case 'Hebdomadaire':
+          freq = 1/4.34524; // 1 semaine ≈ 0.23 mois
+          break;
+        case 'Trimestriel':
+          freq = 3;
+          break;
+        case 'Semestriel':
+          freq = 6;
+          break;
+        case 'Quotidien':
+          freq = 1/30.44; // 1 jour ≈ 0.033 mois
+          break;
+        default:
+          freq = 0;
+      }
+      if (freq > 0) {
+        let next = sub.nextPaymentDate ? new Date(sub.nextPaymentDate) : now;
+        while (next <= lastDate) {
+          count++;
+          switch (sub.renewal) {
+            case 'Mensuel':
+              next.setMonth(next.getMonth() + 1);
+              break;
+            case 'Annuel':
+              next.setFullYear(next.getFullYear() + 1);
+              break;
+            case 'Hebdomadaire':
+              next.setDate(next.getDate() + 7);
+              break;
+            case 'Trimestriel':
+              next.setMonth(next.getMonth() + 3);
+              break;
+            case 'Semestriel':
+              next.setMonth(next.getMonth() + 6);
+              break;
+            case 'Quotidien':
+              next.setDate(next.getDate() + 1);
+              break;
+          }
+        }
+      }
+      return sum + (sub.amount * count);
+    }, 0);
     
     // Afficher TOUS les abonnements (pas seulement top 5)
     this.series = sortedSubs.map((sub) => sub.amount);
