@@ -29,68 +29,117 @@ export class ExepensesService {
     );
   }
 
-  private calculateCurrentExpensesMonth(subscriptions: Subscription[]): number {
+  public calculateCurrentExpensesMonth(subscriptions: Subscription[]): number {
     if (!Array.isArray(subscriptions) || subscriptions.length === 0) {
       return 0;
     }
-
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth() + 1;
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
     let expensesMonth = 0;
-
     for (const subscription of subscriptions) {
+      // 1. Additionner les paiements déjà effectués ce mois-ci
       const paymentHistory = this.getPaymentHistory(subscription);
-      const nextPaymentDate = new Date(subscription.nextPaymentDate);
-
-      const mostRecentPayment = this.getMostRecentPayment(paymentHistory);
-      if (mostRecentPayment) {
-        const mostRecentPaymentMonth =
-          new Date(mostRecentPayment.date).getMonth() + 1;
-        if (mostRecentPaymentMonth === currentMonth) {
-          expensesMonth += mostRecentPayment.amount;
-          continue;
+      for (const payment of paymentHistory) {
+        const paymentDate = new Date(payment.date);
+        if (
+          paymentDate.getMonth() === currentMonth &&
+          paymentDate.getFullYear() === currentYear
+        ) {
+          expensesMonth += payment.amount;
         }
       }
-
-      if (nextPaymentDate.getMonth() + 1 === currentMonth) {
-        expensesMonth += subscription.amount;
+      // 2. Ajouter le paiement à venir si la prochaine échéance tombe ce mois-ci
+      if (subscription.nextPaymentDate) {
+        const paymentDate = new Date(subscription.nextPaymentDate);
+        if (
+          paymentDate.getMonth() === currentMonth &&
+          paymentDate.getFullYear() === currentYear
+        ) {
+          expensesMonth += subscription.amount;
+        }
       }
     }
-
     return Number(expensesMonth.toFixed(2));
   }
 
-  private calculateCurrentExpensesYear(subscriptions: Subscription[]): number {
+  public calculateCurrentExpensesYear(subscriptions: Subscription[]): number {
     if (!Array.isArray(subscriptions) || subscriptions.length === 0) {
       return 0;
     }
-
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth() + 1;
-    const currentYear = currentDate.getFullYear();
+    const now = new Date();
+    const currentYear = now.getFullYear();
     let expensesYear = 0;
-
     for (const subscription of subscriptions) {
+      // 1. Additionner les paiements déjà effectués cette année
       const paymentHistory = this.getPaymentHistory(subscription);
       for (const payment of paymentHistory) {
-        const paymentHistoryYear = new Date(payment.date).getFullYear();
-        if (paymentHistoryYear === currentYear) {
+        const paymentDate = new Date(payment.date);
+        if (paymentDate.getFullYear() === currentYear) {
           expensesYear += payment.amount;
         }
       }
-
-      const nextPaymentDate = new Date(subscription.nextPaymentDate);
-      const paymentsLeft = this.getPaymentsLeft(
-        subscription.renewal,
-        currentMonth,
-        currentYear,
-        currentDate,
-        nextPaymentDate
-      );
-
-      expensesYear += paymentsLeft * subscription.amount;
+      // 2. Ajouter les paiements à venir jusqu'à la fin de l'année ou la deadline
+      let endDate: Date | null = null;
+      if (subscription.deadline && subscription.deadline !== 'indetermine' && subscription.deadline !== 'indéterminé') {
+        endDate = new Date(subscription.deadline);
+      }
+      const endOfYear = new Date(now.getFullYear(), 11, 31);
+      const lastDate = endDate && endDate < endOfYear ? endDate : endOfYear;
+      let count = 0;
+      let freq = 0;
+      switch (subscription.renewal) {
+        case 'Mensuel':
+          freq = 1;
+          break;
+        case 'Annuel':
+          freq = 12;
+          break;
+        case 'Hebdomadaire':
+          freq = 1/4.34524;
+          break;
+        case 'Trimestriel':
+          freq = 3;
+          break;
+        case 'Semestriel':
+          freq = 6;
+          break;
+        case 'Quotidien':
+          freq = 1/30.44;
+          break;
+        default:
+          freq = 0;
+      }
+      if (freq > 0) {
+        let next = subscription.nextPaymentDate ? new Date(subscription.nextPaymentDate) : now;
+        while (next <= lastDate) {
+          if (next.getFullYear() === currentYear) {
+            count++;
+          }
+          switch (subscription.renewal) {
+            case 'Mensuel':
+              next.setMonth(next.getMonth() + 1);
+              break;
+            case 'Annuel':
+              next.setFullYear(next.getFullYear() + 1);
+              break;
+            case 'Hebdomadaire':
+              next.setDate(next.getDate() + 7);
+              break;
+            case 'Trimestriel':
+              next.setMonth(next.getMonth() + 3);
+              break;
+            case 'Semestriel':
+              next.setMonth(next.getMonth() + 6);
+              break;
+            case 'Quotidien':
+              next.setDate(next.getDate() + 1);
+              break;
+          }
+        }
+      }
+      expensesYear += (subscription.amount * count);
     }
-
     return Number(expensesYear.toFixed(2));
   }
 

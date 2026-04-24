@@ -88,20 +88,15 @@ export class AddSubComponent {
   domain = '';
   filteredOptions$!: Observable<Company[]>;
   toggleDropdown: boolean = false;
-  selectedOption: Company | null = null;
   private readonly destroyRef = inject(DestroyRef);
-  
+
   // Use imported constants instead of duplicating
   readonly subscriptionCategories = SUBSCRIPTION_CATEGORIES;
   readonly subscriptionRenewal = SUBSCRIPTION_RENEWAL_TYPES;
   readonly subsciptionDeadline = SUBSCRIPTION_DEADLINE_TYPES;
   today = formatDate(new Date().toISOString(), 'YYYY-MM-dd', 'fr-CH');
-  selectedNextPaymentDate: string | null = this.today;
-  selectedDeadlineDate: string | null = this.today;
-  isDataValid: boolean = true;
   showErrors: boolean = false;
   status: boolean = false;
-  indetermineeValue: string = 'Indéterminée';
 
   addSubscribtionForm!: FormGroup;
   selectedCompany = new FormControl(
@@ -125,7 +120,7 @@ export class AddSubComponent {
     '',
     Validators.compose([Validators.required])
   );
-  deadline = new FormControl(
+  deadline = new FormControl<string>(
     this.subsciptionDeadline[0],
     Validators.compose([Validators.required])
   );
@@ -181,13 +176,8 @@ export class AddSubComponent {
     this.addSubscribtionForm.markAsUntouched();
     this.logo = '';
     this.domain = '';
-    const formData = this.addSubscribtionForm.value;
-    formData.deadline = null;
-    this.selectedDeadline;
-    this.selectedDeadlineDate;
-    this.deadline;
+    this.addSubscribtionForm.value.deadline = null;
     this.status = false;
-    this.isDataValid = true;
     this.showErrors = false;
   }
 
@@ -198,7 +188,7 @@ export class AddSubComponent {
     if (value === this.subsciptionDeadline[0]) {
       this.deadline.setValue(this.subsciptionDeadline[0]);
     } else if (value === 'Date de fin') {
-      this.deadline.reset();
+      this.deadline.setValue(this.today);
     }
   }
 
@@ -212,7 +202,6 @@ export class AddSubComponent {
     }
 
     if (this.addSubscribtionForm.valid) {
-      this.isDataValid = true;
       this.showErrors = false;
       const loading = await this.loadingCtrl.create({
         message: 'Connexion...',
@@ -232,7 +221,6 @@ export class AddSubComponent {
       this._router.navigate(['/home']);
     } else {
       this.addSubscribtionForm.markAllAsTouched();
-      this.isDataValid = false;
       this.showErrors = true;
     }
   }

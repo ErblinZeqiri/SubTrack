@@ -125,10 +125,7 @@
                 presentation="date"
                 min="{{ today }}"
                 max="2099-12-09"
-                [(ngModel)]="selectedNextPaymentDate"
-                name="nextPaymentDate"
                 [formControl]="nextPaymentDate"
-                formControlName="nextPaymentDate"
               >
               </ion-datetime>
             </ng-template>
@@ -163,10 +160,7 @@
                 presentation="date"
                 min="{{ today }}"
                 max="2099-12-09"
-                name="deadline"
-                [(ngModel)]="selectedDeadlineDate"
                 [formControl]="deadline"
-                formControlName="deadline"
               >
               </ion-datetime>
             </ng-template>

@@ -26,7 +26,6 @@ import {
   IonRow,
   IonCol,
   IonButton,
-  LoadingController,
   IonAvatar,
   IonModal,
   IonDatetime,
@@ -96,16 +95,13 @@ export class UpdateSubComponent implements OnInit {
   domain = '';
   filteredOptions$!: Observable<Company[]>;
   toggleDropdown: boolean = false;
-  selectedOption: Company | null = null;
   private readonly destroyRef = inject(DestroyRef);
-  
+
   // Use imported constants instead of duplicating
   readonly subscriptionCategories = SUBSCRIPTION_CATEGORIES;
   readonly subscriptionRenewal = SUBSCRIPTION_RENEWAL_TYPES;
   readonly subsciptionDeadline = SUBSCRIPTION_DEADLINE_TYPES;
   today = formatDate(new Date().toISOString(), 'YYYY-MM-dd', 'fr-CH');
-  selectedNextPaymentDate: string | null = this.today;
-  selectedDeadlineDate: string | null = this.today;
   isDataValid: boolean = true;
   status: boolean = false;
   indetermineeValue: string = 'Indéterminée';
@@ -143,7 +139,6 @@ export class UpdateSubComponent implements OnInit {
     private readonly _router: Router,
     private readonly companySuggestionsService: CompanySuggestionsService,
     private readonly _auth: AuthService,
-    private readonly loadingCtrl: LoadingController
   ) {
     addIcons({
       arrowBackOutline,
@@ -216,11 +211,6 @@ export class UpdateSubComponent implements OnInit {
     this.updateSubscribtionForm.reset();
     this.logo = '';
     this.domain = '';
-    const formData = this.updateSubscribtionForm.value;
-
-    if (formData.selectedDeadline === this.indetermineeValue) {
-      formData.deadline = null;
-    }
     this.status = false;
   }
 
@@ -230,7 +220,9 @@ export class UpdateSubComponent implements OnInit {
     if (value === this.indetermineeValue) {
       this.deadline.setValue(this.indetermineeValue);
     } else if (value === 'Date de fin') {
-      this.deadline.reset();
+      // Ne pas reset à null : garder la date sélectionnée (ou aujourd'hui par défaut)
+      // pour que le formulaire reste valide avant que l'utilisateur ouvre le picker
+      this.deadline.setValue(this.today);
     }
   }
 
@@ -240,16 +232,12 @@ export class UpdateSubComponent implements OnInit {
       throw new Error('User ID not found');
     }
 
-    if (this.selectedDeadline.value === this.indetermineeValue) {
+    if (this.deadline.value === this.indetermineeValue) {
       this.updateSubscribtionForm.value.deadline = null;
     }
 
     if (this.updateSubscribtionForm.valid) {
       this.isDataValid = true;
-      const loading = await this.loadingCtrl.create({
-        message: 'Connexion...',
-      });
-
       const formData = {
         ...this.updateSubscribtionForm.value,
         logo: this.logo,
