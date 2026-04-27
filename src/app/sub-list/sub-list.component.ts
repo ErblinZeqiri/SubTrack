@@ -5,9 +5,9 @@ import {
   SUBSCRIPTION_CATEGORIES,
   SUBSCRIPTION_RENEWAL_TYPES,
 } from '../constants/subscription.constants';
-import { Router, RouterLink, NavigationEnd } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { firstValueFrom, map, Observable, of, switchMap, filter } from 'rxjs';
+import { firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
 import { DataService } from '../services/data/data.service';
 import { AuthService } from '../services/auth/auth.service';
 import {
@@ -109,20 +109,6 @@ export class SubListComponent implements OnInit {
     private readonly _expensesService: ExepensesService
   ) {
     addIcons({ funnelOutline, calendarOutline, close });
-    
-    // Recharger les données seulement quand on navigue VERS /home depuis add-sub
-    let previousUrl: string | null = null;
-    this._router.events
-      .pipe(
-        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe((event) => {
-        if ((event.url === '/home' || event.url.startsWith('/home')) && previousUrl === '/add-sub') {
-          this.loadData();
-        }
-        previousUrl = event.url;
-      });
   }
 
   onFilterSelectionChange() {
@@ -202,7 +188,6 @@ export class SubListComponent implements OnInit {
   }
 
   async ionViewWillEnter(): Promise<void> {
-    await this.loadData(false);
     if (this.selectedCategories.length > 0 || this.selectedRenewals.length > 0) {
       await this.applyFilters();
     }
@@ -245,6 +230,7 @@ export class SubListComponent implements OnInit {
         );
         this.monthlyExpenses$ = this._expensesService.getCurrentExpensesMonth(this.userSubData$);
         this.yearlyExpenses$ = this._expensesService.getCurrentExpensesYear(this.userSubData$);
+        this.isFirstLoad = false;
       });
   }
 
