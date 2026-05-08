@@ -1,4 +1,4 @@
-package com.zeqiri.subtrack;
+package com.subtrack.app;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.zeqiri.subtrack",
+  "applicationId": "com.subtrack.app",
   "variantName": "release",
   "elements": [
     {
