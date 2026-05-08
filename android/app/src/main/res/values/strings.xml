@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">SubTrack</string>
     <string name="title_activity_main">SubTrack</string>
-    <string name="package_name">com.zeqiri.subtrack</string>
-    <string name="custom_url_scheme">com.zeqiri.subtrack</string>
+    <string name="package_name">com.subtrack.app</string>
+    <string name="custom_url_scheme">com.subtrack.app</string>
 </resources>
