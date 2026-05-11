@@ -7,41 +7,41 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:369263570865:android:8e5b8b3c29cfcfa85b1790",
+        "mobilesdk_app_id": "1:369263570865:android:2d9273c5e40837f85b1790",
         "android_client_info": {
-          "package_name": "com.zeqiri.subtrack"
+          "package_name": "com.subtrack.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "369263570865-6joddru7jlugqg2eivvfltlir7k02s7q.apps.googleusercontent.com",
+          "client_id": "369263570865-6fbni9kghlegg2a47hnqsb0phpaegiee.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.zeqiri.subtrack",
-            "certificate_hash": "caf70c80a269b7c89c03fc1fbd245a493e71c0b9"
-          }
-        },
-        {
-          "client_id": "369263570865-6tijat9pj9l9fh1g651d59m0gh3locaa.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.zeqiri.subtrack",
-            "certificate_hash": "479db1d17498a02694c8d52cb29e5c081c353023"
-          }
-        },
-        {
-          "client_id": "369263570865-72v8au82ps96ks69o0buqcqj7njierj4.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.zeqiri.subtrack",
+            "package_name": "com.subtrack.app",
             "certificate_hash": "ca67bfce3c54d00db553604b0de1ee1e94ed28c3"
           }
         },
         {
-          "client_id": "369263570865-grfa1nipbgvdfveapcujqnfk33393gf8.apps.googleusercontent.com",
+          "client_id": "369263570865-cf4dumva9bq3lmii89v6nbs3jafv25bq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.zeqiri.subtrack",
+            "package_name": "com.subtrack.app",
+            "certificate_hash": "caf70c80a269b7c89c03fc1fbd245a493e71c0b9"
+          }
+        },
+        {
+          "client_id": "369263570865-lb1ff9rl3207pjke056guua5vkd1egj8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.subtrack.app",
+            "certificate_hash": "479db1d17498a02694c8d52cb29e5c081c353023"
+          }
+        },
+        {
+          "client_id": "369263570865-upjvq412ncfm4kpv18pnqvv8du7lau7p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.subtrack.app",
             "certificate_hash": "16ce50f877dfefe1da56e0fdb146fac078e0cccb"
           }
         },
