@@ -20,7 +20,9 @@
           <ion-loading trigger="open-loading" message="Loading..." [duration]="3000" spinner="circles"></ion-loading>
         }
 
-        <div class="filter-container">
+        <div class="filter-container" #filterContainer
+          (touchstart)="isUserScrolling = true"
+          (touchend)="isUserScrolling = false">
           <div class="filter-pill" [class.active]="selectedCategories.length > 0">
             <ion-icon name="funnel-outline"></ion-icon>
             <span class="filter-label">Catégorie</span>
@@ -94,7 +96,9 @@
           }
         </ion-list>
     } @else {
-      <div class="filter-container">
+      <div class="filter-container" #filterContainer
+        (touchstart)="isUserScrolling = true"
+        (touchend)="isUserScrolling = false">
         <div class="filter-pill" [class.active]="selectedCategories.length > 0">
           <ion-icon name="funnel-outline"></ion-icon>
           <span class="filter-label">Catégorie</span>

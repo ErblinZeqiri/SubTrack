@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren, inject } from '@angular/core';
 import { Subscription } from '../../interfaces/interface';
 import { ExepensesService } from '../services/expenses/exepenses.service';
 import {
@@ -68,14 +68,15 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./sub-list.component.css', './sub-list-dark.component.css'],
   providers: [ExepensesService],
 })
-export class SubListComponent implements OnInit {
+export class SubListComponent implements OnInit, OnDestroy {
   monthlyExpenses$!: Observable<number>;
   yearlyExpenses$!: Observable<number>;
   userSubData$!: Observable<Subscription[]>;
   totalAmount$!: Observable<number>;
   noSub: boolean = false;
   isFirstLoad: boolean = true;
-  
+  isUserScrolling = false;
+
   // Use imported constants instead of duplicating
   readonly subscriptionCategories = SUBSCRIPTION_CATEGORIES;
   readonly subscriptionRenewal = SUBSCRIPTION_RENEWAL_TYPES;
@@ -85,6 +86,10 @@ export class SubListComponent implements OnInit {
   tempSelectedRenewals: string[] = [];
   userID!: string;
   private readonly destroyRef = inject(DestroyRef);
+  private autoScrollTimer?: ReturnType<typeof setInterval>;
+  private autoScrollDirection = 1;
+
+  @ViewChildren('filterContainer') filterContainers!: QueryList<ElementRef>;
   private readonly logoBaseUrl = 'https://img.logo.dev';
   private readonly logoDevToken = environment.logoDevToken;
 
@@ -190,6 +195,44 @@ export class SubListComponent implements OnInit {
   async ionViewWillEnter(): Promise<void> {
     if (this.selectedCategories.length > 0 || this.selectedRenewals.length > 0) {
       await this.applyFilters();
+    }
+    setTimeout(() => this.startAutoScroll(), 400);
+  }
+
+  ionViewDidLeave(): void {
+    this.stopAutoScroll();
+  }
+
+  ngOnDestroy(): void {
+    this.stopAutoScroll();
+  }
+
+  private startAutoScroll(): void {
+    this.stopAutoScroll();
+    this.autoScrollDirection = 1;
+
+    const container = this.filterContainers?.first?.nativeElement as HTMLElement | undefined;
+    if (!container) return;
+
+    this.autoScrollTimer = setInterval(() => {
+      if (this.isUserScrolling) return;
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      if (maxScroll <= 0) return;
+
+      container.scrollLeft += this.autoScrollDirection * 0.8;
+
+      if (container.scrollLeft >= maxScroll) {
+        this.autoScrollDirection = -1;
+      } else if (container.scrollLeft <= 0) {
+        this.autoScrollDirection = 1;
+      }
+    }, 16);
+  }
+
+  private stopAutoScroll(): void {
+    if (this.autoScrollTimer !== undefined) {
+      clearInterval(this.autoScrollTimer);
+      this.autoScrollTimer = undefined;
     }
   }
 
