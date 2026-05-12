@@ -55,3 +55,10 @@
 -keepclasseswithmembernames class * {
     native <methods>;
 }
+
+# Facebook SDK optionnel (référencé par capacitor-firebase-authentication mais non installé)
+-dontwarn com.facebook.CallbackManager$Factory
+-dontwarn com.facebook.CallbackManager
+-dontwarn com.facebook.FacebookCallback
+-dontwarn com.facebook.login.LoginManager
+-dontwarn com.facebook.login.widget.LoginButton
