@@ -1,8 +1,10 @@
+/* ── Filter bar ─────────────────────────────────────────────── */
 .filter-container {
   display: flex;
   gap: 10px;
   margin: 16px 0 20px;
   align-items: center;
+  justify-content: center;
   flex-wrap: nowrap;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -14,68 +16,6 @@
   display: none;
 }
 
-.filter-card {
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  background-color: #ffffff;
-  transition: all 0.3s ease;
-  position: relative;
-  width: 56px;
-  height: 56px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  --padding-start: 0;
-  --padding-end: 0;
-  --inner-padding-end: 0;
-  --padding-top: 0;
-  --padding-bottom: 0;
-  --min-height: 56px;
-  --inner-border-width: 0;
-  --ripple-color: transparent;
-  --highlight-background: transparent;
-  overflow: visible;
-  border: 2px solid #e0e0e0;
-}
-
-.filter-card::part(native) {
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  background-color: #ffffff;
-  overflow: visible;
-}
-
-.filter-card ion-icon[slot="start"] {
-  margin: 0;
-  font-size: 26px;
-  color: #043451;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.filter-count {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background: #ff4444;
-  color: white;
-  border-radius: 50%;
-  width: 26px;
-  height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
-  z-index: 10;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
 .filter-select-hidden {
   position: absolute;
   inset: 0;
@@ -83,50 +23,29 @@
   cursor: pointer;
 }
 
-.filter-card.filter-active {
-  background-color: #043451;
-  box-shadow: 0 4px 12px rgba(4, 52, 81, 0.4);
-  border-color: #043451;
-  transform: scale(1.05);
-}
-
-.filter-card.filter-active::part(native) {
-  background-color: #043451;
-}
-
-.filter-card.filter-active ion-icon[slot="start"] {
-  color: #ffffff;
-}
-
-.reset-button {
-  --background: #f0f0f0;
-  --color: #043451;
-  --border-radius: 10px;
-  --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  height: 30px;
-}
-
+/* ── Subscription card ──────────────────────────────────────── */
 ion-item.no-border {
   --border-width: 0;
   --border-style: none;
-  --ion-item-background: transparent;
   --ion-border-color: transparent;
-  --background: transparent;
 }
 
 ion-item.no-border::part(native) {
-  background: transparent;
-  overflow: visible;
+  overflow: hidden;
 }
 
-
+.sliding-wrapper {
+  display: block;
+  margin-bottom: 12px;
+  overflow: hidden;
+  border-radius: 16px;
+}
 
 .subscription-card {
   --background: var(--app-surface);
   --color: var(--app-text);
   border-radius: 16px;
   border: 1px solid var(--app-border);
-  margin-bottom: 12px;
 }
 
 .subscription-card::part(native) {
@@ -162,13 +81,6 @@ ion-item.no-border::part(native) {
   color: var(--app-text);
 }
 
-.subscription-details-hint {
-  font-size: 12px;
-  color: #888;
-  margin-left: auto;
-  align-self: center;
-}
-
 .details-link {
   background: transparent;
   border: 0;
@@ -177,45 +89,48 @@ ion-item.no-border::part(native) {
   margin-left: 10px;
 }
 
+/* ── Swipe action buttons ───────────────────────────────────── */
 .subscription-item-options {
   height: 100%;
-  margin-bottom: 10px;
-  border-radius: 10px;
 }
 
 .subscription-item-option {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: calc(100% - 10px);
+  min-width: 80px;
   border-radius: 10px;
+}
+
+.option-edit::part(native),
+.option-delete::part(native) {
+  flex-direction: column;
+  gap: 4px;
+}
+
+.option-edit {
+  --background: #7c3aed;
+  --color: #ffffff;
+  --border-radius: 10px;
+}
+
+.option-delete {
+  --background: #ef4444;
+  --color: #ffffff;
+  --border-radius: 10px;
+}
+
+.option-edit ion-icon,
+.option-delete ion-icon {
+  font-size: 18px;
+  color: #ffffff;
+  margin-right: 0;
+  margin-bottom: 4px;
+}
+
+.option-edit span,
+.option-delete span {
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .item-options-ios.item-options-end {
   border-bottom-width: 0;
-}
-
-ion-icon {
-  color: #043451;
-  margin-right: 10px;
-}
-
-.reset-filters-icon {
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.reset-filters-icon:hover {
-  transform: scale(1.1);
-}
-
-ion-select {
-  width: 100%;
-  --padding-start: 10px;
-  --background: #f0f0f0;
-  --border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  align-self: center;
-  --icon-width: 0;
-  --icon-display: none;
 }

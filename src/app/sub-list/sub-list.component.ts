@@ -34,7 +34,7 @@ import {
 import { DonutChartComponent } from '../donut-chart/donut-chart.component';
 import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { funnelOutline, calendarOutline, close } from 'ionicons/icons';
+import { funnelOutline, calendarOutline, close, createOutline, trashOutline } from 'ionicons/icons';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../environments/environment';
 
@@ -113,7 +113,7 @@ export class SubListComponent implements OnInit, OnDestroy {
     private readonly alertCtrl: AlertController,
     private readonly _expensesService: ExepensesService
   ) {
-    addIcons({ funnelOutline, calendarOutline, close });
+    addIcons({ funnelOutline, calendarOutline, close, createOutline, trashOutline });
   }
 
   onFilterSelectionChange() {
