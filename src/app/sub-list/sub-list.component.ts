@@ -1,5 +1,6 @@
 import { Component, DestroyRef, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren, inject } from '@angular/core';
 import { Subscription } from '../../interfaces/interface';
+import { SmartAmountPipe } from '../pipes/smart-amount.pipe';
 import { ExepensesService } from '../services/expenses/exepenses.service';
 import {
   SUBSCRIPTION_CATEGORIES,
@@ -63,6 +64,7 @@ import { environment } from '../../environments/environment';
     FormsModule,
     IonLoading,
     RouterLink,
+    SmartAmountPipe,
   ],
   templateUrl: './sub-list.component.html',
   styleUrls: ['./sub-list.component.css', './sub-list-dark.component.css'],

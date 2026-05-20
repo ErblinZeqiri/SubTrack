@@ -26,6 +26,7 @@ import {
 import { IonLoading } from '@ionic/angular/standalone';
 import { Subscription } from '../../interfaces/interface';
 import { ExepensesService } from '../services/expenses/exepenses.service';
+import { SmartAmountPipe } from '../pipes/smart-amount.pipe';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -47,7 +48,7 @@ export type ChartOptions = {
   templateUrl: './donut-chart.component.html',
   styleUrls: ['./donut-chart.component.scss'],
   standalone: true,
-  imports: [IonLoading, CommonModule, NgApexchartsModule],
+  imports: [IonLoading, CommonModule, NgApexchartsModule, SmartAmountPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DonutChartComponent implements OnChanges {

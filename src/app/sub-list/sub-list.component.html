@@ -83,7 +83,7 @@
                   <span class="subscription-meta">Catégorie : {{ sub.category }}</span>
                 </div>
                 <div class="subscription-amount">
-                  <span class="amount">{{ sub.amount | number:'1.0-2' }}.-</span>
+                  <span class="amount">{{ sub.amount | smartAmount }}.-</span>
                   <span class="period">/ {{ sub.renewal }}</span>
                 </div>
                 <button type="button" class="details-link" (click)="subDetails(sub)">Détails</button>

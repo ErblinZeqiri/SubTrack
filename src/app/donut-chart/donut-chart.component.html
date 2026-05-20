@@ -33,7 +33,7 @@
         <span class="label">Ce mois</span>
       </div>
       <span class="value">
-        <strong>{{ monthlyAmount | number:'1.0-2' }} CHF</strong>
+        <strong>{{ monthlyAmount | smartAmount }} CHF</strong>
       </span>
     </div>
     <div class="row">
@@ -41,7 +41,7 @@
         <span class="label">Cette année</span>
       </div>
       <span class="value">
-        <strong>{{ annualAmount | number:'1.0-2' }} CHF</strong>
+        <strong>{{ annualAmount | smartAmount }} CHF</strong>
       </span>
     </div>
   </div>
@@ -53,7 +53,7 @@
         <div class="chip" (click)="onChipClick($index)" [class.selected]="selectedSegmentIndex === $index">
           <div class="chip-color" [style.background-color]="getChipColor($index)"></div>
           <span class="chip-name">{{ sub.companyName }}</span>
-          <span class="chip-amount">{{ sub.amount | number:'1.0-2' }} CHF</span>
+          <span class="chip-amount">{{ sub.amount | smartAmount }} CHF</span>
           <span class="chip-percent">{{ getPercentage(sub.amount) }}%</span>
         </div>
       }
