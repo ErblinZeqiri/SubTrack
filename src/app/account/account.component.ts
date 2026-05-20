@@ -3,13 +3,13 @@ import { AuthService } from '../services/auth/auth.service';
 import {
   LoadingController,
   AlertController,
+  ToastController,
   IonHeader,
   IonToolbar,
   IonTitle,
   IonContent,
   IonIcon,
   IonToggle,
-  IonAlert,
 } from '@ionic/angular/standalone';
 import { Observable, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -44,7 +44,6 @@ import {
   imports: [
     IonIcon,
     IonToggle,
-    IonAlert,
     IonContent,
     IonTitle,
     IonToolbar,
@@ -68,17 +67,10 @@ export class AccountComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly loadingCtrl = inject(LoadingController);
   private readonly alertCtrl = inject(AlertController);
+  private readonly toastCtrl = inject(ToastController);
   private readonly dataService = inject(DataService);
   private readonly expensesService = inject(ExepensesService);
 
-  public logoutButtons = [
-    { text: 'Annuler', role: 'cancel' },
-    {
-      text: 'Déconnexion',
-      role: 'confirm',
-      handler: () => this.logout(),
-    },
-  ];
 
   constructor() {
     this.userData$ = this.authService.getCurrentUser();
@@ -118,6 +110,28 @@ export class AccountComponent implements OnInit {
       month: 'long',
       year: 'numeric',
     });
+  }
+
+  async confirmLogout(): Promise<void> {
+    const alert = await this.alertCtrl.create({
+      header: 'Se déconnecter ?',
+      message: 'Vous devrez vous reconnecter pour accéder à vos données.',
+      buttons: [
+        { text: 'Annuler', role: 'cancel' },
+        { text: 'Déconnexion', role: 'confirm', handler: () => this.logout() },
+      ],
+    });
+    await alert.present();
+  }
+
+  async showComingSoon(): Promise<void> {
+    const toast = await this.toastCtrl.create({
+      message: '🚧 Fonctionnalité à venir',
+      duration: 1800,
+      position: 'bottom',
+      color: 'dark',
+    });
+    await toast.present();
   }
 
   async confirmDeleteAccount(): Promise<void> {

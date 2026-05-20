@@ -76,14 +76,14 @@
     <div class="section">
       <p class="section-title">Paramètres</p>
       <div class="info-list">
-        <div class="info-row action-row">
+        <div class="info-row action-row" (click)="showComingSoon()">
           <div class="info-left">
             <ion-icon name="notifications-outline"></ion-icon>
             <span class="info-label">Notifications</span>
           </div>
           <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
         </div>
-        <div class="info-row action-row">
+        <div class="info-row action-row" (click)="showComingSoon()">
           <div class="info-left">
             <ion-icon name="cash-outline"></ion-icon>
             <span class="info-label">Devise</span>
@@ -93,7 +93,7 @@
             <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
           </div>
         </div>
-        <div class="info-row action-row">
+        <div class="info-row action-row" (click)="showComingSoon()">
           <div class="info-left">
             <ion-icon name="language-outline"></ion-icon>
             <span class="info-label">Langue</span>
@@ -110,7 +110,7 @@
           </div>
           <ion-toggle [(ngModel)]="darkMode" [checked]="true" color="primary"></ion-toggle>
         </div>
-        <div class="info-row action-row no-border">
+        <div class="info-row action-row no-border" (click)="showComingSoon()">
           <div class="info-left">
             <ion-icon name="download-outline"></ion-icon>
             <span class="info-label">Exporter mes données</span>
@@ -124,7 +124,7 @@
     <div class="section danger-section">
       <p class="section-title">Zone dangereuse</p>
       <div class="danger-actions">
-        <button type="button" class="danger-btn btn-edit" id="open-logout-alert">
+        <button type="button" class="danger-btn btn-edit" (click)="confirmLogout()">
           <ion-icon name="log-out-outline"></ion-icon>
           <span>Déconnexion</span>
         </button>
@@ -138,10 +138,4 @@
   </div>
   }
 
-  <ion-alert
-    trigger="open-logout-alert"
-    header="Se déconnecter ?"
-    message="Vous devrez vous reconnecter pour accéder à vos données."
-    [buttons]="logoutButtons"
-  ></ion-alert>
 </ion-content>
