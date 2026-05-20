@@ -9,6 +9,7 @@ import {
   onAuthStateChanged,
   signInWithCredential,
   updateProfile,
+  deleteUser,
 } from '@angular/fire/auth';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
@@ -250,6 +251,28 @@ export class AuthService {
     // Redirige vers la page de connexion.
     this._router.navigate(['/login']);
     /******  371681db-b683-4ae8-bc75-723718bc2baa  *******/
+  }
+
+  /**
+   * Supprime définitivement le compte :
+   * 1. Supprime tous les abonnements Firestore de l'utilisateur
+   * 2. Supprime le document utilisateur Firestore
+   * 3. Supprime le compte Firebase Auth
+   * 4. Nettoie le cache et redirige
+   */
+  async deleteAccount(): Promise<void> {
+    const currentUser = this._auth.currentUser;
+    if (!currentUser) return;
+
+    const dataService = this._injector.get(DataService);
+
+    await dataService.deleteAllUserSubscriptions(currentUser.uid);
+    await dataService.deleteUserDocument(currentUser.uid);
+    await deleteUser(currentUser);
+
+    await Preferences.clear();
+    dataService.clearData();
+    this._router.navigate(['/login']);
   }
 
   /**

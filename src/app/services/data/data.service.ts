@@ -16,6 +16,7 @@ import {
   deleteDoc,
   setDoc,
   updateDoc,
+  getDocs,
 } from '@angular/fire/firestore';
 
 @Injectable({
@@ -161,6 +162,25 @@ export class DataService implements OnDestroy {
       console.error('❌ Erreur updateSubscription:', error);
       throw error;
     }
+  }
+
+  /**
+   * Supprime tous les abonnements d'un utilisateur de Firestore.
+   * À appeler avant la suppression du compte.
+   */
+  async deleteAllUserSubscriptions(userID: string): Promise<void> {
+    const fbCollection = collection(this._firestore, 'subscriptions');
+    const q = query(fbCollection, where('userID', '==', userID));
+    const snapshot = await getDocs(q);
+    await Promise.all(snapshot.docs.map((d) => deleteDoc(d.ref)));
+  }
+
+  /**
+   * Supprime le document utilisateur de Firestore.
+   */
+  async deleteUserDocument(userID: string): Promise<void> {
+    const userRef = doc(this._firestore, `users/${userID}`);
+    await deleteDoc(userRef);
   }
 
   /**

@@ -137,18 +137,30 @@ export class AccountComponent implements OnInit {
   async confirmDeleteAccount(): Promise<void> {
     const alert = await this.alertCtrl.create({
       header: 'Supprimer le compte',
-      message: 'Cette action est irréversible. Toutes vos données seront perdues.',
+      message: 'Cette action est irréversible. Tous vos abonnements et données seront définitivement supprimés.',
       buttons: [
         { text: 'Annuler', role: 'cancel' },
         {
-          text: 'Supprimer',
+          text: 'Supprimer définitivement',
           role: 'destructive',
           cssClass: 'alert-btn-danger',
-          handler: () => this.logout(),
+          handler: () => this.deleteAccount(),
         },
       ],
     });
     await alert.present();
+  }
+
+  private async deleteAccount(): Promise<void> {
+    const loading = await this.loadingCtrl.create({ message: 'Suppression du compte...' });
+    await loading.present();
+    try {
+      await this.authService.deleteAccount();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      await loading.dismiss();
+    }
   }
 
   private async logout(): Promise<void> {
