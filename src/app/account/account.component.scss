@@ -1,18 +1,179 @@
-ion-button {
-  --border-radius: 12px;
-  height: 48px;
-  font-weight: 500;
-  text-transform: none;
+/* ── Wrapper ─────────────────────────────────────────────── */
+.account-wrapper {
+  padding: 16px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-// Style spécifique bouton déconnexion
-::ng-deep ion-button#present-alert {
-  --background: var(--ion-color-primary) !important;
-  --color: white !important;
-  --border-radius: 16px !important;
+/* ── Hero ────────────────────────────────────────────────── */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 0 8px;
 }
 
-/* Dans global styles ou avec :host */
-ion-button.button-full::part(native) {
-  border-radius: 16px !important;
+.avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--ion-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid rgba(124, 58, 237, 0.4);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.initials {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+.user-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--app-text);
+  margin: 4px 0 0;
+}
+
+.user-email {
+  font-size: 14px;
+  color: var(--app-text-muted);
+  margin: 0;
+}
+
+/* ── Stats ───────────────────────────────────────────────── */
+.stats-row {
+  display: flex;
+  gap: 12px;
+}
+
+.stat-card {
+  flex: 1;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 16px;
+  padding: 14px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  ion-icon {
+    font-size: 20px;
+    color: var(--ion-color-primary);
+    margin: 0;
+  }
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--app-text);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--app-text-muted);
+  text-align: center;
+}
+
+/* ── Sections ────────────────────────────────────────────── */
+.section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--app-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin: 0 0 8px 4px;
+}
+
+.info-list {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--app-border);
+
+  &.no-border {
+    border-bottom: none;
+  }
+
+  &.action-row {
+    cursor: pointer;
+    transition: background 0.15s ease;
+
+    &:active {
+      background: rgba(255, 255, 255, 0.04);
+    }
+  }
+}
+
+.info-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  ion-icon {
+    font-size: 18px;
+    color: var(--app-text-muted);
+    margin: 0;
+  }
+}
+
+.info-label {
+  font-size: 15px;
+  color: var(--app-text);
+}
+
+.info-value {
+  font-size: 14px;
+  color: var(--app-text-muted);
+  max-width: 55%;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  font-size: 16px;
+  color: var(--app-text-muted);
+  margin: 0;
+}
+
+/* ── Zone dangereuse ─────────────────────────────────────── */
+.icon-logout {
+  color: var(--ion-color-primary) !important;
+}
+
+.logout-label {
+  color: var(--ion-color-primary);
+}
+
+.icon-delete {
+  color: var(--ion-color-danger) !important;
+}
+
+.delete-label {
+  color: var(--ion-color-danger);
 }

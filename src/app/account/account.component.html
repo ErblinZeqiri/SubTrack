@@ -1,19 +1,101 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Account</ion-title>
+    <ion-title>Mon compte</ion-title>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
-  <div class="main-content">
-    
-      <ion-text>
-        <h2>{{(userData$ | async )?.displayName}}</h2>
-      </ion-text>
-    <ion-button expand="full" id="present-alert">Déconnexion</ion-button>
-    <ion-alert
-      trigger="present-alert"
-      header="Êtes-vous sur de vouloir vous déconnecter ?"
-      [buttons]="alertButtons"
-    ></ion-alert>    
+  @if (userData$ | async; as user) {
+  <div class="account-wrapper">
+
+    <!-- ── Hero ─────────────────────────────────────────── -->
+    <div class="hero">
+      <div class="avatar">
+        @if (user.photoURL) {
+          <img [src]="user.photoURL" [alt]="user.displayName ?? ''" referrerpolicy="no-referrer" />
+        } @else {
+          <span class="initials">{{ getInitials(user.displayName) }}</span>
+        }
+      </div>
+      <h2 class="user-name">{{ user.displayName ?? 'Utilisateur' }}</h2>
+      <p class="user-email">{{ user.email }}</p>
+    </div>
+
+    <!-- ── Stats ─────────────────────────────────────────── -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <ion-icon name="card-outline"></ion-icon>
+        <span class="stat-value">{{ subCount$ | async }}</span>
+        <span class="stat-label">Abonnements</span>
+      </div>
+      <div class="stat-card">
+        <ion-icon name="stats-chart-outline"></ion-icon>
+        <span class="stat-value">{{ (monthlyExpenses$ | async) | smartAmount }}</span>
+        <span class="stat-label">Ce mois</span>
+      </div>
+      <div class="stat-card">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span class="stat-value">{{ (yearlyExpenses$ | async) | smartAmount }}</span>
+        <span class="stat-label">Cette année</span>
+      </div>
+    </div>
+
+    <!-- ── Mes informations ───────────────────────────────── -->
+    <div class="section">
+      <p class="section-title">Mes informations</p>
+      <div class="info-list">
+        <div class="info-row">
+          <div class="info-left">
+            <ion-icon name="person-outline"></ion-icon>
+            <span class="info-label">Nom</span>
+          </div>
+          <span class="info-value">{{ user.displayName ?? '—' }}</span>
+        </div>
+        <div class="info-row">
+          <div class="info-left">
+            <ion-icon name="mail-outline"></ion-icon>
+            <span class="info-label">Email</span>
+          </div>
+          <span class="info-value">{{ user.email }}</span>
+        </div>
+        <div class="info-row no-border">
+          <div class="info-left">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span class="info-label">Membre depuis</span>
+          </div>
+          <span class="info-value">{{ getCreationDate(user) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Zone dangereuse ────────────────────────────────── -->
+    <div class="section">
+      <p class="section-title">Zone dangereuse</p>
+      <div class="info-list">
+        <div class="info-row action-row" id="present-alert">
+          <div class="info-left">
+            <ion-icon name="log-out-outline" class="icon-logout"></ion-icon>
+            <span class="info-label logout-label">Déconnexion</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+        </div>
+        <div class="info-row action-row no-border" (click)="confirmDeleteAccount()">
+          <div class="info-left">
+            <ion-icon name="trash-outline" class="icon-delete"></ion-icon>
+            <span class="info-label delete-label">Supprimer le compte</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+        </div>
+      </div>
+    </div>
+
   </div>
+  }
+
+  <ion-alert
+    trigger="present-alert"
+    header="Se déconnecter ?"
+    message="Vous devrez vous reconnecter pour accéder à vos données."
+    [buttons]="alertButtons"
+  ></ion-alert>
 </ion-content>
