@@ -8,84 +8,130 @@
   @if (userData$ | async; as user) {
   <div class="account-wrapper">
 
-    <!-- ── Hero ─────────────────────────────────────────── -->
+    <!-- ── Hero ──────────────────────────────────────────── -->
     <div class="hero">
-      <div class="avatar">
-        @if (user.photoURL) {
-          <img [src]="user.photoURL" [alt]="user.displayName ?? ''" referrerpolicy="no-referrer" />
-        } @else {
-          <span class="initials">{{ getInitials(user.displayName) }}</span>
-        }
+      <div class="avatar-wrapper">
+        <div class="avatar">
+          @if (user.photoURL) {
+            <img [src]="user.photoURL" [alt]="user.displayName ?? ''" referrerpolicy="no-referrer" />
+          } @else {
+            <span class="initials">{{ getInitials(user.displayName) }}</span>
+          }
+        </div>
+        <button class="avatar-edit-btn" type="button">
+          <ion-icon name="create-outline"></ion-icon>
+        </button>
       </div>
       <h2 class="user-name">{{ user.displayName ?? 'Utilisateur' }}</h2>
       <p class="user-email">{{ user.email }}</p>
+      <p class="member-since">Membre depuis {{ getCreationDate(user) }}</p>
     </div>
 
     <!-- ── Stats ─────────────────────────────────────────── -->
-    <div class="stats-row">
-      <div class="stat-card">
-        <ion-icon name="card-outline"></ion-icon>
-        <span class="stat-value">{{ subCount$ | async }}</span>
-        <span class="stat-label">Abonnements</span>
-      </div>
-      <div class="stat-card">
-        <ion-icon name="stats-chart-outline"></ion-icon>
-        <span class="stat-value">{{ (monthlyExpenses$ | async) | smartAmount }}</span>
-        <span class="stat-label">Ce mois</span>
-      </div>
-      <div class="stat-card">
-        <ion-icon name="calendar-outline"></ion-icon>
-        <span class="stat-value">{{ (yearlyExpenses$ | async) | smartAmount }}</span>
-        <span class="stat-label">Cette année</span>
+    <div class="section">
+      <p class="section-title">Statistiques</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <ion-icon name="stats-chart-outline"></ion-icon>
+          <span class="stat-value">{{ (yearlyExpenses$ | async) | smartAmount }}</span>
+          <span class="stat-label">Cette année</span>
+        </div>
+        <div class="stat-card">
+          <ion-icon name="card-outline"></ion-icon>
+          <span class="stat-value">{{ subCount$ | async }}</span>
+          <span class="stat-label">Abonnements</span>
+        </div>
+        <div class="stat-card">
+          <ion-icon name="cash-outline"></ion-icon>
+          <span class="stat-value">{{ (monthlyExpenses$ | async) | smartAmount }}</span>
+          <span class="stat-label">Ce mois</span>
+        </div>
       </div>
     </div>
 
-    <!-- ── Mes informations ───────────────────────────────── -->
+    <!-- ── Mes abonnements ────────────────────────────────── -->
     <div class="section">
-      <p class="section-title">Mes informations</p>
+      <p class="section-title">Mes abonnements</p>
       <div class="info-list">
         <div class="info-row">
           <div class="info-left">
-            <ion-icon name="person-outline"></ion-icon>
-            <span class="info-label">Nom</span>
+            <ion-icon name="card-outline"></ion-icon>
+            <span class="info-label">Abonnements actifs</span>
           </div>
-          <span class="info-value">{{ user.displayName ?? '—' }}</span>
-        </div>
-        <div class="info-row">
-          <div class="info-left">
-            <ion-icon name="mail-outline"></ion-icon>
-            <span class="info-label">Email</span>
-          </div>
-          <span class="info-value">{{ user.email }}</span>
+          <span class="info-value">{{ subCount$ | async }}</span>
         </div>
         <div class="info-row no-border">
           <div class="info-left">
-            <ion-icon name="calendar-outline"></ion-icon>
-            <span class="info-label">Membre depuis</span>
+            <ion-icon name="time-outline"></ion-icon>
+            <span class="info-label">Dernier ajouté</span>
           </div>
-          <span class="info-value">{{ getCreationDate(user) }}</span>
+          <span class="info-value">
+            {{ (lastSub$ | async)?.companyName ?? '—' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Paramètres ─────────────────────────────────────── -->
+    <div class="section">
+      <p class="section-title">Paramètres</p>
+      <div class="info-list">
+        <div class="info-row action-row">
+          <div class="info-left">
+            <ion-icon name="notifications-outline"></ion-icon>
+            <span class="info-label">Notifications</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+        </div>
+        <div class="info-row action-row">
+          <div class="info-left">
+            <ion-icon name="cash-outline"></ion-icon>
+            <span class="info-label">Devise</span>
+          </div>
+          <div class="info-right">
+            <span class="info-value">CHF</span>
+            <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+          </div>
+        </div>
+        <div class="info-row action-row">
+          <div class="info-left">
+            <ion-icon name="language-outline"></ion-icon>
+            <span class="info-label">Langue</span>
+          </div>
+          <div class="info-right">
+            <span class="info-value">Français</span>
+            <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-left">
+            <ion-icon name="moon-outline"></ion-icon>
+            <span class="info-label">Mode sombre</span>
+          </div>
+          <ion-toggle [(ngModel)]="darkMode" [checked]="true" color="primary"></ion-toggle>
+        </div>
+        <div class="info-row action-row no-border">
+          <div class="info-left">
+            <ion-icon name="download-outline"></ion-icon>
+            <span class="info-label">Exporter mes données</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
         </div>
       </div>
     </div>
 
     <!-- ── Zone dangereuse ────────────────────────────────── -->
-    <div class="section">
+    <div class="section danger-section">
       <p class="section-title">Zone dangereuse</p>
-      <div class="info-list">
-        <div class="info-row action-row" id="present-alert">
-          <div class="info-left">
-            <ion-icon name="log-out-outline" class="icon-logout"></ion-icon>
-            <span class="info-label logout-label">Déconnexion</span>
-          </div>
-          <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
-        </div>
-        <div class="info-row action-row no-border" (click)="confirmDeleteAccount()">
-          <div class="info-left">
-            <ion-icon name="trash-outline" class="icon-delete"></ion-icon>
-            <span class="info-label delete-label">Supprimer le compte</span>
-          </div>
-          <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
-        </div>
+      <div class="danger-actions">
+        <button type="button" class="danger-btn btn-edit" id="open-logout-alert">
+          <ion-icon name="log-out-outline"></ion-icon>
+          <span>Déconnexion</span>
+        </button>
+        <button type="button" class="danger-btn btn-delete" (click)="confirmDeleteAccount()">
+          <ion-icon name="trash-outline"></ion-icon>
+          <span>Supprimer mon compte</span>
+        </button>
       </div>
     </div>
 
@@ -93,9 +139,9 @@
   }
 
   <ion-alert
-    trigger="present-alert"
+    trigger="open-logout-alert"
     header="Se déconnecter ?"
     message="Vous devrez vous reconnecter pour accéder à vos données."
-    [buttons]="alertButtons"
+    [buttons]="logoutButtons"
   ></ion-alert>
 </ion-content>

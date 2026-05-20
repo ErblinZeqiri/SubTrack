@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { AuthService } from '../services/auth/auth.service';
 import {
   LoadingController,
@@ -7,17 +7,18 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonButton,
-  IonAlert,
-  IonText,
   IonIcon,
+  IonToggle,
+  IonAlert,
 } from '@ionic/angular/standalone';
-import { Observable, map, switchMap } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { DataService } from '../services/data/data.service';
 import { ExepensesService } from '../services/expenses/exepenses.service';
 import { SmartAmountPipe } from '../pipes/smart-amount.pipe';
 import { User } from '@angular/fire/auth';
+import { Subscription } from '../../interfaces/interface';
 import { addIcons } from 'ionicons';
 import {
   personOutline,
@@ -28,6 +29,13 @@ import {
   cardOutline,
   statsChartOutline,
   chevronForwardOutline,
+  notificationsOutline,
+  cashOutline,
+  languageOutline,
+  moonOutline,
+  downloadOutline,
+  createOutline,
+  timeOutline,
 } from 'ionicons/icons';
 
 @Component({
@@ -35,24 +43,27 @@ import {
   standalone: true,
   imports: [
     IonIcon,
-    IonText,
+    IonToggle,
     IonAlert,
-    IonButton,
     IonContent,
     IonTitle,
     IonToolbar,
     IonHeader,
     CommonModule,
+    FormsModule,
     SmartAmountPipe,
   ],
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit {
-  userData$: Observable<User | null>;
+  userData$!: Observable<User | null>;
   subCount$!: Observable<number>;
+  lastSub$!: Observable<Subscription | null>;
   monthlyExpenses$!: Observable<number>;
   yearlyExpenses$!: Observable<number>;
+
+  darkMode = true;
 
   private readonly authService = inject(AuthService);
   private readonly loadingCtrl = inject(LoadingController);
@@ -60,40 +71,33 @@ export class AccountComponent implements OnInit {
   private readonly dataService = inject(DataService);
   private readonly expensesService = inject(ExepensesService);
 
-  @ViewChild(IonAlert) alertRef?: IonAlert;
-
-  public alertButtons = [
-    { text: 'Non', role: 'cancel' },
+  public logoutButtons = [
+    { text: 'Annuler', role: 'cancel' },
     {
-      text: 'Oui',
+      text: 'Déconnexion',
       role: 'confirm',
-      handler: () => {
-        this.alertRef?.dismiss();
-        this.logout();
-        return false;
-      },
+      handler: () => this.logout(),
     },
   ];
 
   constructor() {
     this.userData$ = this.authService.getCurrentUser();
     addIcons({
-      personOutline,
-      mailOutline,
-      calendarOutline,
-      logOutOutline,
-      trashOutline,
-      cardOutline,
-      statsChartOutline,
-      chevronForwardOutline,
+      personOutline, mailOutline, calendarOutline, logOutOutline,
+      trashOutline, cardOutline, statsChartOutline, chevronForwardOutline,
+      notificationsOutline, cashOutline, languageOutline, moonOutline,
+      downloadOutline, createOutline, timeOutline,
     });
   }
 
   ngOnInit(): void {
     const subs$ = this.dataService.userSubData$;
-    this.subCount$ = subs$.pipe(map((subs) => subs.length));
+    this.subCount$ = subs$.pipe(map((s) => s.length));
     this.monthlyExpenses$ = this.expensesService.getCurrentExpensesMonth(subs$);
     this.yearlyExpenses$ = this.expensesService.getCurrentExpensesYear(subs$);
+    this.lastSub$ = subs$.pipe(
+      map((subs) => (subs.length > 0 ? subs[subs.length - 1] : null))
+    );
   }
 
   getInitials(displayName: string | null | undefined): string {
@@ -125,23 +129,12 @@ export class AccountComponent implements OnInit {
         {
           text: 'Supprimer',
           role: 'destructive',
-          handler: () => this.deleteAccount(),
+          cssClass: 'alert-btn-danger',
+          handler: () => this.logout(),
         },
       ],
     });
     await alert.present();
-  }
-
-  private async deleteAccount(): Promise<void> {
-    const loading = await this.loadingCtrl.create({ message: 'Suppression...' });
-    await loading.present();
-    try {
-      await this.authService.logout();
-    } catch (error) {
-      console.error('Erreur suppression compte:', error);
-    } finally {
-      await loading.dismiss();
-    }
   }
 
   private async logout(): Promise<void> {
@@ -149,8 +142,8 @@ export class AccountComponent implements OnInit {
     await loading.present();
     try {
       await this.authService.logout();
-    } catch (error) {
-      console.error('Erreur déconnexion:', error);
+    } catch (e) {
+      console.error(e);
     } finally {
       await loading.dismiss();
     }

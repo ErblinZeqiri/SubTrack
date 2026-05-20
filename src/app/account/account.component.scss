@@ -1,9 +1,9 @@
 /* ── Wrapper ─────────────────────────────────────────────── */
 .account-wrapper {
-  padding: 16px 16px 40px;
+  padding: 8px 16px 48px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
 /* ── Hero ────────────────────────────────────────────────── */
@@ -11,20 +11,25 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 24px 0 8px;
+  gap: 6px;
+  padding: 20px 0 4px;
+}
+
+.avatar-wrapper {
+  position: relative;
+  margin-bottom: 4px;
 }
 
 .avatar {
-  width: 88px;
-  height: 88px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
   overflow: hidden;
   background: var(--ion-color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid rgba(124, 58, 237, 0.4);
+  border: 3px solid rgba(124, 58, 237, 0.5);
 
   img {
     width: 100%;
@@ -34,10 +39,31 @@
 }
 
 .initials {
-  font-size: 32px;
+  font-size: 34px;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: 1px;
+}
+
+.avatar-edit-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--app-surface);
+  border: 2px solid var(--app-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 13px;
+    color: var(--app-text-muted);
+    margin: 0;
+  }
 }
 
 .user-name {
@@ -53,10 +79,27 @@
   margin: 0;
 }
 
+.member-since {
+  font-size: 12px;
+  color: var(--app-text-muted);
+  opacity: 0.6;
+  margin: 2px 0 0;
+}
+
+/* ── Sections ────────────────────────────────────────────── */
+.section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--app-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 8px 4px;
+}
+
 /* ── Stats ───────────────────────────────────────────────── */
 .stats-row {
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
 .stat-card {
@@ -64,21 +107,21 @@
   background: var(--app-surface);
   border: 1px solid var(--app-border);
   border-radius: 16px;
-  padding: 14px 8px;
+  padding: 16px 8px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
 
   ion-icon {
-    font-size: 20px;
+    font-size: 22px;
     color: var(--ion-color-primary);
     margin: 0;
   }
 }
 
 .stat-value {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--app-text);
   line-height: 1;
@@ -90,16 +133,7 @@
   text-align: center;
 }
 
-/* ── Sections ────────────────────────────────────────────── */
-.section-title {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--app-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin: 0 0 8px 4px;
-}
-
+/* ── Info list ───────────────────────────────────────────── */
 .info-list {
   background: var(--app-surface);
   border: 1px solid var(--app-border);
@@ -113,6 +147,7 @@
   justify-content: space-between;
   padding: 14px 16px;
   border-bottom: 1px solid var(--app-border);
+  min-height: 52px;
 
   &.no-border {
     border-bottom: none;
@@ -121,10 +156,7 @@
   &.action-row {
     cursor: pointer;
     transition: background 0.15s ease;
-
-    &:active {
-      background: rgba(255, 255, 255, 0.04);
-    }
+    &:active { background: rgba(255, 255, 255, 0.04); }
   }
 }
 
@@ -137,7 +169,14 @@
     font-size: 18px;
     color: var(--app-text-muted);
     margin: 0;
+    flex-shrink: 0;
   }
+}
+
+.info-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .info-label {
@@ -148,7 +187,7 @@
 .info-value {
   font-size: 14px;
   color: var(--app-text-muted);
-  max-width: 55%;
+  max-width: 50%;
   text-align: right;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -156,24 +195,58 @@
 }
 
 .chevron {
-  font-size: 16px;
+  font-size: 15px;
   color: var(--app-text-muted);
+  opacity: 0.5;
   margin: 0;
+  flex-shrink: 0;
+}
+
+ion-toggle {
+  --handle-background: #ffffff;
 }
 
 /* ── Zone dangereuse ─────────────────────────────────────── */
-.icon-logout {
-  color: var(--ion-color-primary) !important;
+.danger-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.logout-label {
+.danger-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 20px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:active { opacity: 0.8; }
+
+  ion-icon {
+    font-size: 18px;
+    margin: 0;
+  }
+}
+
+.btn-edit {
+  background: rgba(124, 58, 237, 0.12);
   color: var(--ion-color-primary);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+
+  ion-icon { color: var(--ion-color-primary); }
 }
 
-.icon-delete {
-  color: var(--ion-color-danger) !important;
-}
+.btn-delete {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.25);
 
-.delete-label {
-  color: var(--ion-color-danger);
+  ion-icon { color: #ef4444; }
 }
