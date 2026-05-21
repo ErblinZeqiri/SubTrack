@@ -4,7 +4,7 @@ import {
   LoadingController,
   AlertController,
   ToastController,
-  ActionSheetController,
+  ModalController,
   IonHeader,
   IonToolbar,
   IonTitle,
@@ -17,7 +17,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../services/data/data.service';
 import { ExepensesService } from '../services/expenses/exepenses.service';
-import { UserPreferencesService, CURRENCIES } from '../services/preferences/user-preferences.service';
+import { UserPreferencesService } from '../services/preferences/user-preferences.service';
+import { CurrencyPickerComponent } from '../currency-picker/currency-picker.component';
 import { SmartAmountPipe } from '../pipes/smart-amount.pipe';
 import { User } from '@angular/fire/auth';
 import { Subscription } from '../../interfaces/interface';
@@ -52,7 +53,7 @@ export class AccountComponent implements OnInit {
   private readonly loadingCtrl        = inject(LoadingController);
   private readonly alertCtrl          = inject(AlertController);
   private readonly toastCtrl          = inject(ToastController);
-  private readonly actionSheetCtrl    = inject(ActionSheetController);
+  private readonly modalCtrl          = inject(ModalController);
   private readonly dataService        = inject(DataService);
   private readonly expensesService    = inject(ExepensesService);
   readonly prefs                      = inject(UserPreferencesService);
@@ -76,21 +77,19 @@ export class AccountComponent implements OnInit {
   }
 
   async openCurrencyPicker(): Promise<void> {
-    const current = this.prefs.currency;
-
-    const buttons = CURRENCIES.map((c) => ({
-      text: `${c.label} (${c.code})`,
-      icon: current === c.code ? 'checkmark-outline' : undefined,
-      handler: () => this.prefs.setCurrency(c.code),
-    }));
-
-    buttons.push({ text: 'Annuler', icon: undefined, handler: () => {} } as any);
-
-    const sheet = await this.actionSheetCtrl.create({
-      header: 'Choisir une devise',
-      buttons,
+    const modal = await this.modalCtrl.create({
+      component: CurrencyPickerComponent,
+      componentProps: { selectedCurrency: this.prefs.currency },
+      breakpoints: [0, 0.75, 1],
+      initialBreakpoint: 0.75,
+      cssClass: 'currency-picker-modal',
     });
-    await sheet.present();
+    await modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+    if (role === 'confirm' && data) {
+      await this.prefs.setCurrency(data);
+    }
   }
 
   getInitials(displayName: string | null | undefined): string {

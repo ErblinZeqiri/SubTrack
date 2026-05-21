@@ -2,12 +2,24 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Preferences } from '@capacitor/preferences';
 
-export const CURRENCIES = [
-  { code: 'CHF', label: 'Franc suisse', symbol: 'CHF' },
-  { code: 'EUR', label: 'Euro',         symbol: '€'   },
-  { code: 'USD', label: 'Dollar US',    symbol: '$'   },
-  { code: 'GBP', label: 'Livre sterling', symbol: '£' },
-  { code: 'CAD', label: 'Dollar canadien', symbol: 'CA$' },
+export interface Currency {
+  code: string;
+  label: string;
+  flag: string;
+  popular?: boolean;
+}
+
+export const CURRENCIES: Currency[] = [
+  { code: 'CHF', label: 'Franc suisse',        flag: '🇨🇭', popular: true  },
+  { code: 'EUR', label: 'Euro',                flag: '🇪🇺', popular: true  },
+  { code: 'USD', label: 'Dollar US',           flag: '🇺🇸', popular: true  },
+  { code: 'GBP', label: 'Livre sterling',      flag: '🇬🇧' },
+  { code: 'CAD', label: 'Dollar canadien',     flag: '🇨🇦' },
+  { code: 'JPY', label: 'Yen japonais',        flag: '🇯🇵' },
+  { code: 'AUD', label: 'Dollar australien',   flag: '🇦🇺' },
+  { code: 'SEK', label: 'Couronne suédoise',   flag: '🇸🇪' },
+  { code: 'NOK', label: 'Couronne norvégienne',flag: '🇳🇴' },
+  { code: 'DKK', label: 'Couronne danoise',    flag: '🇩🇰' },
 ];
 
 const CURRENCY_KEY = 'pref_currency';

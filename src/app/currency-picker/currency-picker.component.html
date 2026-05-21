@@ -1,0 +1,75 @@
+<ion-header class="picker-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()" class="close-btn">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Choisir une devise</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="picker-content">
+  <ion-searchbar
+    [(ngModel)]="searchQuery"
+    placeholder="Rechercher..."
+    class="currency-search"
+    [debounce]="150"
+  ></ion-searchbar>
+
+  <!-- Devises populaires -->
+  @if (showPopularSection && searchQuery.trim() === '') {
+    <div class="section-header">DEVISES POPULAIRES</div>
+    <ion-list class="currency-list" lines="none">
+      @for (c of filteredPopular; track c.code) {
+        <ion-item
+          class="currency-item"
+          [class.selected]="c.code === selectedCurrency"
+          (click)="select(c.code)"
+          button
+          detail="false"
+        >
+          <span class="currency-flag" slot="start">{{ c.flag }}</span>
+          <ion-label>
+            <span class="currency-label">{{ c.label }}</span>
+            <span class="currency-code">{{ c.code }}</span>
+          </ion-label>
+          @if (c.code === selectedCurrency) {
+            <ion-icon name="checkmark-outline" slot="end" class="checkmark-icon"></ion-icon>
+          }
+        </ion-item>
+      }
+    </ion-list>
+  }
+
+  <!-- Toutes les devises -->
+  @if (showAllSection) {
+    <div class="section-header">
+      {{ searchQuery.trim() === '' ? 'TOUTES LES DEVISES' : 'RÉSULTATS' }}
+    </div>
+    <ion-list class="currency-list" lines="none">
+      @for (c of filteredAll; track c.code) {
+        <ion-item
+          class="currency-item"
+          [class.selected]="c.code === selectedCurrency"
+          (click)="select(c.code)"
+          button
+          detail="false"
+        >
+          <span class="currency-flag" slot="start">{{ c.flag }}</span>
+          <ion-label>
+            <span class="currency-label">{{ c.label }}</span>
+            <span class="currency-code">{{ c.code }}</span>
+          </ion-label>
+          @if (c.code === selectedCurrency) {
+            <ion-icon name="checkmark-outline" slot="end" class="checkmark-icon"></ion-icon>
+          }
+        </ion-item>
+      }
+    </ion-list>
+  }
+
+  @if (filteredAll.length === 0) {
+    <div class="no-results">Aucune devise trouvée</div>
+  }
+</ion-content>

@@ -491,38 +491,84 @@ ion-popover {
 // Action Sheet dark mode
 ion-action-sheet {
   --background: var(--app-surface);
+  --button-background: transparent;
+  --button-background-activated: rgba(124, 58, 237, 0.08);
+  --button-color: var(--app-text);
+  --color: var(--app-text);
   --backdrop-opacity: 0.6;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  
-  &::part(backdrop) {
-    background: rgba(15, 17, 23, 0.8);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+}
+
+// Devise picker - surcharge complète
+.currency-sheet {
+  --background: var(--app-surface) !important;
+  --color: var(--app-text) !important;
+  --button-color: var(--app-text) !important;
+  --button-background: transparent !important;
+  --button-background-activated: rgba(124, 58, 237, 0.08) !important;
+
+  .action-sheet-container {
+    background: var(--app-surface) !important;
+  }
+
+  .action-sheet-group {
+    background: var(--app-surface) !important;
+    border-radius: 16px !important;
+    margin: 0 8px 8px !important;
+    overflow: hidden;
+  }
+
+  .action-sheet-title {
+    color: var(--app-text-muted) !important;
+    background: var(--app-surface) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+  }
+
+  .action-sheet-button {
+    color: var(--app-text) !important;
+    background: transparent !important;
+    border-bottom: 1px solid var(--app-border) !important;
+    font-size: 15px !important;
+
+    &:last-child { border-bottom: none !important; }
+
+    .action-sheet-button-inner {
+      color: var(--app-text) !important;
+    }
+
+    ion-icon { color: var(--ion-color-primary) !important; }
+  }
+
+  .action-sheet-cancel .action-sheet-button {
+    color: #ef4444 !important;
+    font-weight: 600 !important;
+    border-top: 1px solid var(--app-border) !important;
+    border-bottom: none !important;
+    margin-top: 8px;
+    border-radius: 16px !important;
+
+    .action-sheet-button-inner { color: #ef4444 !important; }
   }
 }
 
-.action-sheet-wrapper {
-  background: var(--app-surface) !important;
-  border-radius: 16px 16px 0 0 !important;
-  border-top: 1px solid var(--app-border) !important;
-  
-  .action-sheet-title {
-    color: var(--app-text) !important;
+// ─── Currency Picker Modal ──────────────────────────────────────────────────
+.currency-picker-modal {
+  --background: transparent;
+
+  &::part(content) {
+    background: #12121f;
+    border-radius: 20px 20px 0 0;
   }
-  
-  .action-sheet-button {
-    color: var(--app-text) !important;
-    
-    &.action-sheet-selected {
-      color: var(--ion-color-primary) !important;
-      font-weight: 600 !important;
-    }
-    
-    &[role="cancel"] {
-      color: #ef4444 !important;
-      font-weight: 600 !important;
-    }
+
+  &::part(handle) {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  ion-header ion-toolbar {
+    --background: #1a1a2e;
+    --border-color: rgba(255, 255, 255, 0.08);
   }
 }
-  
+
