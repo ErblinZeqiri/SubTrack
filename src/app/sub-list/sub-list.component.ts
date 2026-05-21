@@ -1,6 +1,7 @@
 import { Component, DestroyRef, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren, inject } from '@angular/core';
 import { Subscription } from '../../interfaces/interface';
 import { SmartAmountPipe } from '../pipes/smart-amount.pipe';
+import { UserPreferencesService } from '../services/preferences/user-preferences.service';
 import { ExepensesService } from '../services/expenses/exepenses.service';
 import {
   SUBSCRIPTION_CATEGORIES,
@@ -106,6 +107,8 @@ export class SubListComponent implements OnInit, OnDestroy {
   get renewalFilterCount(): number {
     return this.selectedRenewals.length;
   }
+
+  readonly prefs = inject(UserPreferencesService);
 
   constructor(
     private readonly _dataService: DataService,

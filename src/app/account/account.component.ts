@@ -4,6 +4,7 @@ import {
   LoadingController,
   AlertController,
   ToastController,
+  ActionSheetController,
   IonHeader,
   IonToolbar,
   IonTitle,
@@ -16,41 +17,24 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../services/data/data.service';
 import { ExepensesService } from '../services/expenses/exepenses.service';
+import { UserPreferencesService, CURRENCIES } from '../services/preferences/user-preferences.service';
 import { SmartAmountPipe } from '../pipes/smart-amount.pipe';
 import { User } from '@angular/fire/auth';
 import { Subscription } from '../../interfaces/interface';
 import { addIcons } from 'ionicons';
 import {
-  personOutline,
-  mailOutline,
-  calendarOutline,
-  logOutOutline,
-  trashOutline,
-  cardOutline,
-  statsChartOutline,
-  chevronForwardOutline,
-  notificationsOutline,
-  cashOutline,
-  languageOutline,
-  moonOutline,
-  downloadOutline,
-  createOutline,
-  timeOutline,
+  personOutline, mailOutline, calendarOutline, logOutOutline,
+  trashOutline, cardOutline, statsChartOutline, chevronForwardOutline,
+  notificationsOutline, cashOutline, languageOutline, moonOutline,
+  downloadOutline, createOutline, timeOutline, checkmarkOutline,
 } from 'ionicons/icons';
 
 @Component({
   selector: 'app-account',
   standalone: true,
   imports: [
-    IonIcon,
-    IonToggle,
-    IonContent,
-    IonTitle,
-    IonToolbar,
-    IonHeader,
-    CommonModule,
-    FormsModule,
-    SmartAmountPipe,
+    IonIcon, IonToggle, IonContent, IonTitle, IonToolbar, IonHeader,
+    CommonModule, FormsModule, SmartAmountPipe,
   ],
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
@@ -64,13 +48,14 @@ export class AccountComponent implements OnInit {
 
   darkMode = true;
 
-  private readonly authService = inject(AuthService);
-  private readonly loadingCtrl = inject(LoadingController);
-  private readonly alertCtrl = inject(AlertController);
-  private readonly toastCtrl = inject(ToastController);
-  private readonly dataService = inject(DataService);
-  private readonly expensesService = inject(ExepensesService);
-
+  private readonly authService        = inject(AuthService);
+  private readonly loadingCtrl        = inject(LoadingController);
+  private readonly alertCtrl          = inject(AlertController);
+  private readonly toastCtrl          = inject(ToastController);
+  private readonly actionSheetCtrl    = inject(ActionSheetController);
+  private readonly dataService        = inject(DataService);
+  private readonly expensesService    = inject(ExepensesService);
+  readonly prefs                      = inject(UserPreferencesService);
 
   constructor() {
     this.userData$ = this.authService.getCurrentUser();
@@ -78,37 +63,46 @@ export class AccountComponent implements OnInit {
       personOutline, mailOutline, calendarOutline, logOutOutline,
       trashOutline, cardOutline, statsChartOutline, chevronForwardOutline,
       notificationsOutline, cashOutline, languageOutline, moonOutline,
-      downloadOutline, createOutline, timeOutline,
+      downloadOutline, createOutline, timeOutline, checkmarkOutline,
     });
   }
 
   ngOnInit(): void {
     const subs$ = this.dataService.userSubData$;
-    this.subCount$ = subs$.pipe(map((s) => s.length));
+    this.subCount$        = subs$.pipe(map((s) => s.length));
     this.monthlyExpenses$ = this.expensesService.getCurrentExpensesMonth(subs$);
-    this.yearlyExpenses$ = this.expensesService.getCurrentExpensesYear(subs$);
-    this.lastSub$ = subs$.pipe(
-      map((subs) => (subs.length > 0 ? subs[subs.length - 1] : null))
-    );
+    this.yearlyExpenses$  = this.expensesService.getCurrentExpensesYear(subs$);
+    this.lastSub$         = subs$.pipe(map((s) => s.length > 0 ? s[s.length - 1] : null));
+  }
+
+  async openCurrencyPicker(): Promise<void> {
+    const current = this.prefs.currency;
+
+    const buttons = CURRENCIES.map((c) => ({
+      text: `${c.label} (${c.code})`,
+      icon: current === c.code ? 'checkmark-outline' : undefined,
+      handler: () => this.prefs.setCurrency(c.code),
+    }));
+
+    buttons.push({ text: 'Annuler', icon: undefined, handler: () => {} } as any);
+
+    const sheet = await this.actionSheetCtrl.create({
+      header: 'Choisir une devise',
+      buttons,
+    });
+    await sheet.present();
   }
 
   getInitials(displayName: string | null | undefined): string {
     if (!displayName) return '?';
-    return displayName
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+    return displayName.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
   }
 
   getCreationDate(user: User): string {
     const date = user.metadata?.creationTime;
     if (!date) return '—';
     return new Date(date).toLocaleDateString('fr-CH', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
+      day: '2-digit', month: 'long', year: 'numeric',
     });
   }
 
@@ -143,7 +137,6 @@ export class AccountComponent implements OnInit {
         {
           text: 'Supprimer définitivement',
           role: 'destructive',
-          cssClass: 'alert-btn-danger',
           handler: () => this.deleteAccount(),
         },
       ],
@@ -154,24 +147,16 @@ export class AccountComponent implements OnInit {
   private async deleteAccount(): Promise<void> {
     const loading = await this.loadingCtrl.create({ message: 'Suppression du compte...' });
     await loading.present();
-    try {
-      await this.authService.deleteAccount();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      await loading.dismiss();
-    }
+    try { await this.authService.deleteAccount(); }
+    catch (e) { console.error(e); }
+    finally { await loading.dismiss(); }
   }
 
   private async logout(): Promise<void> {
     const loading = await this.loadingCtrl.create({ message: 'Déconnexion...' });
     await loading.present();
-    try {
-      await this.authService.logout();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      await loading.dismiss();
-    }
+    try { await this.authService.logout(); }
+    catch (e) { console.error(e); }
+    finally { await loading.dismiss(); }
   }
 }

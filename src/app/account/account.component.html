@@ -83,13 +83,13 @@
           </div>
           <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
         </div>
-        <div class="info-row action-row" (click)="showComingSoon()">
+        <div class="info-row action-row" (click)="openCurrencyPicker()">
           <div class="info-left">
             <ion-icon name="cash-outline"></ion-icon>
             <span class="info-label">Devise</span>
           </div>
           <div class="info-right">
-            <span class="info-value">CHF</span>
+            <span class="info-value currency-badge">{{ prefs.currency$ | async }}</span>
             <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
           </div>
         </div>

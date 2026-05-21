@@ -27,6 +27,8 @@ import { IonLoading } from '@ionic/angular/standalone';
 import { Subscription } from '../../interfaces/interface';
 import { ExepensesService } from '../services/expenses/exepenses.service';
 import { SmartAmountPipe } from '../pipes/smart-amount.pipe';
+import { UserPreferencesService } from '../services/preferences/user-preferences.service';
+import { inject } from '@angular/core';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -53,6 +55,7 @@ export type ChartOptions = {
 })
 export class DonutChartComponent implements OnChanges {
   @ViewChild('chart') chart!: ChartComponent;
+  readonly prefs = inject(UserPreferencesService);
   public chartOptions: Partial<ChartOptions>;
   @Input() subData: Subscription[] = [];
   @Input() isFirstLoad: boolean = true;

@@ -192,6 +192,15 @@
   flex-shrink: 0;
 }
 
+.currency-badge {
+  background: rgba(124, 58, 237, 0.15);
+  color: var(--ion-color-primary);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
 .chevron {
   font-size: 15px;
   color: var(--app-text-muted);
