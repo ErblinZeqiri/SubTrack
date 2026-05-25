@@ -3,19 +3,18 @@ import { AuthService } from '../services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import {
   LoadingController,
+  AlertController,
+  ToastController,
   IonContent,
   IonButton,
   IonIcon,
-  IonList,
   IonItem,
   IonImg,
   IonInput,
   IonText,
-  AnimationController,
-  ModalController,
   IonInputPasswordToggle,
 } from '@ionic/angular/standalone';
-import { logInOutline, logoGoogle, personAddOutline } from 'ionicons/icons';
+import { mailOutline, lockClosedOutline, logoGoogle } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import {
   FormGroup,
@@ -36,7 +35,6 @@ import { Router } from '@angular/router';
     IonInput,
     IonImg,
     IonItem,
-    IonList,
     IonIcon,
     IonButton,
     IonContent,
@@ -59,10 +57,10 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
-    private loadingCtrl: LoadingController,
-    private animationCtrl: AnimationController,
-    private modalCtrl: ModalController,
-    private readonly _router: Router
+    private readonly loadingCtrl: LoadingController,
+    private readonly alertCtrl: AlertController,
+    private readonly toastCtrl: ToastController,
+    private readonly router: Router
   ) {
     this.loginForm = new FormGroup({
       email: this.email,
@@ -71,44 +69,39 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    addIcons({ logoGoogle, logInOutline, personAddOutline });
+    addIcons({ mailOutline, lockClosedOutline, logoGoogle });
     this.resetForm();
   }
 
   private resetForm() {
     this.loginForm.reset();
-    this.email.reset();
-    this.password.reset();
     this.isDataValid = true;
   }
 
-  enterAnimation = (baseEl: HTMLElement) => {
-    const root = baseEl.shadowRoot;
+  async loginWithEmail() {
+    this.loginForm.markAllAsTouched();
 
-    const backdropAnimation = this.animationCtrl
-      .create()
-      .addElement(root!.querySelector('ion-backdrop')!)
-      .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
+    if (!this.loginForm.valid) {
+      this.isDataValid = false;
+      return;
+    }
 
-    const wrapperAnimation = this.animationCtrl
-      .create()
-      .addElement(root!.querySelector('.modal-wrapper')!)
-      .keyframes([
-        { offset: 0, opacity: '0', transform: 'scale(0)' },
-        { offset: 1, opacity: '0.99', transform: 'scale(1)' },
-      ]);
+    this.isDataValid = true;
+    const loading = await this.loadingCtrl.create({ message: 'Connexion...' });
+    await loading.present();
 
-    return this.animationCtrl
-      .create()
-      .addElement(baseEl)
-      .easing('ease-out')
-      .duration(500)
-      .addAnimation([backdropAnimation, wrapperAnimation]);
-  };
-
-  leaveAnimation = (baseEl: HTMLElement) => {
-    return this.enterAnimation(baseEl).direction('reverse');
-  };
+    try {
+      await this.authService.serviceLoginWithemail(
+        this.loginForm.value.email,
+        this.loginForm.value.password
+      );
+      this.resetForm();
+    } catch (error) {
+      this.isDataValid = false;
+    } finally {
+      await loading.dismiss();
+    }
+  }
 
   async loginWithGoogle() {
     const loading = await this.loadingCtrl.create({ message: 'Connexion...' });
@@ -118,52 +111,61 @@ export class LoginComponent implements OnInit {
       await this.authService.serviceLoginWithGoogle();
       this.resetForm();
     } catch (error: any) {
-      console.error('Login Google échoué:', error);
-      // Afficher le vrai message d'erreur pour faciliter le débogage
-      const msg = error?.message ?? 'Erreur de connexion Google';
-      const toast = document.createElement('ion-toast');
-      toast.message = msg;
-      toast.duration = 4000;
-      toast.position = 'bottom';
-      toast.color = 'danger';
-      document.body.appendChild(toast);
-      await (toast as any).present();
+      await this.showErrorToast(error?.message ?? 'Erreur de connexion Google');
     } finally {
       await loading.dismiss();
     }
   }
 
-  async loginWithEmail() {
-    // Marque tous les champs comme touchés pour afficher les erreurs de validation
-    this.loginForm.markAllAsTouched();
-
-    if (!this.loginForm.valid) {
-      this.isDataValid = false;
-    } else {
-      this.isDataValid = true;
-      const loading = await this.loadingCtrl.create({
-        message: 'Connexion...',
-      });
-
-      await loading.present();
-
-      try {
-        await this.authService.serviceLoginWithemail(
-          this.loginForm.value.email,
-          this.loginForm.value.password
-        );
-        this.resetForm();
-        this.modalCtrl.dismiss();
-      } catch (error) {
-        console.error('Login failed:', error);
-        this.isDataValid = false;
-      } finally {
-        await loading.dismiss();
-      }
-    }
+  async forgotPassword() {
+    const alert = await this.alertCtrl.create({
+      header: 'Mot de passe oublié',
+      message: 'Entrez votre adresse email pour recevoir un lien de réinitialisation.',
+      inputs: [
+        {
+          name: 'email',
+          type: 'email',
+          placeholder: 'exemple@exemple.com',
+          value: this.email.value ?? '',
+        },
+      ],
+      buttons: [
+        { text: 'Annuler', role: 'cancel' },
+        {
+          text: 'Envoyer',
+          handler: async (data) => {
+            if (!data.email) return false;
+            try {
+              await this.authService.sendPasswordReset(data.email);
+              const toast = await this.toastCtrl.create({
+                message: 'Email de réinitialisation envoyé.',
+                duration: 3000,
+                position: 'bottom',
+                color: 'dark',
+              });
+              await toast.present();
+            } catch {
+              await this.showErrorToast('Adresse email introuvable.');
+            }
+            return true;
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   toSigninForm() {
-    this._router.navigate(['/signin']);
+    this.router.navigate(['/signin']);
+  }
+
+  private async showErrorToast(message: string) {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 4000,
+      position: 'bottom',
+      color: 'danger',
+    });
+    await toast.present();
   }
 }

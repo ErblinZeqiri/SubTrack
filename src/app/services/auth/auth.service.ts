@@ -6,6 +6,8 @@ import {
   signInWithCredential,
   signInWithPopup,
   GoogleAuthProvider,
+  OAuthProvider,
+  sendPasswordResetEmail,
   user as firebaseUser,
   User,
   onAuthStateChanged,
@@ -310,5 +312,45 @@ export class AuthService {
    */
   getCurrentUser(): Observable<User | null> {
     return firebaseUser(this._auth);
+  }
+
+  async serviceLoginWithApple(): Promise<void> {
+    let currentUser: User;
+
+    if (Capacitor.isNativePlatform()) {
+      const result = await FirebaseAuthentication.signInWithApple();
+      if (!result.user) throw new Error('Aucun utilisateur retourné par Apple');
+
+      currentUser = this._auth.currentUser
+        ?? await (async () => {
+          const idToken = result.credential?.idToken;
+          if (!idToken) throw new Error('Aucun idToken Apple disponible');
+          const provider = new OAuthProvider('apple.com');
+          const cred = provider.credential({ idToken, rawNonce: result.credential?.nonce });
+          return (await signInWithCredential(this._auth, cred)).user;
+        })();
+    } else {
+      const provider = new OAuthProvider('apple.com');
+      provider.addScope('email');
+      provider.addScope('name');
+      const webCredential = await signInWithPopup(this._auth, provider);
+      currentUser = webCredential.user;
+    }
+
+    const userRef = doc(this._firestore, `users/${currentUser.uid}`);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      await setDoc(userRef, {
+        email: currentUser.email,
+        fullName: currentUser.displayName,
+        uid: currentUser.uid,
+      });
+    }
+
+    await this._router.navigate(['/home']);
+  }
+
+  async sendPasswordReset(email: string): Promise<void> {
+    await sendPasswordResetEmail(this._auth, email);
   }
 }

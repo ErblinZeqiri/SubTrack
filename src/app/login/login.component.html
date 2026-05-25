@@ -1,81 +1,83 @@
-<ion-content>
-  <div class="main-content">
-    <div
-      class="ion-text-center ion-justify-content-center ion-align-items-center image-container"
-    >
-      <ion-img src="../../assets/subtrack_logo_full_inverse_transparent.png" alt="SubTrack Logo">
-      </ion-img>
-    </div>
-    <form
-      [formGroup]="loginForm"
-      (ngSubmit)="loginWithEmail()"
-      class="loginWithEmail"
-    >
-      <ion-list>
-        <ion-item>
-          <ion-input
-            labelPlacement="fixed"
-            label="Email :"
-            type="email"
-            placeholder="exemple@exemple.com"
-            name="email"
-            formControlName="email"
-            [formControl]="email"
-            ></ion-input>
-        </ion-item> 
-        <ion-text
-          color="danger"
-          *ngIf="email.invalid && email.touched"
-        >
-          Ajoutez une adresse email valide.
-        </ion-text>
+<ion-content [fullscreen]="true" [scrollY]="false">
+  <div class="login-container">
 
-        <ion-item>
-          <ion-input
-            labelPlacement="fixed"
-            label="Mot de passe :"
-            type="password"
-            placeholder=""
-            name="password"
-            formControlName="password"
-            [formControl]="password"
-          >
-            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
-          </ion-input>
-        </ion-item>
-        <ion-text
-          color="danger"
-          *ngIf="password.invalid && password.touched"
-        >
-          Mauvais mot de passe.
-        </ion-text>
-        <br>
+    <div class="section-top">
+      <div class="logo-section">
+        <div class="logo-glow">
+          <ion-img src="../../assets/subtrack_logo_full_inverse_transparent.png" alt="SubTrack Logo"></ion-img>
+        </div>
+      </div>
+      <div class="title-section">
+        <h1>Connexion</h1>
+        <p>Content de te revoir sur SubTrack</p>
+      </div>
+    </div>
+
+    <div class="section-middle">
+      <form [formGroup]="loginForm" (ngSubmit)="loginWithEmail()">
+
+        <div class="field-wrapper">
+          <label class="field-label">Email</label>
+          <ion-item>
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+            <ion-input
+              type="email"
+              placeholder="exemple@exemple.com"
+              formControlName="email"
+              [formControl]="email"
+            ></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="email.invalid && email.touched">
+            Adresse email invalide.
+          </ion-text>
+        </div>
+
+        <div class="field-wrapper">
+          <label class="field-label">Mot de passe</label>
+          <ion-item>
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-input
+              type="password"
+              placeholder="••••••••"
+              formControlName="password"
+              [formControl]="password"
+            >
+              <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+            </ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="password.invalid && password.touched">
+            Mot de passe invalide (6 caractères minimum).
+          </ion-text>
+        </div>
 
         <ion-text color="danger" *ngIf="!isDataValid && email.valid && password.valid">
-          Mauvaises données de connexion.
+          Email ou mot de passe incorrect.
         </ion-text>
 
-        <ion-button id="open-loading" expand="block" type="submit"
-          >Valider</ion-button
-        >
-      </ion-list>
+        <ion-button expand="block" type="submit" class="submit-btn">
+          Valider
+        </ion-button>
 
-      <ion-text color="medium">
-        <h5 id="signin" (click)="toSigninForm()" class="ion-text-right">
-          Créer un compte !
-        </h5>
-      </ion-text>
-      <h4 class="ion-text-center">Ou</h4>
-      <br>
-    </form>
-    <ion-button
-      id="open-loading"
-      (click)="loginWithGoogle()"
-      expand="block"
-      class="google-button"
-    >
-      <ion-icon md="logo-google" ios="logo-google"></ion-icon>
-      &nbsp; Connexion avec Google
-    </ion-button>
+        <div class="forgot-password" (click)="forgotPassword()">
+          Mot de passe oublié ?
+        </div>
+
+      </form>
+    </div>
+
+    <div class="section-bottom">
+      <div class="separator"><span>Ou</span></div>
+
+      <ion-button expand="block" (click)="loginWithGoogle()" class="social-btn google-btn">
+        <ion-icon name="logo-google" slot="start"></ion-icon>
+        Continuer avec Google
+      </ion-button>
+
+      <div class="signup-link">
+        <span>Pas encore de compte ?</span>
+        <span class="link" (click)="toSigninForm()">Créer un compte</span>
+      </div>
+    </div>
+
   </div>
 </ion-content>
