@@ -35,6 +35,11 @@
   color: var(--app-text);
   font-size: 13px;
   height: 36px;
+  cursor: pointer;
+  font-family: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: manipulation;
 }
 
 .filter-pill ion-icon {

@@ -17,12 +17,6 @@
   display: none;
 }
 
-.filter-select-hidden {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
 
 /* ── Subscription card ──────────────────────────────────────── */
 ion-item.no-border {

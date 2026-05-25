@@ -1,246 +1,287 @@
-// Dark mode form styling
-ion-header {
-  ion-toolbar {
-    --background: var(--app-surface);
-    --color: var(--app-text);
-    --border-color: var(--app-border);
-  }
+ion-header ion-toolbar {
+  --background: var(--app-surface);
+  --color: var(--app-text);
+  --border-color: var(--app-border);
 }
 
 ion-content {
   --background: var(--app-bg);
 }
 
-.main-content {
-  padding: 16px;
+.btn-cancel {
+  --color: var(--app-text-muted);
+  font-size: 13px;
+  text-transform: none;
 }
 
-ion-list {
-  background: transparent;
-  padding: 0;
+// ── Conteneur ─────────────────────────────────────────────────────────────────
+
+.form-container {
+  padding: 20px 16px calc(32px + env(safe-area-inset-bottom, 0px));
+  max-width: 600px;
+  margin: 0 auto;
 }
+
+.divider {
+  height: 1px;
+  background: var(--app-border);
+  margin: 20px 0;
+}
+
+// ── Service sélectionné ───────────────────────────────────────────────────────
+
+.selected-service {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--app-surface);
+  border: 1.5px solid var(--ion-color-primary);
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+
+  .service-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: contain;
+    background: var(--app-bg);
+  }
+
+  .service-name {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+
+  .service-clear {
+    font-size: 20px;
+    color: var(--app-text-muted);
+    cursor: pointer;
+  }
+}
+
+// ── Labels ────────────────────────────────────────────────────────────────────
+
+.field-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--app-text-muted);
+  margin-bottom: 6px;
+  padding-left: 2px;
+
+  ion-icon {
+    font-size: 15px;
+    color: var(--ion-color-primary);
+  }
+}
+
+// ── Groupes de champs ─────────────────────────────────────────────────────────
+
+.field-group {
+  margin-bottom: 16px;
+
+  &.half {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.row-fields {
+  display: flex;
+  gap: 12px;
+}
+
+// ── Items ─────────────────────────────────────────────────────────────────────
 
 ion-item {
   --background: var(--app-surface);
-  --border-color: var(--app-border);
+  --border-color: transparent;
   --color: var(--app-text);
   --highlight-color-focused: var(--ion-color-primary);
-  --highlight-color-valid: var(--ion-color-primary);
-  --highlight-color-invalid: #dc2626;
-  
-  border-radius: 12px;
-  margin-bottom: 12px;
-  border: 1px solid var(--app-border);
-  transition: all 0.3s ease;
-  
-  &:hover {
-    border-color: rgba(124, 58, 237, 0.3);
-  }
-  
+  --inner-padding-end: 14px;
+  --padding-start: 16px;
+  --min-height: 54px;
+
+  border-radius: 14px;
+  border: 1.5px solid var(--app-border);
+  transition: border-color 0.2s, box-shadow 0.2s;
+
   &.ion-focused {
     border-color: var(--ion-color-primary);
     box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
   }
+
+  &.search-item ion-input {
+    font-size: 16px;
+  }
+
+  &.price-item ion-input {
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  ion-input {
+    --color: var(--app-text);
+    --placeholder-color: var(--app-text-muted);
+    font-size: 15px;
+  }
+
   ion-select {
     --color: var(--app-text);
     --placeholder-color: var(--app-text-muted);
-    --placeholder-opacity: 0.6;
-  }
-  
-  ion-avatar {
-    width: 32px;
-    height: 32px;
-    
-    img {
-      border-radius: 8px;
-      background: var(--app-bg);
-    }
+    font-size: 15px;
+    width: 100%;
   }
 }
 
-// ===== DATETIME MODAL & CALENDAR STYLES =====
+// ── Chips suggestions rapides ─────────────────────────────────────────────────
+
+.quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.chip {
+  background: var(--app-surface);
+  border: 1.5px solid var(--app-border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--app-text-muted);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+
+  &:active {
+    border-color: var(--ion-color-primary);
+    color: var(--ion-color-primary);
+  }
+}
+
+// ── Dropdown suggestions ──────────────────────────────────────────────────────
+
+.suggestions {
+  background: var(--app-surface);
+  border: 1.5px solid var(--app-border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--app-text);
+  transition: background 0.15s;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--app-border);
+  }
+
+  &:active {
+    background: rgba(124, 58, 237, 0.08);
+  }
+}
+
+.suggestion-logo {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+
+  img {
+    border-radius: 7px;
+    background: var(--app-bg);
+  }
+}
+
+// ── Datetime ──────────────────────────────────────────────────────────────────
+
+.date-field {
+  cursor: pointer;
+}
+
+.date-value {
+  font-size: 15px;
+  color: var(--app-text);
+}
+
+.date-chevron {
+  font-size: 16px;
+  color: var(--app-text-muted);
+}
+
 ion-modal.datetime-modal {
-  --backdrop-opacity: 0.6 !important;
-  --ion-background-color: #0F1117 !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
-  
-  &::part(backdrop) {
-    background: rgba(15, 17, 23, 0.8) !important;
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-  }
-  
+  --height: fit-content;
+  --width: fit-content;
+  --min-width: 320px;
+  --border-radius: 16px;
+  --backdrop-opacity: 0.5;
+
   &::part(content) {
-    --background: #171B22 !important;
-    background: #171B22 !important;
-    border-radius: 16px !important;
+    --background: #171B22;
+    background: #171B22;
+    border-radius: 16px;
+    overflow: hidden;
   }
 }
 
-/* Styles pour datetime dans la modal */
-ion-modal.datetime-modal ion-datetime {
-  --background: #171B22 !important;
-  --calendar-background: #171B22 !important;
-  --color: #F1F5F9 !important;
-  color: #F1F5F9 !important;
-}
-
-/* Parts du datetime */
-ion-datetime::part(background) {
-  background: #171B22 !important;
-  color: #F1F5F9 !important;
-}
-
-ion-datetime::part(header) {
-  background: #171B22 !important;
-}
-
-ion-datetime::part(calendar) {
-  background: #171B22 !important;
-  color: #F1F5F9 !important;
-  border-radius: 16px !important;
-}
-
-ion-datetime::part(calendar-body) {
-  background: #171B22 !important;
-}
+ion-modal.datetime-modal ion-datetime { --background: #171B22; --color: #F1F5F9; }
+ion-datetime::part(background)        { background: #171B22; }
+ion-datetime::part(header)            { background: #171B22; }
+ion-datetime::part(calendar)          { background: #171B22; color: #F1F5F9; border-radius: 16px; }
+ion-datetime::part(calendar-body)     { background: #171B22; }
 
 ion-datetime::part(month-year-button),
 ion-datetime::part(calendar-day),
 ion-datetime::part(time-button) {
-  color: #F1F5F9 !important;
-  background: transparent !important;
-  font-weight: 500 !important;
-}
-
-ion-datetime::part(calendar-day):hover {
-  background: rgba(124, 58, 237, 0.1) !important;
-  color: #F1F5F9 !important;
+  color: #F1F5F9;
+  background: transparent;
+  font-weight: 500;
 }
 
 ion-datetime::part(calendar-day-active),
 ion-datetime::part(calendar-day-today) {
-  background: #7C3AED !important;
-  color: #FFFFFF !important;
-  font-weight: 600 !important;
+  background: #7C3AED;
+  color: #fff;
+  font-weight: 600;
 }
 
-ion-datetime::part(active) {
-  background: transparent !important;
-  color: #F1F5F9 !important;
-  font-weight: 600 !important;
-  border-radius: 12px !important;
-  text-align: center !important;
-  box-shadow: none !important;
-}
+// ── Erreurs ───────────────────────────────────────────────────────────────────
 
-ion-datetime::part(month-year-button-active) {
-  background: transparent !important;
-  color: #F1F5F9 !important;
-}
-
-ion-datetime::part(month-year-picker) {
-  background: #171B22 !important;
-}
-
-// Boutons du calendrier (Annuler/Valider) - TRÈS VISIBLE
-ion-datetime {
-  .calendar-action-buttons {
-    padding: 16px;
-    gap: 12px;
-  }
-  
-  button {
-    font-size: 15px;
-    font-weight: 600;
-    padding: 12px 24px;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    text-transform: none;
-    
-    // Bouton Annuler
-    &:first-child {
-      background: var(--app-surface);
-      color: var(--app-text-muted);
-      border: 1.5px solid var(--app-border);
-      
-      &:hover {
-        background: rgba(239, 68, 68, 0.1);
-        color: #ef4444;
-        border-color: #ef4444;
-        box-shadow: 0 0 12px rgba(239, 68, 68, 0.2);
-      }
-    }
-    
-    // Bouton Valider
-    &:last-child {
-      background: linear-gradient(135deg, var(--ion-color-primary) 0%, #6d28d9 100%);
-      color: white;
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-      
-      &:hover {
-        background: linear-gradient(135deg, #6d28d9 0%, var(--ion-color-primary) 100%);
-        box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
-        transform: translateY(-2px);
-      }
-    }
-  }
-}
-
-ion-datetime-button {
-  --background: var(--app-surface);
-  --background-hover: rgba(124, 58, 237, 0.1);
-  --color: var(--ion-color-primary);
-  --border-color: var(--app-border);
-  --border-width: 1px;
-  --border-style: solid;
-  border-radius: 8px;
-}
-
-ion-datetime-button::part(native) {
-  background: var(--app-surface);
-  color: var(--ion-color-primary);
-  border: 1px solid var(--app-border);
-  border-radius: 8px;
-}
-
-// Error messages
 ion-text[color='danger'] {
   display: block;
-  margin-top: 6px;
-  margin-bottom: 8px;
-  padding-left: 4px;
-  font-size: 13px;
+  font-size: 12px;
   color: #ef4444;
-  pointer-events: none;
+  padding: 4px 4px 0;
 }
 
-// Buttons
-ion-button {
-  --border-radius: 12px;
-  height: 48px;
-  font-weight: 500;
+.global-error {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+// ── Bouton valider ────────────────────────────────────────────────────────────
+
+.btn-submit {
+  --border-radius: 14px;
+  height: 54px;
+  font-size: 16px;
+  font-weight: 600;
   text-transform: none;
-  
-  // Bouton Valider - texte blanc
-  &[type='submit'] {
-    --color: white;
-  }
-  
-  // Bouton Effacer - texte noir
-  &[color='medium'] {
-    --background: var(--app-surface);
-    --color: var(--app-text);
-    --border-color: var(--app-border);
-    --border-width: 1px;
-    --border-style: solid;
-  }
+  margin-top: 8px;
 }
 
-// Select dropdown
 ion-select::part(icon) {
   color: var(--app-text-muted);
 }

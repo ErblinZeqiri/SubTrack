@@ -17,22 +17,26 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonList,
   IonItem,
   IonText,
   IonAvatar,
   IonLabel,
   IonButton,
-  IonGrid,
-  IonRow,
-  IonCol,
+  IonButtons,
+  IonBackButton,
+  IonIcon,
   LoadingController,
   IonSelect,
   IonSelectOption,
   IonDatetime,
-  IonDatetimeButton,
   IonModal,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  searchOutline, cashOutline, pricetagOutline, repeatOutline,
+  calendarOutline, hourglassOutline, calendarClearOutline, closeCircle,
+  chevronForwardOutline,
+} from 'ionicons/icons';
 import {
   Company,
   CompanySuggestionsService,
@@ -57,16 +61,14 @@ registerLocaleData(localeFrCh, 'fr-CH');
   standalone: true,
   imports: [
     IonModal,
-    IonDatetimeButton,
-    IonCol,
-    IonRow,
-    IonGrid,
     IonButton,
+    IonButtons,
+    IonBackButton,
+    IonIcon,
     IonLabel,
     IonAvatar,
     IonText,
     IonItem,
-    IonList,
     IonContent,
     IonTitle,
     IonToolbar,
@@ -89,6 +91,8 @@ export class AddSubComponent {
   filteredOptions$!: Observable<Company[]>;
   toggleDropdown: boolean = false;
   private readonly destroyRef = inject(DestroyRef);
+
+  readonly quickSuggestions = ['Netflix', 'Spotify', 'Disney+', 'Apple', 'Amazon', 'YouTube', 'Adobe'];
 
   // Use imported constants instead of duplicating
   readonly subscriptionCategories = SUBSCRIPTION_CATEGORIES;
@@ -125,6 +129,18 @@ export class AddSubComponent {
     Validators.compose([Validators.required])
   );
 
+  get formattedNextPaymentDate(): string {
+    const v = this.nextPaymentDate.value;
+    if (!v) return 'Choisir une date';
+    return formatDate(v, 'd MMM yyyy', 'fr-CH');
+  }
+
+  get formattedDeadlineDate(): string {
+    const v = this.deadline.value;
+    if (!v || v === this.subsciptionDeadline[0]) return 'Choisir une date';
+    return formatDate(v, 'd MMM yyyy', 'fr-CH');
+  }
+
   constructor(
     private readonly companySuggestionsService: CompanySuggestionsService,
     private readonly _router: Router,
@@ -132,6 +148,11 @@ export class AddSubComponent {
     private readonly _dataService: DataService,
     private readonly _auth: AuthService
   ) {
+    addIcons({
+      searchOutline, cashOutline, pricetagOutline, repeatOutline,
+      calendarOutline, hourglassOutline, calendarClearOutline, closeCircle,
+      chevronForwardOutline,
+    });
     this.addSubscribtionForm = new FormGroup({
       companyName: this.selectedCompany,
       amount: this.amount,
@@ -160,6 +181,21 @@ export class AddSubComponent {
     this.selectedCompany.setValue(option.name);
     this.logo = this.companySuggestionsService.getLogoUrl(option);
     this.domain = option.domain;
+    this.toggleDropdown = false;
+  }
+
+  quickSelect(name: string) {
+    this.selectedCompany.setValue(name);
+    this.filteredOptions$ = this.companySuggestionsService
+      .fetchCompanySuggestions(name)
+      .pipe(takeUntilDestroyed(this.destroyRef));
+    this.toggleDropdown = true;
+  }
+
+  clearService() {
+    this.selectedCompany.setValue('');
+    this.logo = '';
+    this.domain = '';
     this.toggleDropdown = false;
   }
 

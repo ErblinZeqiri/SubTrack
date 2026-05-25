@@ -27,14 +27,11 @@ import {
   LoadingController,
   AlertController,
   IonText,
-  IonSelect,
-  IonSelectOption,
   IonLoading,
   IonButton,
   IonIcon,
 } from '@ionic/angular/standalone';
 import { DonutChartComponent } from '../donut-chart/donut-chart.component';
-import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { funnelOutline, calendarOutline, close, createOutline, trashOutline } from 'ionicons/icons';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -60,9 +57,6 @@ import { environment } from '../../environments/environment';
     IonHeader,
     CommonModule,
     DonutChartComponent,
-    IonSelect,
-    IonSelectOption,
-    FormsModule,
     IonLoading,
     RouterLink,
     SmartAmountPipe,
@@ -85,8 +79,6 @@ export class SubListComponent implements OnInit, OnDestroy {
   readonly subscriptionRenewal = SUBSCRIPTION_RENEWAL_TYPES;
   selectedCategories: string[] = [];
   selectedRenewals: string[] = [];
-  tempSelectedCategories: string[] = [];
-  tempSelectedRenewals: string[] = [];
   userID!: string;
   private readonly destroyRef = inject(DestroyRef);
   private autoScrollTimer?: ReturnType<typeof setInterval>;
@@ -121,36 +113,56 @@ export class SubListComponent implements OnInit, OnDestroy {
     addIcons({ funnelOutline, calendarOutline, close, createOutline, trashOutline });
   }
 
-  onFilterSelectionChange() {
-    // Ne fait rien, juste pour mettre à jour les variables temporaires
+  async openCategoryFilter(event?: Event) {
+    event?.preventDefault();
+    event?.stopPropagation();
+    const alert = await this.alertCtrl.create({
+      header: 'Catégorie',
+      inputs: this.subscriptionCategories.map(cat => ({
+        type: 'checkbox' as const,
+        label: cat,
+        value: cat,
+        checked: this.selectedCategories.includes(cat),
+      })),
+      buttons: [
+        { text: 'Annuler', role: 'cancel' },
+        {
+          text: 'Valider',
+          handler: async (selected: string[]) => {
+            this.selectedCategories = selected ?? [];
+            await this.applyFilters();
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
-  async onCategoryDismiss() {
-    if (this.areSameSelections(this.tempSelectedCategories, this.selectedCategories)) {
-      return;
-    }
-    this.selectedCategories = [...this.tempSelectedCategories];
-    await this.applyFilters();
+  async openRenewalFilter(event?: Event) {
+    event?.preventDefault();
+    event?.stopPropagation();
+    const alert = await this.alertCtrl.create({
+      header: 'Renouvellement',
+      inputs: this.subscriptionRenewal.map(renewal => ({
+        type: 'checkbox' as const,
+        label: renewal,
+        value: renewal,
+        checked: this.selectedRenewals.includes(renewal),
+      })),
+      buttons: [
+        { text: 'Annuler', role: 'cancel' },
+        {
+          text: 'Valider',
+          handler: async (selected: string[]) => {
+            this.selectedRenewals = selected ?? [];
+            await this.applyFilters();
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
-  async onRenewalDismiss() {
-    if (this.areSameSelections(this.tempSelectedRenewals, this.selectedRenewals)) {
-      return;
-    }
-    this.selectedRenewals = [...this.tempSelectedRenewals];
-    await this.applyFilters();
-  }
-
-  private areSameSelections(first: string[], second: string[]): boolean {
-    if (first.length !== second.length) {
-      return false;
-    }
-    const firstSet = new Set(first);
-    if (firstSet.size !== second.length) {
-      return false;
-    }
-    return second.every((value) => firstSet.has(value));
-  }
 
   async applyFilters() {
     // Pas besoin de loading - filtrage instantan\u00e9 local
@@ -251,8 +263,6 @@ export class SubListComponent implements OnInit, OnDestroy {
     if (loading) {
       await loading.present();
     }
-    this.tempSelectedCategories = [...this.selectedCategories];
-    this.tempSelectedRenewals = [...this.selectedRenewals];
     this._auth
       .getCurrentUser()
       .pipe(
@@ -314,8 +324,6 @@ export class SubListComponent implements OnInit, OnDestroy {
   async clearFilters() {
     this.selectedCategories = [];
     this.selectedRenewals = [];
-    this.tempSelectedCategories = [];
-    this.tempSelectedRenewals = [];
     await this.applyFilters();
     this.noSub = false;
   }
