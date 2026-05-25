@@ -1,42 +1,111 @@
 <ion-header>
   <ion-toolbar>
-    <ion-icon name="arrow-back-outline" slot="start" (click)="back()" size="large"></ion-icon>
-    <ion-title class="ion-text-center">Détail de l'abonnement</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Détail</ion-title>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
-  <div class="main-content">
-    @if (subscription$ | async; as sub ) {
-    <h2 class="ion-text-center">{{ sub.companyName }}</h2>
-    <ul>
-      <li>
-        <strong>Montant :</strong> {{ sub.amount | currency : "CHF" }}
-      </li>
-      <li>
-        <strong>Catégorie d'abonnement :</strong> {{ sub.category }}
-      </li>
-      <li>
-          <strong>Date de facturation suivante :</strong>
-          {{ sub.nextPaymentDate | date }}
-      </li>
-      <li><strong>Paiements précedants :</strong></li>
-      <ul>
-        <ng-container *ngIf="sub.paymentHistory && getObjectKeys(sub.paymentHistory).length  > 0; else noHistory">
-          @for (payment of getObjectKeys(sub.paymentHistory); track trackByFn ) {
-          <li>
-            <div>Date : {{ sub.paymentHistory[payment].date | date : "d.MM.yyyy" }}</div>
-            <div>Prix : {{ sub.paymentHistory[payment].amount }}</div>
-          </li>
-          <br>
+  @if (subscription$ | async; as sub) {
+    <div class="detail-container">
+
+      <!-- ── Hero ── -->
+      <div class="hero-section">
+        <div class="hero-logo">
+          <img
+            [src]="getLogoUrl(sub)"
+            alt="{{ sub.companyName }}"
+            referrerpolicy="no-referrer"
+            (error)="onImageError($event)"
+          />
+        </div>
+        <h1 class="hero-name">{{ sub.companyName }}</h1>
+        <span class="status-badge" [class.active]="isActive(sub)">
+          <span class="status-dot"></span>
+          {{ isActive(sub) ? 'Actif' : 'Expiré' }}
+        </span>
+      </div>
+
+      <!-- ── Montant principal ── -->
+      <div class="amount-card">
+        <div class="amount-main-row">
+          <span class="amount-value">{{ sub.amount | currency:'CHF':'symbol':'1.2-2' }}</span>
+          <span class="amount-period">/ {{ sub.renewal | lowercase }}</span>
+        </div>
+        @if (sub.renewal !== 'Annuel') {
+          <span class="amount-annual">soit {{ getAnnualCost(sub) | currency:'CHF':'symbol':'1.2-2' }} / an</span>
+        }
+      </div>
+
+      <!-- ── Infos ── -->
+      <div class="info-grid">
+        <div class="info-card">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <span class="info-label">Prochain paiement</span>
+          <span class="info-value">{{ sub.nextPaymentDate | date:'d MMM yyyy' }}</span>
+        </div>
+        <div class="info-card">
+          <ion-icon name="pricetag-outline"></ion-icon>
+          <span class="info-label">Catégorie</span>
+          <span class="info-value">{{ sub.category }}</span>
+        </div>
+        <div class="info-card">
+          <ion-icon name="repeat-outline"></ion-icon>
+          <span class="info-label">Fréquence</span>
+          <span class="info-value">{{ sub.renewal }}</span>
+        </div>
+        <div class="info-card">
+          <ion-icon name="hourglass-outline"></ion-icon>
+          <span class="info-label">Échéance</span>
+          <span class="info-value">
+            @if (sub.deadline && sub.deadline !== 'Indéterminée') {
+              {{ sub.deadline | date:'d MMM yyyy' }}
+            } @else {
+              Sans engagement
+            }
+          </span>
+        </div>
+      </div>
+
+      <!-- ── Historique ── -->
+      <div class="section">
+        <h2 class="section-title">
+          <ion-icon name="time-outline"></ion-icon>
+          Historique des paiements
+        </h2>
+
+        @if (sub.paymentHistory && getObjectKeys(sub.paymentHistory).length > 0) {
+          <div class="history-list">
+            @for (key of getRecentPayments(sub); track key) {
+              <div class="history-item">
+                <div class="history-dot"></div>
+                <span class="history-date">{{ sub.paymentHistory[key].date | date:'d MMM yyyy' }}</span>
+                <span class="history-amount">{{ sub.paymentHistory[key].amount | currency:'CHF':'symbol':'1.2-2' }}</span>
+              </div>
+            }
+          </div>
+          @if (getObjectKeys(sub.paymentHistory).length > 3) {
+            <div class="see-all">Voir tout ({{ getObjectKeys(sub.paymentHistory).length }} paiements)</div>
           }
-        </ng-container>
-      </ul>
-    </ul>
-    }
-    <ion-button color="dark" class="ion-align-self-center">Annuler l'abonnement</ion-button>
-    
-    <ng-template #noHistory>
-      Aucun historique de paiement disponible.
-    </ng-template>
-  </div>
+        } @else {
+          <p class="empty-history">Aucun paiement enregistré.</p>
+        }
+      </div>
+
+      <!-- ── Actions ── -->
+      <div class="actions-section">
+        <ion-button expand="block" class="btn-edit" (click)="editSubscription(sub)">
+          <ion-icon name="create-outline" slot="start"></ion-icon>
+          Modifier l'abonnement
+        </ion-button>
+        <ion-button expand="block" class="btn-delete" (click)="cancelSubscription(sub)">
+          <ion-icon name="trash-outline" slot="start"></ion-icon>
+          Annuler l'abonnement
+        </ion-button>
+      </div>
+
+    </div>
+  }
 </ion-content>
