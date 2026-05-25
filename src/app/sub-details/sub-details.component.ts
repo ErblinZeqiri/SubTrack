@@ -45,7 +45,7 @@ export class SubDetailsComponent implements OnInit {
   ) {
     addIcons({
       arrowBackOutline, calendarOutline, cashOutline, pricetagOutline,
-      repeatOutline, hourglassOutline, timeOutline, checkmarkCircleOutline,
+      repeatOutline, hourglassOutline, timeOutline,
       createOutline, trashOutline,
     });
   }
