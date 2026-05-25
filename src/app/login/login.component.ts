@@ -111,23 +111,32 @@ export class LoginComponent implements OnInit {
   };
 
   async loginWithGoogle() {
-    const loading = await this.loadingCtrl.create({
-      message: 'Connexion...',
-    });
-
+    const loading = await this.loadingCtrl.create({ message: 'Connexion...' });
     await loading.present();
 
     try {
       await this.authService.serviceLoginWithGoogle();
       this.resetForm();
-    } catch (error) {
-      console.error('Login failed', error);
+    } catch (error: any) {
+      console.error('Login Google échoué:', error);
+      // Afficher le vrai message d'erreur pour faciliter le débogage
+      const msg = error?.message ?? 'Erreur de connexion Google';
+      const toast = document.createElement('ion-toast');
+      toast.message = msg;
+      toast.duration = 4000;
+      toast.position = 'bottom';
+      toast.color = 'danger';
+      document.body.appendChild(toast);
+      await (toast as any).present();
     } finally {
       await loading.dismiss();
     }
   }
 
   async loginWithEmail() {
+    // Marque tous les champs comme touchés pour afficher les erreurs de validation
+    this.loginForm.markAllAsTouched();
+
     if (!this.loginForm.valid) {
       this.isDataValid = false;
     } else {

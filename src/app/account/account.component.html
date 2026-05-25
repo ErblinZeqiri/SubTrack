@@ -18,8 +18,12 @@
             <span class="initials">{{ getInitials(user.displayName) }}</span>
           }
         </div>
-        <button class="avatar-edit-btn" type="button">
-          <ion-icon name="create-outline"></ion-icon>
+        <button class="avatar-edit-btn" type="button" (click)="changeProfilePhoto()" [class.loading]="uploadingPhoto">
+          @if (uploadingPhoto) {
+            <ion-spinner name="crescent" class="upload-spinner"></ion-spinner>
+          } @else {
+            <ion-icon name="create-outline"></ion-icon>
+          }
         </button>
       </div>
       <h2 class="user-name">{{ user.displayName ?? 'Utilisateur' }}</h2>

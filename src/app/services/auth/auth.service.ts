@@ -3,16 +3,20 @@ import {
   Auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithCredential,
+  signInWithPopup,
+  GoogleAuthProvider,
   user as firebaseUser,
   User,
-  GoogleAuthProvider,
   onAuthStateChanged,
-  signInWithCredential,
   updateProfile,
   deleteUser,
 } from '@angular/fire/auth';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
+import { Storage, ref, uploadString, getDownloadURL } from '@angular/fire/storage';
+import { Optional } from '@angular/core';
 import { Router } from '@angular/router';
+import { Capacitor } from '@capacitor/core';
 import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
 import { DataService } from '../data/data.service';
 import { map, Observable } from 'rxjs';
@@ -36,6 +40,7 @@ export class AuthService {
   constructor(
     private readonly _auth: Auth,
     private readonly _firestore: Firestore,
+    @Optional() private readonly _storage: Storage | null,
     private readonly _router: Router,
     private readonly _injector: Injector,
   ) {
@@ -88,74 +93,46 @@ export class AuthService {
    * @throws {Error} Si une erreur se produit lors de la connexion.
    */
   async serviceLoginWithGoogle() {
-    try {
-      if (!environment.production) {
-        console.log('🚀 Début de serviceLoginWithGoogle()');
+    let currentUser: User;
+
+    if (Capacitor.isNativePlatform()) {
+      // ── Android / iOS ──────────────────────────────────────────────────────
+      // Le plugin Capacitor déclenche la connexion native Google.
+      // skipNativeAuth: false synchronise automatiquement le web SDK,
+      // mais on garde un fallback manuel via l'idToken pour la robustesse.
+      const result = await FirebaseAuthentication.signInWithGoogle();
+      if (!result.user) {
+        throw new Error('Aucun utilisateur retourné par Google');
       }
 
-      // Demande une connexion avec Google via l'API Capacitor-firebase/authentication.
-      // La méthode signInWithGoogle() renvoie un objet Credential qui contient
-      // un jeton de connexion Google.
-      const credential = await FirebaseAuthentication.signInWithGoogle();
-
-      if (!environment.production) {
-        console.log('📦 Credential reçu:', JSON.stringify(credential, null, 2));
-        console.log('👤 credential.user:', credential.user);
-        console.log('🔑 credential.credential:', credential.credential);
-      }
-
-      if (!credential.user) {
-        console.error('❌ Aucun utilisateur récupéré après signInWithGoogle');
-        console.error('📦 Credential complet:', credential);
-        return;
-      }
-
-      if (!environment.production) {
-        console.log('✅ Google Auth Response:', credential);
-      }
-
-      // Crée un authCredential à partir du jeton de connexion Google.
-      const authCredential = GoogleAuthProvider.credential(
-        credential.credential?.idToken,
-      );
-      // Appelle signInWithCredential() pour se connecter avec l'authentification Firebase.
-      await signInWithCredential(this._auth, authCredential);
-
-      // Récupère l'utilisateur Firebase actuel.
-      const firebaseUser = await FirebaseAuthentication.getCurrentUser();
-
-      if (!firebaseUser.user) {
-        console.error("❌ Firebase n'a pas récupéré l'utilisateur !");
-        return;
-      }
-
-      // Charge les données de l'utilisateur en Firestore.
-      const userRef = doc(this._firestore, `users/${firebaseUser.user.uid}`);
-      const userSnap = await getDoc(userRef);
-
-      if (!userSnap.exists()) {
-        if (!environment.production) {
-          console.log("ℹ️ Création d'un nouvel utilisateur Firestore.");
-        }
-        // Crée un nouvel utilisateur Firestore si l'utilisateur n'existe pas.
-        await setDoc(userRef, {
-          email: firebaseUser.user.email,
-          fullName: firebaseUser.user.displayName,
-          uid: firebaseUser.user.uid,
-        });
-        if (!environment.production) {
-          console.log('✅ Firestore écrit avec succès !');
-        }
-      }
-
-      if (!environment.production) {
-        console.log('➡️ Redirection vers /home');
-      }
-      // Redirige vers `/home` si tout s'est bien déroulé.
-      this._router.navigate(['/home']);
-    } catch (error) {
-      console.error('❌ Erreur lors de la connexion Google:', error);
+      // Priorité 1 : sync automatique (skipNativeAuth: false)
+      currentUser = this._auth.currentUser
+        // Priorité 2 : sync manuelle via idToken
+        ?? await (async () => {
+          const idToken = result.credential?.idToken;
+          if (!idToken) throw new Error('Aucun idToken Google disponible');
+          const cred = GoogleAuthProvider.credential(idToken);
+          return (await signInWithCredential(this._auth, cred)).user;
+        })();
+    } else {
+      // ── Web ────────────────────────────────────────────────────────────────
+      // signInWithPopup utilise directement le web SDK — pas besoin du plugin.
+      const webCredential = await signInWithPopup(this._auth, new GoogleAuthProvider());
+      currentUser = webCredential.user;
     }
+
+    // Créer le document Firestore si première connexion
+    const userRef = doc(this._firestore, `users/${currentUser.uid}`);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      await setDoc(userRef, {
+        email: currentUser.email,
+        fullName: currentUser.displayName,
+        uid: currentUser.uid,
+      });
+    }
+
+    await this._router.navigate(['/home']);
   }
 
   /**
@@ -173,10 +150,8 @@ export class AuthService {
       password,
     );
 
-    // Vérifie si les informations d'identification ont été récupérées
     if (credential) {
-      // Redirige vers la page d'accueil
-      this._router.navigate(['/home']);
+      await this._router.navigate(['/home']);
     }
   }
 
@@ -251,6 +226,32 @@ export class AuthService {
     // Redirige vers la page de connexion.
     this._router.navigate(['/login']);
     /******  371681db-b683-4ae8-bc75-723718bc2baa  *******/
+  }
+
+  /**
+   * Upload une photo de profil (base64 data URL) vers Firebase Storage
+   * puis met à jour le photoURL du profil Firebase Auth.
+   */
+  async uploadProfilePhoto(dataUrl: string): Promise<void> {
+    const currentUser = this._auth.currentUser;
+    if (!currentUser) throw new Error('Aucun utilisateur connecté');
+
+    // Timeout 8s pour éviter le chargement infini si Storage est inaccessible
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('Upload timeout — vérifiez les règles Firebase Storage')), 8_000)
+    );
+
+    if (!this._storage) throw new Error('Firebase Storage non disponible');
+
+    const upload = async () => {
+      const storageRef = ref(this._storage!, `profile-photos/${currentUser.uid}`);
+      await uploadString(storageRef, dataUrl, 'data_url');
+      const downloadURL = await getDownloadURL(storageRef);
+      await updateProfile(currentUser, { photoURL: downloadURL });
+      await currentUser.reload();
+    };
+
+    await Promise.race([upload(), timeout]);
   }
 
   /**

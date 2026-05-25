@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest 
+<manifest
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
@@ -10,7 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:enableOnBackInvokedCallback="true">
-
 
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
@@ -38,8 +37,10 @@
         </provider>
     </application>
 
-    <!-- Permissions -->
-
+    <!-- Permissions réseau -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Permission caméra (requise pour prendre des photos) -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>

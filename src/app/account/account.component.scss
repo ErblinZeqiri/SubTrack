@@ -49,20 +49,34 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: var(--app-surface);
-  border: 2px solid var(--app-border);
+  background: #7c3aed;
+  border: 2px solid var(--app-bg);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:active { background: #6d28d9; }
+
+  &.loading {
+    background: rgba(124, 58, 237, 0.5);
+    pointer-events: none;
+  }
 
   ion-icon {
-    font-size: 13px;
-    color: var(--app-text-muted);
+    font-size: 14px;
+    color: #ffffff;
     margin: 0;
+  }
+
+  .upload-spinner {
+    width: 14px;
+    height: 14px;
+    --color: #ffffff;
   }
 }
 

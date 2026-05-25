@@ -7,7 +7,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.7.3'
+        classpath 'com.android.tools.build:gradle:8.9.1'
         classpath 'com.google.gms:google-services:4.4.2'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -21,6 +21,14 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+
+    // On n'a que JDK 23 installé — on force tous les sous-projets Kotlin
+    // à utiliser la version 23 au lieu de la 21 demandée par capacitor-camera
+    plugins.withId('kotlin-android') {
+        kotlin {
+            jvmToolchain(23)
+        }
     }
 }
 
