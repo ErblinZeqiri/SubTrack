@@ -1,189 +1,246 @@
 <ion-header>
   <ion-toolbar>
-    <ion-icon name="arrow-back-outline" slot="start" (click)="back()" size="large"></ion-icon>
-    <ion-title class="ion-text-center">Modifier l'abonnement</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Modifier l'abonnement</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" class="btn-cancel" (click)="resetForm()">
+        Réinitialiser
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
-  <div class="main-content">
-    <form [formGroup]="updateSubscribtionForm" (ngSubmit)="onSubmit()">
-      <ion-list>
-        <ion-item>
-          <ion-input
-            labelPlacement="floating"
-            label="Rechercher une marque :"
-            (ionInput)="onInput($event)"
-            #ionInputEl
-            placeholder="Min 2 caractères"
-            formControlName="companyName"
-            [formControl]="selectedCompany"
-            name="selectedCompany"
-            id="selectedCompany"
-          >
-          </ion-input>
-          <ion-text
-            color="danger"
-            [hidden]="
-              selectedCompany.valid ||
-              (!selectedCompany.touched && !selectedCompany.valid)
-            "
-          >
-            Ce champ est obligatoire.
-          </ion-text>
-        </ion-item>
-        @if (filteredOptions$ | async; as filteredOptions) { @if (toggleDropdown)
-        { @for (option of filteredOptions; track option) {
-        <ion-item (click)="selectOption(option)">
-          <ion-avatar slot="start">
-            <img
-              [src]="option.logo"
-              alt="{{ option.name }} logo"
-              referrerpolicy="no-referrer"
-            />
-          </ion-avatar>
-          <ion-label>{{ option.name }}</ion-label>
-        </ion-item>
+  <form [formGroup]="updateSubscribtionForm" (ngSubmit)="onSubmit()" class="form-container">
 
-        } } }
-        <ion-item>
-          <ion-input
-            labelPlacement="floating"
-            label="Prix :"
-            type="number"
-            placeholder=""
-            name="amount"
-            formControlName="amount"
-            [formControl]="amount"
-          ></ion-input>
-          <ion-text
-            color="danger"
-            [hidden]="amount.valid || (!amount.touched && !amount.valid)"
-          >
-            Ce champ est obligatoire.
-          </ion-text>
-        </ion-item>
+    <!-- ── Service sélectionné ── -->
+    @if (logo) {
+      <div class="selected-service">
+        <img [src]="logo" alt="logo" referrerpolicy="no-referrer" class="service-logo" />
+        <span class="service-name">{{ selectedCompany.value }}</span>
+        <ion-icon name="close-circle" class="service-clear" (click)="clearService()"></ion-icon>
+      </div>
+    }
 
-        <ion-item>
-          <ion-select
-            labelPlacement="floating"
-            label="Catégorie :"
-            name="selectedCategory"
-            formControlName="category"
-            [formControl]="selectedCategory"
-          >
-            @for (category of subscriptionCategories; track category) {
-            <ion-select-option value="{{ category }}">{{
-              category
-            }}</ion-select-option>
+    <!-- ── Recherche ── -->
+    <div class="field-group">
+      <label class="field-label">
+        <ion-icon name="search-outline"></ion-icon>
+        Service ou marque
+      </label>
+      <ion-item class="search-item">
+        <ion-input
+          placeholder="Rechercher un service..."
+          (ionInput)="onInput($event)"
+          (ionBlur)="closeDropdown()"
+          formControlName="companyName"
+          [formControl]="selectedCompany"
+        ></ion-input>
+      </ion-item>
+      <ion-text color="danger" *ngIf="(showErrors || selectedCompany.touched) && selectedCompany.invalid">
+        Ce champ est obligatoire.
+      </ion-text>
+
+      <!-- Suggestions rapides -->
+      @if (!logo && !toggleDropdown) {
+        <div class="quick-chips">
+          @for (chip of quickSuggestions; track chip) {
+            <div class="chip" (click)="quickSelect(chip)">{{ chip }}</div>
+          }
+        </div>
+      }
+
+      <!-- Dropdown résultats -->
+      @if (filteredOptions$ | async; as options) {
+        @if (toggleDropdown && options.length > 0) {
+          <div class="suggestions">
+            @for (option of options; track option) {
+              <div class="suggestion-item" (click)="selectOption(option)">
+                <ion-avatar class="suggestion-logo">
+                  <img [src]="option.logo" alt="{{ option.name }}" referrerpolicy="no-referrer" />
+                </ion-avatar>
+                <span>{{ option.name }}</span>
+              </div>
             }
-          </ion-select>
+          </div>
+        }
+      }
+    </div>
 
-          <ion-text
-            color="danger"
-            [hidden]="
-              selectedCategory.valid ||
-              (!selectedCategory.touched && !selectedCategory.valid)
-            "
-          >
-            Ce champ est obligatoire.
-          </ion-text>
+    <div class="divider"></div>
+
+    <!-- ── Prix ── -->
+    <div class="field-group">
+      <label class="field-label">
+        <ion-icon name="cash-outline"></ion-icon>
+        Prix
+      </label>
+      <ion-item class="price-item">
+        <ion-input
+          type="number"
+          placeholder="0.00"
+          inputmode="decimal"
+          formControlName="amount"
+          [formControl]="amount"
+        ></ion-input>
+      </ion-item>
+      <ion-text color="danger" *ngIf="(showErrors || amount.touched) && amount.invalid">
+        Ce champ est obligatoire.
+      </ion-text>
+    </div>
+
+    <!-- ── Catégorie ── -->
+    <div class="field-group">
+      <label class="field-label">
+        <ion-icon name="pricetag-outline"></ion-icon>
+        Catégorie
+      </label>
+      <ion-item>
+        <ion-select
+          placeholder="Choisir une catégorie"
+          formControlName="category"
+          [formControl]="selectedCategory"
+          okText="Valider"
+          cancelText="Annuler"
+        >
+          @for (cat of subscriptionCategories; track cat) {
+            <ion-select-option [value]="cat">{{ cat }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      <ion-text color="danger" *ngIf="(showErrors || selectedCategory.touched) && selectedCategory.invalid">
+        Ce champ est obligatoire.
+      </ion-text>
+    </div>
+
+    <!-- ── Fréquence ── -->
+    <div class="field-group">
+      <label class="field-label">
+        <ion-icon name="repeat-outline"></ion-icon>
+        Fréquence
+      </label>
+      <ion-item>
+        <ion-select
+          placeholder="Choisir une fréquence"
+          formControlName="renewal"
+          [formControl]="selectedRenewal"
+          okText="Valider"
+          cancelText="Annuler"
+        >
+          @for (renewal of subscriptionRenewal; track renewal) {
+            <ion-select-option [value]="renewal">{{ renewal }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      <ion-text color="danger" *ngIf="(showErrors || selectedRenewal.touched) && selectedRenewal.invalid">
+        Ce champ est obligatoire.
+      </ion-text>
+    </div>
+
+    <!-- ── Dates côte à côte ── -->
+    <div class="row-fields">
+      <div class="field-group half">
+        <label class="field-label">
+          <ion-icon name="calendar-outline"></ion-icon>
+          Prochain paiement
+        </label>
+        <ion-item button id="update-next-payment-trigger" class="date-field">
+          <ion-label class="date-value">{{ formattedNextPaymentDate }}</ion-label>
+          <ion-icon name="chevron-forward-outline" slot="end" class="date-chevron"></ion-icon>
         </ion-item>
+        <ion-modal #nextPaymentModal trigger="update-next-payment-trigger" class="datetime-modal">
+          <ng-template>
+            <ion-datetime
+              presentation="date"
+              min="{{ today }}"
+              max="2099-12-09"
+              show-default-buttons="true"
+              doneText="Valider"
+              cancelText="Annuler"
+              [formControl]="nextPaymentDate"
+              (ionChange)="nextPaymentModal.dismiss()"
+              (ionCancel)="nextPaymentModal.dismiss()"
+            ></ion-datetime>
+          </ng-template>
+        </ion-modal>
+        <ion-text color="danger" *ngIf="(showErrors || nextPaymentDate.touched) && nextPaymentDate.invalid">
+          Obligatoire.
+        </ion-text>
+      </div>
+
+      <div class="field-group half">
+        <label class="field-label">
+          <ion-icon name="hourglass-outline"></ion-icon>
+          Échéance
+        </label>
         <ion-item>
           <ion-select
-            labelPlacement="floating"
-            label="Férquence :"
-            name="selectedRenewal"
-            formControlName="renewal"
-            [formControl]="selectedRenewal"
-          >
-            @for (renewal of subscriptionRenewal; track renewal) {
-            <ion-select-option value="{{ renewal }}">{{
-              renewal
-            }}</ion-select-option>
-            }
-          </ion-select>
-          <ion-text
-            color="danger"
-            [hidden]="
-              selectedRenewal.valid ||
-              (!selectedRenewal.touched && !selectedRenewal.valid)
-            "
-          >
-            Ce champ est obligatoire.
-          </ion-text>
-        </ion-item>
-        <ion-item>
-          <ion-label>Prochain paiement :</ion-label>
-          <ion-datetime-button
-            datetime="nextPaymentDatetime"
-            slot="end"
-          ></ion-datetime-button>
-          <ion-modal [keepContentsMounted]="true">
-            <ng-template>
-              <ion-datetime
-                id="nextPaymentDatetime"
-                presentation="date"
-                min="{{ today }}"
-                max="2099-12-09"
-                [formControl]="nextPaymentDate"
-              >
-              </ion-datetime>
-            </ng-template>
-          </ion-modal>
-        </ion-item>
-        <ion-item>
-          <ion-select
-            labelPlacement="floating"
-            label="Echéance :"
-            name="selectedDeadline"
-            formControlName="deadline"
+            placeholder="Choisir"
+            formControlName="selectedDeadline"
             [formControl]="selectedDeadline"
             (ionChange)="openDateModal($event)"
+            okText="Valider"
+            cancelText="Annuler"
           >
-            @for (deadline of subsciptionDeadline; track deadline) {
-            <ion-select-option value="{{ deadline }}"> {{
-              deadline
-            }}</ion-select-option>
+            @for (d of subsciptionDeadline; track d) {
+              <ion-select-option [value]="d">{{ d }}</ion-select-option>
             }
           </ion-select>
         </ion-item>
-        <ion-item [ngClass]="status ? 'ion-show' : 'ion-hide'">
-          <ion-label>Date d'échéance :</ion-label>
-          <ion-datetime-button
-            datetime="deadlineDatetime"
-            slot="end"
-          ></ion-datetime-button>
-          <ion-modal [keepContentsMounted]="true">
-            <ng-template>
-              <ion-datetime
-                id="deadlineDatetime"
-                presentation="date"
-                min="{{ today }}"
-                max="2099-12-09"
-                [formControl]="deadline"
-              >
-              </ion-datetime>
-            </ng-template>
-          </ion-modal>
-        </ion-item>
-        <ion-text color="danger" [hidden]="isDataValid">
-          Veuillez remplir tous les champs.
+        <ion-text color="danger" *ngIf="(showErrors || selectedDeadline.touched) && selectedDeadline.invalid">
+          Obligatoire.
         </ion-text>
-      </ion-list>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6">
-            <ion-button color="medium" expand="block" (click)="resetForm()"
-              >Effacer</ion-button
-            >
-          </ion-col>
-          <ion-col size="6">
-            <ion-button id="open-loading" expand="block" type="submit"
-              >Valider</ion-button
-            >
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </form>
-  </div>
+      </div>
+    </div>
+
+    <!-- ── Date de fin (conditionnelle) ── -->
+    @if (status) {
+      <div class="field-group">
+        <label class="field-label">
+          <ion-icon name="calendar-clear-outline"></ion-icon>
+          Date de fin
+        </label>
+        <ion-item button id="update-deadline-trigger" class="date-field">
+          <ion-label class="date-value">{{ formattedDeadlineDate }}</ion-label>
+          <ion-icon name="chevron-forward-outline" slot="end" class="date-chevron"></ion-icon>
+        </ion-item>
+        <ion-modal #deadlineModal trigger="update-deadline-trigger" class="datetime-modal">
+          <ng-template>
+            <ion-datetime
+              presentation="date"
+              min="{{ today }}"
+              max="2099-12-09"
+              show-default-buttons="true"
+              doneText="Valider"
+              cancelText="Annuler"
+              [formControl]="deadline"
+              (ionChange)="deadlineModal.dismiss()"
+              (ionCancel)="deadlineModal.dismiss()"
+            ></ion-datetime>
+          </ng-template>
+        </ion-modal>
+        <ion-text color="danger" *ngIf="(showErrors || deadline.touched) && deadline.invalid">
+          Ce champ est obligatoire.
+        </ion-text>
+      </div>
+    }
+
+    <ion-text color="danger" *ngIf="showErrors && updateSubscribtionForm.invalid" class="global-error">
+      Veuillez remplir tous les champs obligatoires.
+    </ion-text>
+
+    <!-- ── Bouton principal ── -->
+    <ion-button expand="block" type="submit" class="btn-submit" [disabled]="isSubmitting || isSuccess" [class.btn-success]="isSuccess">
+      @if (isSuccess) {
+        <ion-icon name="checkmark-circle" slot="icon-only" class="success-icon"></ion-icon>
+      } @else if (isSubmitting) {
+        <ion-spinner name="crescent"></ion-spinner>
+      } @else {
+        Valider
+      }
+    </ion-button>
+
+  </form>
 </ion-content>

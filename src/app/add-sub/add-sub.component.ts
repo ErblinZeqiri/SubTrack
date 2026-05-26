@@ -25,7 +25,7 @@ import {
   IonButtons,
   IonBackButton,
   IonIcon,
-  LoadingController,
+  IonSpinner,
   IonSelect,
   IonSelectOption,
   IonDatetime,
@@ -35,7 +35,7 @@ import { addIcons } from 'ionicons';
 import {
   searchOutline, cashOutline, pricetagOutline, repeatOutline,
   calendarOutline, hourglassOutline, calendarClearOutline, closeCircle,
-  chevronForwardOutline,
+  chevronForwardOutline, checkmarkCircle,
 } from 'ionicons/icons';
 import {
   Company,
@@ -61,6 +61,7 @@ registerLocaleData(localeFrCh, 'fr-CH');
   standalone: true,
   imports: [
     IonModal,
+    IonSpinner,
     IonButton,
     IonButtons,
     IonBackButton,
@@ -101,6 +102,8 @@ export class AddSubComponent {
   today = formatDate(new Date().toISOString(), 'YYYY-MM-dd', 'fr-CH');
   showErrors: boolean = false;
   status: boolean = false;
+  isSubmitting = false;
+  isSuccess = false;
 
   addSubscribtionForm!: FormGroup;
   selectedCompany = new FormControl(
@@ -144,14 +147,13 @@ export class AddSubComponent {
   constructor(
     private readonly companySuggestionsService: CompanySuggestionsService,
     private readonly _router: Router,
-    private readonly loadingCtrl: LoadingController,
     private readonly _dataService: DataService,
     private readonly _auth: AuthService
   ) {
     addIcons({
       searchOutline, cashOutline, pricetagOutline, repeatOutline,
       calendarOutline, hourglassOutline, calendarClearOutline, closeCircle,
-      chevronForwardOutline,
+      chevronForwardOutline, checkmarkCircle,
     });
     this.addSubscribtionForm = new FormGroup({
       companyName: this.selectedCompany,
@@ -215,6 +217,8 @@ export class AddSubComponent {
     this.addSubscribtionForm.value.deadline = null;
     this.status = false;
     this.showErrors = false;
+    this.isSubmitting = false;
+    this.isSuccess = false;
   }
 
   openDateModal($event: any) {
@@ -229,6 +233,8 @@ export class AddSubComponent {
   }
 
   async onSubmit() {
+    if (this.isSubmitting) return;
+
     const currentUser = await firstValueFrom(this._auth.getCurrentUser());
     if (!currentUser || !currentUser.uid) {
       throw new Error('User ID not found');
@@ -239,9 +245,7 @@ export class AddSubComponent {
 
     if (this.addSubscribtionForm.valid) {
       this.showErrors = false;
-      const loading = await this.loadingCtrl.create({
-        message: 'Connexion...',
-      });
+      this.isSubmitting = true;
 
       const formData = {
         ...this.addSubscribtionForm.value,
@@ -251,10 +255,15 @@ export class AddSubComponent {
         userID: currentUser.uid,
       };
 
-      await this._dataService.addSubscription(formData);
+      const newSubId = await this._dataService.addSubscription(formData);
+
+      this.isSubmitting = false;
+      this.isSuccess = true;
+
+      await new Promise(r => setTimeout(r, 700));
 
       this.resetForm();
-      this._router.navigate(['/home']);
+      this._router.navigate(['/home'], { state: { newSubId } });
     } else {
       this.addSubscribtionForm.markAllAsTouched();
       this.showErrors = true;

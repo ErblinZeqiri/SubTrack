@@ -50,6 +50,7 @@ export const routes: Routes = [
     path: 'account',
     component: AccountComponent,
     canActivate: [authGuard],
+    canDeactivate: [(component: AccountComponent) => component.canDeactivate()],
   },
   {
     path: 'signin',

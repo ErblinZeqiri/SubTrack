@@ -232,8 +232,14 @@
     </ion-text>
 
     <!-- ── Bouton principal ── -->
-    <ion-button expand="block" type="submit" class="btn-submit">
-      Valider
+    <ion-button expand="block" type="submit" class="btn-submit" [disabled]="isSubmitting || isSuccess" [class.btn-success]="isSuccess">
+      @if (isSuccess) {
+        <ion-icon name="checkmark-circle" slot="icon-only" class="success-icon"></ion-icon>
+      } @else if (isSubmitting) {
+        <ion-spinner name="crescent"></ion-spinner>
+      } @else {
+        Valider
+      }
     </ion-button>
 
   </form>

@@ -24,7 +24,7 @@
           (touchstart)="isUserScrolling = true"
           (touchend)="isUserScrolling = false">
           <button type="button" class="filter-pill" [class.active]="selectedCategories.length > 0"
-            (touchend)="openCategoryFilter($event)" (click)="openCategoryFilter($event)">
+            (touchstart)="onFilterTouchStart($event)" (touchend)="openCategoryFilter($event)" (click)="openCategoryFilter($event)">
             <ion-icon name="funnel-outline"></ion-icon>
             <span class="filter-label">Catégorie</span>
             @if (categoryFilterCount > 0) {
@@ -32,7 +32,7 @@
             }
           </button>
           <button type="button" class="filter-pill" [class.active]="selectedRenewals.length > 0"
-            (touchend)="openRenewalFilter($event)" (click)="openRenewalFilter($event)">
+            (touchstart)="onFilterTouchStart($event)" (touchend)="openRenewalFilter($event)" (click)="openRenewalFilter($event)">
             <ion-icon name="calendar-outline"></ion-icon>
             <span class="filter-label">Renouvellement</span>
             @if (renewalFilterCount > 0) {
@@ -46,8 +46,8 @@
 
         <ion-list>
           @for (sub of userSubData$ | async; track sub) {
-            <ion-item-sliding class="sliding-wrapper">
-              <ion-item class="subscription-card no-border">
+            <ion-item-sliding class="sliding-wrapper" [id]="'sub-' + sub.id">
+              <ion-item class="subscription-card no-border" [class.card-new]="newSubId === sub.id">
                 <div class="subscription-logo">
                   <img
                     [src]="getLogoUrl(sub)"
@@ -84,7 +84,7 @@
         (touchstart)="isUserScrolling = true"
         (touchend)="isUserScrolling = false">
         <button type="button" class="filter-pill" [class.active]="selectedCategories.length > 0"
-          (touchend)="openCategoryFilter($event)" (click)="openCategoryFilter($event)">
+          (touchstart)="onFilterTouchStart($event)" (touchend)="openCategoryFilter($event)" (click)="openCategoryFilter($event)">
           <ion-icon name="funnel-outline"></ion-icon>
           <span class="filter-label">Catégorie</span>
           @if (categoryFilterCount > 0) {
@@ -92,7 +92,7 @@
           }
         </button>
         <button type="button" class="filter-pill" [class.active]="selectedRenewals.length > 0"
-          (touchend)="openRenewalFilter($event)" (click)="openRenewalFilter($event)">
+          (touchstart)="onFilterTouchStart($event)" (touchend)="openRenewalFilter($event)" (click)="openRenewalFilter($event)">
           <ion-icon name="calendar-outline"></ion-icon>
           <span class="filter-label">Renouvellement</span>
           @if (renewalFilterCount > 0) {

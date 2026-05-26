@@ -280,6 +280,27 @@ ion-text[color='danger'] {
   font-weight: 600;
   text-transform: none;
   margin-top: 8px;
+  transition: --background 0.3s;
+}
+
+.btn-submit.btn-success {
+  --background: #22c55e;
+  --background-activated: #16a34a;
+}
+
+.btn-submit ion-spinner {
+  width: 22px;
+  height: 22px;
+}
+
+.success-icon {
+  font-size: 26px;
+  animation: icon-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes icon-pop {
+  0%   { transform: scale(0.4); opacity: 0; }
+  100% { transform: scale(1);   opacity: 1; }
 }
 
 ion-select::part(icon) {

@@ -216,7 +216,11 @@ export class AccountComponent implements OnInit {
     await toast.present();
   }
 
+  currencyModalOpen = false;
+
   async openCurrencyPicker(): Promise<void> {
+    this.currencyModalOpen = true;
+
     const modal = await this.modalCtrl.create({
       component: CurrencyPickerComponent,
       componentProps: { selectedCurrency: this.prefs.currency },
@@ -227,9 +231,19 @@ export class AccountComponent implements OnInit {
     await modal.present();
 
     const { data, role } = await modal.onWillDismiss();
+    this.currencyModalOpen = false;
+
     if (role === 'confirm' && data) {
       await this.prefs.setCurrency(data);
     }
+  }
+
+  canDeactivate(): boolean {
+    if (this.currencyModalOpen) {
+      this.modalCtrl.dismiss(null, 'cancel');
+      return false;
+    }
+    return true;
   }
 
   getInitials(displayName: string | null | undefined): string {

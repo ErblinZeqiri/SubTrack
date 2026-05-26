@@ -73,6 +73,9 @@ export class SubListComponent implements OnInit, OnDestroy {
   noSub: boolean = false;
   isFirstLoad: boolean = true;
   isUserScrolling = false;
+  newSubId: string | null = null;
+  private filterTouchStartX = 0;
+  private filterTouchStartY = 0;
 
   // Use imported constants instead of duplicating
   readonly subscriptionCategories = SUBSCRIPTION_CATEGORIES;
@@ -113,7 +116,21 @@ export class SubListComponent implements OnInit, OnDestroy {
     addIcons({ funnelOutline, calendarOutline, close, createOutline, trashOutline });
   }
 
+  onFilterTouchStart(event: TouchEvent) {
+    if (event.touches.length > 0) {
+      this.filterTouchStartX = event.touches[0].clientX;
+      this.filterTouchStartY = event.touches[0].clientY;
+    }
+  }
+
   async openCategoryFilter(event?: Event) {
+    if (event instanceof TouchEvent) {
+      const touch = event.changedTouches[0];
+      if (
+        Math.abs(touch.clientX - this.filterTouchStartX) > 8 ||
+        Math.abs(touch.clientY - this.filterTouchStartY) > 8
+      ) return;
+    }
     event?.preventDefault();
     event?.stopPropagation();
     const alert = await this.alertCtrl.create({
@@ -139,6 +156,13 @@ export class SubListComponent implements OnInit, OnDestroy {
   }
 
   async openRenewalFilter(event?: Event) {
+    if (event instanceof TouchEvent) {
+      const touch = event.changedTouches[0];
+      if (
+        Math.abs(touch.clientX - this.filterTouchStartX) > 8 ||
+        Math.abs(touch.clientY - this.filterTouchStartY) > 8
+      ) return;
+    }
     event?.preventDefault();
     event?.stopPropagation();
     const alert = await this.alertCtrl.create({
@@ -214,6 +238,16 @@ export class SubListComponent implements OnInit, OnDestroy {
       await this.applyFilters();
     }
     setTimeout(() => this.startAutoScroll(), 400);
+
+    const navState = history.state;
+    if (navState?.newSubId) {
+      this.newSubId = navState.newSubId;
+      setTimeout(() => {
+        document.getElementById('sub-' + this.newSubId)
+          ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => { this.newSubId = null; }, 2200);
+      }, 500);
+    }
   }
 
   ionViewDidLeave(): void {
