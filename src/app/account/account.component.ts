@@ -7,6 +7,7 @@ import {
   ToastController,
   ModalController,
   ActionSheetController,
+  NavController,
   IonHeader,
   IonToolbar,
   IonTitle,
@@ -63,6 +64,7 @@ export class AccountComponent implements OnInit {
   private readonly toastCtrl          = inject(ToastController);
   private readonly modalCtrl          = inject(ModalController);
   private readonly actionSheetCtrl    = inject(ActionSheetController);
+  private readonly navCtrl            = inject(NavController);
   private readonly dataService        = inject(DataService);
   private readonly expensesService    = inject(ExepensesService);
   readonly prefs                      = inject(UserPreferencesService);
@@ -269,6 +271,10 @@ export class AccountComponent implements OnInit {
       ],
     });
     await alert.present();
+  }
+
+  goToNotifications(): void {
+    this.navCtrl.navigateForward('/notifications');
   }
 
   async showComingSoon(): Promise<void> {

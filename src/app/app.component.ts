@@ -6,6 +6,7 @@ import { Capacitor } from '@capacitor/core';
 import { NavigationBar } from '@capgo/capacitor-navigation-bar';  // Assure-toi que ce plugin est installé !
 import { App } from '@capacitor/app';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,7 @@ import { Router } from '@angular/router';
   imports: [IonApp, HomePage],
 })
 export class AppComponent {
-  constructor(private router: Router) {
+  constructor(private router: Router, private location: Location) {
     this.configurerBarresSysteme();
     this.configurerBoutonRetour();
   }
@@ -75,8 +76,15 @@ export class AppComponent {
         return;
       }
       
-      // Pour toutes les autres pages après login, on ramène à sub-list
-      this.router.navigate(['/home']);
+      // Pages "tab racine" : retour vers home via Angular Router
+      // (passe par canDeactivate → gère la modal devise sur /account)
+      if (currentUrl === '/account' || currentUrl === '/search') {
+        this.router.navigate(['/home']);
+        return;
+      }
+
+      // Pages détail : on remonte dans l'historique réel
+      this.location.back();
     });
   }
 }

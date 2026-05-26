@@ -1,0 +1,502 @@
+ion-header ion-toolbar {
+  --background: var(--app-surface);
+  --color: var(--app-text);
+  --border-color: var(--app-border);
+}
+
+ion-content {
+  --background: var(--app-bg);
+}
+
+// ── Wrapper ───────────────────────────────────────────────────────────────────
+
+.notif-wrapper {
+  padding: 20px 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+}
+
+// ── Bannière permission ───────────────────────────────────────────────────────
+
+.permission-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(124, 58, 237, 0.1);
+  border: 1.5px solid rgba(124, 58, 237, 0.4);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(124, 58, 237, 0.15);
+  transition: background 0.2s, box-shadow 0.2s;
+
+  &:active {
+    background: rgba(124, 58, 237, 0.16);
+  }
+}
+
+.banner-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  background: rgba(124, 58, 237, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 23px;
+    color: #a78bfa;
+  }
+}
+
+.banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.banner-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #a78bfa;
+}
+
+.banner-sub {
+  font-size: 12px;
+  color: var(--app-text-muted);
+}
+
+.banner-chevron {
+  font-size: 18px;
+  color: #a78bfa;
+  flex-shrink: 0;
+}
+
+// ── Toggle principal (hero card) ──────────────────────────────────────────────
+
+.main-toggle-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--app-surface);
+  border: 1.5px solid var(--app-border);
+  border-radius: 20px;
+  padding: 22px 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+
+  &.main-toggle-active {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.14) 0%, rgba(124, 58, 237, 0.04) 100%);
+    border-color: rgba(124, 58, 237, 0.55);
+    box-shadow: 0 6px 28px rgba(124, 58, 237, 0.22);
+  }
+}
+
+.main-toggle-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+.main-icon-wrap {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: rgba(124, 58, 237, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(124, 58, 237, 0.2);
+
+  ion-icon {
+    font-size: 27px;
+    color: #a78bfa;
+  }
+}
+
+.main-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.main-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--app-text);
+}
+
+.main-sub {
+  font-size: 13px;
+  color: var(--app-text-muted);
+}
+
+.main-toggle {
+  flex-shrink: 0;
+  transform: scale(1.15);
+  --track-background: var(--app-border);
+}
+
+// ── Sections ─────────────────────────────────────────────────────────────────
+
+.section {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 20px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.15);
+
+  &.section-disabled {
+    pointer-events: none;
+
+    // On dimme uniquement textes, icônes, badges — pas les toggles
+    // Les toggles gardent leur vrai état visuel (on/off préservé)
+    .section-title,
+    .row-icon-wrap,
+    .row-texts,
+    .soon-pill,
+    .status-granted,
+    .sub-section {
+      opacity: 0.38;
+      transition: opacity 0.2s;
+    }
+  }
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--app-text);
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  padding: 18px 18px 6px;
+  margin: 0;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 3px;
+    height: 14px;
+    border-radius: 2px;
+    background: #7c3aed;
+    flex-shrink: 0;
+  }
+}
+
+// ── Lignes ────────────────────────────────────────────────────────────────────
+
+.notif-row {
+  display: flex;
+  align-items: center;
+  padding: 16px 18px;
+  gap: 14px;
+  border-top: 1px solid var(--app-border);
+
+  &:first-of-type {
+    border-top: none;
+  }
+
+  &.coming-soon-row {
+    .row-texts {
+      opacity: 0.5;
+    }
+  }
+}
+
+// ── Icônes colorées ───────────────────────────────────────────────────────────
+
+.row-icon-wrap {
+  width: 50px;
+  height: 50px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon { font-size: 24px; }
+
+  &.violet {
+    background: rgba(124, 58, 237, 0.18);
+    box-shadow: 0 2px 10px rgba(124, 58, 237, 0.18);
+    ion-icon { color: #a78bfa; }
+  }
+  &.blue {
+    background: rgba(59, 130, 246, 0.18);
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.15);
+    ion-icon { color: #60a5fa; }
+  }
+  &.green {
+    background: rgba(34, 197, 94, 0.18);
+    box-shadow: 0 2px 10px rgba(34, 197, 94, 0.15);
+    ion-icon { color: #4ade80; }
+  }
+  &.orange {
+    background: rgba(249, 115, 22, 0.18);
+    box-shadow: 0 2px 10px rgba(249, 115, 22, 0.15);
+    ion-icon { color: #fb923c; }
+  }
+  &.red {
+    background: rgba(239, 68, 68, 0.18);
+    box-shadow: 0 2px 10px rgba(239, 68, 68, 0.15);
+    ion-icon { color: #f87171; }
+  }
+  &.dark {
+    background: rgba(148, 163, 184, 0.15);
+    ion-icon { color: #94a3b8; }
+  }
+}
+
+// ── Textes ────────────────────────────────────────────────────────────────────
+
+.row-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.row-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--app-text);
+}
+
+.row-sub {
+  font-size: 12px;
+  color: var(--app-text-muted);
+  line-height: 1.4;
+}
+
+// ── Statut "Actif" ────────────────────────────────────────────────────────────
+
+.status-granted {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4ade80;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1.5px solid rgba(74, 222, 128, 0.35);
+  border-radius: 999px;
+  padding: 5px 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 14px;
+  }
+}
+
+// ── Badge "Bientôt" ───────────────────────────────────────────────────────────
+
+.soon-pill {
+  font-size: 11px;
+  font-weight: 700;
+  color: #c4b5fd;
+  background: rgba(124, 58, 237, 0.25);
+  border: 1.5px solid rgba(167, 139, 250, 0.5);
+  border-radius: 999px;
+  padding: 5px 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.3px;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.15);
+}
+
+// ── Sous-sections ─────────────────────────────────────────────────────────────
+
+.sub-section {
+  background: rgba(124, 58, 237, 0.04);
+  border-top: 1px solid var(--app-border);
+  padding: 16px 18px 18px;
+}
+
+.sub-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--app-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: 0 0 12px;
+}
+
+// ── Chips jours avant ────────────────────────────────────────────────────────
+
+.day-chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.day-chip {
+  padding: 9px 20px;
+  border-radius: 999px;
+  border: 1.5px solid var(--app-border);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--app-text-muted);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  background: transparent;
+
+  &.active {
+    border-color: transparent;
+    background: #7c3aed;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25), 0 4px 14px rgba(124, 58, 237, 0.35);
+  }
+}
+
+// ── Résumé rappels ────────────────────────────────────────────────────────────
+
+.chips-hint {
+  font-size: 12.5px;
+  color: var(--app-text-muted);
+  margin: 0;
+  line-height: 1.6;
+  background: rgba(124, 58, 237, 0.07);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 10px;
+  padding: 10px 12px;
+
+  strong {
+    color: #a78bfa;
+    font-weight: 700;
+  }
+}
+
+// ── Carte sélecteur jour rapport ──────────────────────────────────────────────
+
+.report-day-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--app-bg);
+  border: 1.5px solid var(--app-border);
+  border-radius: 14px;
+  padding: 4px 4px 4px 14px;
+}
+
+.report-day-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 17px;
+    color: #4ade80;
+  }
+
+  span {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--app-text-muted);
+    white-space: nowrap;
+  }
+}
+
+// ── Select compact ────────────────────────────────────────────────────────────
+
+.select-item {
+  --background: transparent;
+  --border-color: transparent;
+  --color: var(--app-text);
+  --min-height: 44px;
+  --inner-padding-end: 10px;
+  --padding-start: 10px;
+  border-radius: 10px;
+  margin: 0;
+  flex: 1;
+
+  ion-select {
+    --color: var(--app-text);
+    --placeholder-color: var(--app-text-muted);
+    font-size: 14px;
+    font-weight: 600;
+    width: 100%;
+  }
+}
+
+// ── Ne pas déranger ───────────────────────────────────────────────────────────
+
+.dnd-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dnd-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--app-text-muted);
+  flex-shrink: 0;
+}
+
+.dnd-select {
+  flex: 1;
+  border: 1.5px solid var(--app-border);
+  border-radius: 12px;
+  --background: var(--app-bg);
+  --min-height: 46px;
+  --padding-start: 12px;
+  --inner-padding-end: 8px;
+}
+
+// ── Toggle ────────────────────────────────────────────────────────────────────
+
+ion-toggle {
+  flex-shrink: 0;
+  --track-background: var(--app-border);
+}
+
+// ── Bouton test ───────────────────────────────────────────────────────────────
+
+.test-section {
+  padding: 4px 0 8px;
+}
+
+.test-btn {
+  --border-radius: 16px;
+  --background: rgba(124, 58, 237, 0.09);
+  --background-activated: rgba(124, 58, 237, 0.2);
+  --color: #a78bfa;
+  --border-color: rgba(124, 58, 237, 0.6);
+  height: 58px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: none;
+  margin: 0;
+  letter-spacing: 0.2px;
+}
+
+.test-btn::part(native) {
+  box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.35), 0 6px 28px rgba(124, 58, 237, 0.28);
+}
+
+.test-hint {
+  text-align: center;
+  font-size: 12px;
+  color: var(--app-text-muted);
+  margin: 10px 0 0;
+  line-height: 1.5;
+}

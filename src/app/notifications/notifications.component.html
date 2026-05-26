@@ -1,13 +1,276 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/account" text=""></ion-back-button>
+    </ion-buttons>
     <ion-title>Notifications</ion-title>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
-  @if (userSubData$ | async; as subscriptions) {
-    @for (subscription of subscriptions; track subscription) {
-      {{ subscription.companyName }} - Expires le {{ subscription.nextPaymentDate| date }} 
-    <br>
+  <div class="notif-wrapper">
+
+    <!-- ── Bannière permission ── -->
+    @if (!permissionGranted) {
+      <div class="permission-banner" (click)="requestPermission()">
+        <div class="banner-icon">
+          <ion-icon name="notifications-outline"></ion-icon>
+        </div>
+        <div class="banner-text">
+          <span class="banner-title">Autoriser les notifications</span>
+          <span class="banner-sub">Appuyez pour activer les rappels de paiement</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="banner-chevron"></ion-icon>
+      </div>
     }
-  }
+
+    <!-- ── Toggle principal ── -->
+    <div class="main-toggle-card" [class.main-toggle-active]="prefs.enabled">
+      <div class="main-toggle-left">
+        <div class="main-icon-wrap">
+          <ion-icon name="notifications-outline"></ion-icon>
+        </div>
+        <div class="main-texts">
+          <span class="main-title">Activer les notifications</span>
+          <span class="main-sub">{{ prefs.enabled ? 'Notifications activées' : 'Toutes les notifications SubTrack' }}</span>
+        </div>
+      </div>
+      <ion-toggle
+        [(ngModel)]="prefs.enabled"
+        (ionChange)="onMainToggle()"
+        color="primary"
+        class="main-toggle">
+      </ion-toggle>
+    </div>
+
+    <!-- ── Section 2 : Types ── -->
+    <div class="section" [class.section-disabled]="!prefs.enabled">
+      <p class="section-title">Types de notifications</p>
+
+      <!-- Rappels de renouvellement -->
+      <div class="notif-row">
+        <div class="row-icon-wrap blue">
+          <ion-icon name="calendar-outline"></ion-icon>
+        </div>
+        <div class="row-texts">
+          <span class="row-title">Rappels de renouvellement</span>
+          <span class="row-sub">Avant chaque prélèvement</span>
+        </div>
+        <ion-toggle
+          [(ngModel)]="prefs.renewalReminders"
+          (ionChange)="onSave()"
+          color="primary">
+        </ion-toggle>
+      </div>
+      @if (prefs.renewalReminders) {
+        <div class="sub-section">
+          <p class="sub-label">Quand me prévenir ?</p>
+          <div class="day-chips">
+            @for (opt of daysOptions; track opt.value) {
+              <div class="day-chip"
+                [class.active]="isDaySelected(opt.value)"
+                (click)="toggleDay(opt.value)">
+                {{ opt.label }}
+              </div>
+            }
+          </div>
+          <p class="chips-hint">
+            Rappel envoyé <strong>{{ selectedDaysLabel }}</strong> avant chaque renouvellement
+          </p>
+        </div>
+      }
+
+      <!-- Rapport mensuel -->
+      <div class="notif-row">
+        <div class="row-icon-wrap green">
+          <ion-icon name="analytics-outline"></ion-icon>
+        </div>
+        <div class="row-texts">
+          <span class="row-title">Rapport mensuel</span>
+          <span class="row-sub">Résumé des dépenses du mois</span>
+        </div>
+        <ion-toggle
+          [(ngModel)]="prefs.monthlyReport"
+          (ionChange)="onSave()"
+          color="primary">
+        </ion-toggle>
+      </div>
+      @if (prefs.monthlyReport) {
+        <div class="sub-section">
+          <div class="report-day-card">
+            <div class="report-day-left">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span>Envoyé le</span>
+            </div>
+            <ion-item class="select-item">
+              <ion-select
+                [(ngModel)]="prefs.reportDay"
+                (ionChange)="onSave()"
+                interface="alert"
+                okText="Valider"
+                cancelText="Annuler">
+                @for (d of reportDayOptions; track d) {
+                  <ion-select-option [value]="d">{{ d }} de chaque mois</ion-select-option>
+                }
+              </ion-select>
+            </ion-item>
+          </div>
+        </div>
+      }
+
+      <!-- Alertes de prix -->
+      <div class="notif-row coming-soon-row">
+        <div class="row-icon-wrap orange">
+          <ion-icon name="cash-outline"></ion-icon>
+        </div>
+        <div class="row-texts">
+          <span class="row-title">Alertes de prix</span>
+          <span class="row-sub">Soyez alerté dès qu'un tarif augmente</span>
+        </div>
+        <span class="soon-pill">✨ Bientôt</span>
+      </div>
+
+      <!-- Abonnements inutilisés -->
+      <div class="notif-row coming-soon-row">
+        <div class="row-icon-wrap red">
+          <ion-icon name="time-outline"></ion-icon>
+        </div>
+        <div class="row-texts">
+          <span class="row-title">Abonnements inutilisés</span>
+          <span class="row-sub">Repérez les abonnements à résilier</span>
+        </div>
+        <span class="soon-pill">✨ Bientôt</span>
+      </div>
+
+      <!-- Conseils d'optimisation -->
+      <div class="notif-row coming-soon-row">
+        <div class="row-icon-wrap violet">
+          <ion-icon name="sparkles-outline"></ion-icon>
+        </div>
+        <div class="row-texts">
+          <span class="row-title">Conseils d'optimisation</span>
+          <span class="row-sub">Des idées pour réduire vos dépenses</span>
+        </div>
+        <span class="soon-pill">✨ Bientôt</span>
+      </div>
+    </div>
+
+    <!-- ── Section 3 : Canaux ── -->
+    <div class="section" [class.section-disabled]="!prefs.enabled">
+      <p class="section-title">Canaux de notification</p>
+
+      <div class="notif-row">
+        <div class="row-icon-wrap violet">
+          <ion-icon name="phone-portrait-outline"></ion-icon>
+        </div>
+        <div class="row-texts">
+          <span class="row-title">Notifications push</span>
+          <span class="row-sub">
+            {{ permissionGranted ? 'Autorisées sur cet appareil' : 'Permission non accordée' }}
+          </span>
+        </div>
+        @if (permissionGranted) {
+          <span class="status-granted">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+            Actif
+          </span>
+        } @else {
+          <ion-button
+            size="small"
+            fill="solid"
+            color="primary"
+            (click)="requestPermission()">
+            Autoriser
+          </ion-button>
+        }
+      </div>
+
+      <div class="notif-row coming-soon-row">
+        <div class="row-icon-wrap blue">
+          <ion-icon name="mail-outline"></ion-icon>
+        </div>
+        <div class="row-texts">
+          <span class="row-title">E-mail</span>
+          <span class="row-sub">Résumé hebdomadaire dans votre boîte</span>
+        </div>
+        <span class="soon-pill">✨ Bientôt</span>
+      </div>
+    </div>
+
+    <!-- ── Section 4 : Horaires ── -->
+    <div class="section" [class.section-disabled]="!prefs.enabled">
+      <p class="section-title">Horaires</p>
+
+      <div class="notif-row">
+        <div class="row-icon-wrap dark">
+          <ion-icon name="moon-outline"></ion-icon>
+        </div>
+        <div class="row-texts">
+          <span class="row-title">Ne pas déranger</span>
+          <span class="row-sub">Silence pendant la nuit</span>
+        </div>
+        <ion-toggle
+          [(ngModel)]="prefs.dndEnabled"
+          (ionChange)="onSave()"
+          color="primary">
+        </ion-toggle>
+      </div>
+      @if (prefs.dndEnabled) {
+        <div class="sub-section">
+          <p class="sub-label">Plage horaire silencieuse</p>
+          <div class="dnd-row">
+            <span class="dnd-label">De</span>
+            <ion-item class="select-item dnd-select">
+              <ion-select
+                [(ngModel)]="prefs.dndStart"
+                (ionChange)="onSave()"
+                interface="alert"
+                okText="Valider"
+                cancelText="Annuler">
+                @for (h of hours; track h) {
+                  <ion-select-option [value]="h">{{ formatHour(h) }}</ion-select-option>
+                }
+              </ion-select>
+            </ion-item>
+            <span class="dnd-label">à</span>
+            <ion-item class="select-item dnd-select">
+              <ion-select
+                [(ngModel)]="prefs.dndEnd"
+                (ionChange)="onSave()"
+                interface="alert"
+                okText="Valider"
+                cancelText="Annuler">
+                @for (h of hours; track h) {
+                  <ion-select-option [value]="h">{{ formatHour(h) }}</ion-select-option>
+                }
+              </ion-select>
+            </ion-item>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- ── Bouton test ── -->
+    <div class="test-section">
+      <ion-button
+        expand="block"
+        fill="outline"
+        class="test-btn"
+        [disabled]="testing || !permissionGranted"
+        (click)="sendTest()">
+        @if (testing) {
+          <ion-spinner name="crescent" slot="start"></ion-spinner>
+          Envoi en cours...
+        } @else if (testSuccess) {
+          <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+          Envoyée avec succès !
+        } @else {
+          <ion-icon name="refresh-outline" slot="start"></ion-icon>
+          Tester les notifications
+        }
+      </ion-button>
+      <p class="test-hint">Une notification apparaîtra sur votre écran dans 5 secondes</p>
+    </div>
+
+  </div>
 </ion-content>
