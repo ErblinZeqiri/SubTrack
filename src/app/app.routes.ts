@@ -10,6 +10,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { SigninComponent } from './signin/signin.component'
 import { UpdateSubComponent } from './update-sub/update-sub.component'
 import { Page404Component } from './page404/page404.component'
+import { ReportsComponent } from './reports/reports.component'
 
 export const routes: Routes = [
   {
@@ -44,6 +45,11 @@ export const routes: Routes = [
   {
     path: 'notifications',
     component: NotificationsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'reports',
+    component: ReportsComponent,
     canActivate: [authGuard],
   },
   {

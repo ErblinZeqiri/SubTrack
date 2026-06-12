@@ -21,6 +21,7 @@ import {
   NotificationPrefs,
   DEFAULT_PREFS,
 } from '../services/notifications/notification.service';
+import { UserPreferencesService } from '../services/preferences/user-preferences.service';
 import { Subscription } from 'src/interfaces/interface';
 import { of, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -43,6 +44,8 @@ export class NotificationsComponent implements OnInit {
   loading = true;
   testing = false;
   testSuccess = false;
+  testingReport = false;
+  testReportSuccess = false;
   subscriptions: Subscription[] = [];
 
   readonly daysOptions = [
@@ -56,6 +59,7 @@ export class NotificationsComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly notifService = inject(NotificationService);
   private readonly toastCtrl = inject(ToastController);
+  private readonly prefs_ = inject(UserPreferencesService);
   private readonly auth = inject(AuthService);
   private readonly dataService = inject(DataService);
 
@@ -142,6 +146,50 @@ export class NotificationsComponent implements OnInit {
       await toast.present();
     } else {
       this.permissionGranted = false;
+      const toast = await this.toastCtrl.create({
+        message: 'Permission refusée. Activez les notifications dans les paramètres système.',
+        duration: 3500,
+        position: 'bottom',
+        color: 'warning',
+      });
+      await toast.present();
+    }
+  }
+
+  formatReportDay(d: number): string {
+    return d === 1 ? '1er de chaque mois' : `${d}ème de chaque mois`;
+  }
+
+  private computeMonthlyTotal(): number {
+    return this.subscriptions.reduce((sum, sub) => {
+      const r = (sub.renewal ?? '').toLowerCase();
+      if (r.includes('annuel'))      return sum + sub.amount / 12;
+      if (r.includes('trimestr'))    return sum + sub.amount / 3;
+      if (r.includes('hebdo') || r.includes('semaine')) return sum + sub.amount * 4.33;
+      return sum + sub.amount; // mensuel par défaut
+    }, 0);
+  }
+
+  async sendTestReport(): Promise<void> {
+    this.testingReport = true;
+    const success = await this.notifService.sendTestReport(
+      this.subscriptions.length,
+      this.computeMonthlyTotal(),
+      this.prefs_.currency,
+    );
+    this.testingReport = false;
+
+    if (success) {
+      this.testReportSuccess = true;
+      setTimeout(() => { this.testReportSuccess = false; }, 3000);
+      const toast = await this.toastCtrl.create({
+        message: 'Rapport de test envoyé dans 3 secondes',
+        duration: 2500,
+        position: 'bottom',
+        color: 'dark',
+      });
+      await toast.present();
+    } else {
       const toast = await this.toastCtrl.create({
         message: 'Permission refusée. Activez les notifications dans les paramètres système.',
         duration: 3500,

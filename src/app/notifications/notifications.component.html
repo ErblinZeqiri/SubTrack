@@ -110,11 +110,30 @@
                 okText="Valider"
                 cancelText="Annuler">
                 @for (d of reportDayOptions; track d) {
-                  <ion-select-option [value]="d">{{ d }} de chaque mois</ion-select-option>
+                  <ion-select-option [value]="d">{{ formatReportDay(d) }}</ion-select-option>
                 }
               </ion-select>
             </ion-item>
           </div>
+
+          <!-- Bouton test rapport -->
+          <ion-button
+            expand="block"
+            fill="outline"
+            class="test-report-btn"
+            [disabled]="testingReport || !permissionGranted"
+            (click)="sendTestReport()">
+            @if (testingReport) {
+              <ion-spinner name="crescent" slot="start"></ion-spinner>
+              Envoi en cours...
+            } @else if (testReportSuccess) {
+              <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+              Envoyé !
+            } @else {
+              <ion-icon name="refresh-outline" slot="start"></ion-icon>
+              Tester le rapport
+            }
+          </ion-button>
         </div>
       }
 

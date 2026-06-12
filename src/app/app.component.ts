@@ -78,7 +78,7 @@ export class AppComponent {
       
       // Pages "tab racine" : retour vers home via Angular Router
       // (passe par canDeactivate → gère la modal devise sur /account)
-      if (currentUrl === '/account' || currentUrl === '/search') {
+      if (currentUrl === '/account' || currentUrl === '/search' || currentUrl === '/reports') {
         this.router.navigate(['/home']);
         return;
       }

@@ -15,6 +15,7 @@ import {
   addOutline,
   notificationsOutline,
   personOutline,
+  barChartOutline,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { SubListComponent } from '../sub-list/sub-list.component';
@@ -46,6 +47,7 @@ export class HomePage {
       addOutline,
       notificationsOutline,
       personOutline,
+      barChartOutline,
     });
 
     // Cacher la tab bar sur les pages login/signin et mettre à jour le tab sélectionné
@@ -62,6 +64,8 @@ export class HomePage {
           this.selectedTab = 'add';
         } else if (url === '/account') {
           this.selectedTab = 'account';
+        } else if (url === '/reports') {
+          this.selectedTab = 'reports';
         }
       });
   }

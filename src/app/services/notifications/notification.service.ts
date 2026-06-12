@@ -38,7 +38,8 @@ export const DEFAULT_PREFS: NotificationPrefs = {
 
 const PREFS_KEY = 'notification_prefs';
 const MONTHLY_REPORT_ID = 200000;
-const TEST_NOTIF_ID = 200001;
+const TEST_NOTIF_ID    = 200001;
+const TEST_REPORT_ID   = 200002;
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
@@ -144,6 +145,29 @@ export class NotificationService {
     if (notifications.length > 0) {
       await LocalNotifications.cancel({ notifications });
     }
+  }
+
+  async sendTestReport(subCount: number, monthlyTotal: number, currency: string): Promise<boolean> {
+    const granted = await this.requestPermission();
+    if (!granted) return false;
+
+    await LocalNotifications.cancel({ notifications: [{ id: TEST_REPORT_ID }] });
+
+    const now = new Date();
+    const monthName = now.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    const label = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+    const totalStr = monthlyTotal.toFixed(2).replace('.', '.');
+
+    await LocalNotifications.schedule({
+      notifications: [{
+        id: TEST_REPORT_ID,
+        title: '📊 Rapport mensuel SubTrack',
+        body: `${label} — ${subCount} abonnement${subCount > 1 ? 's' : ''} · ${totalStr} ${currency}/mois`,
+        schedule: { at: new Date(Date.now() + 3000) },
+        channelId: 'reports',
+      }],
+    });
+    return true;
   }
 
   async sendTest(): Promise<boolean> {

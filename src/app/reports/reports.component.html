@@ -1,0 +1,220 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Rapports</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="reports-wrapper">
+
+    <!-- ── Sélecteur de mois ── -->
+    <div class="month-nav">
+      <button class="nav-btn" (click)="prevMonth()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+      <div class="month-display">
+        <span class="month-label">{{ monthLabel }}</span>
+        @if (isCurrentMonth) {
+          <span class="current-badge">Ce mois-ci</span>
+        }
+      </div>
+      <button class="nav-btn" [class.nav-btn-disabled]="isCurrentMonth" (click)="nextMonth()">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </button>
+    </div>
+
+    @if (loading) {
+      <div class="skeleton hero-skeleton"></div>
+      <div class="skeleton chart-skeleton"></div>
+      <div class="skeleton list-skeleton"></div>
+    } @else {
+
+      <!-- ══════════════════════════════════════════════════════════════════
+           CARTE PRINCIPALE (HERO)
+      ══════════════════════════════════════════════════════════════════ -->
+      <div class="hero-card">
+        <div class="hero-top">
+          <span class="hero-label">TOTAL DU MOIS</span>
+          <div class="hero-amount">
+            <span class="hero-number">{{ monthTotal.toFixed(2) }}</span>
+            <span class="hero-currency">{{ prefs.currency }}</span>
+          </div>
+        </div>
+
+        <div class="hero-stats">
+          <!-- Nombre de prélèvements -->
+          <div class="hero-stat">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>{{ activeSubs.length }} prélèvement{{ activeSubs.length > 1 ? 's' : '' }}</span>
+          </div>
+
+          <!-- Séparateur -->
+          <span class="hero-sep">•</span>
+
+          <!-- Évolution vs mois précédent -->
+          @if (prevTotal > 0) {
+            <div class="hero-stat hero-diff" [class]="'hero-diff--' + diffClass">
+              @if (diffClass === 'up') {
+                <ion-icon name="trending-up-outline"></ion-icon>
+                <span>+{{ diffPercent }}% vs {{ prevMonthLabel }}</span>
+              } @else if (diffClass === 'down') {
+                <ion-icon name="trending-down-outline"></ion-icon>
+                <span>-{{ Math.abs(diffPercent) }}% vs {{ prevMonthLabel }}</span>
+              } @else {
+                <span>Stable vs {{ prevMonthLabel }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Détail écart en CHF -->
+        @if (prevTotal > 0 && diffClass !== 'stable') {
+          <div class="hero-diff-detail" [class]="'hero-diff-detail--' + diffClass">
+            {{ diffClass === 'up' ? '+' : '-' }}{{ diffAbsolute.toFixed(2) }} {{ prefs.currency }}
+            par rapport à {{ prevMonthLabel }}
+          </div>
+        }
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════════════
+           GRAPHIQUE TENDANCE
+      ══════════════════════════════════════════════════════════════════ -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <ion-icon name="analytics-outline"></ion-icon>
+          <span>Tendance sur 6 mois</span>
+        </div>
+        <apx-chart
+          [series]="chartOptions.series!"
+          [chart]="chartOptions.chart!"
+          [xaxis]="chartOptions.xaxis!"
+          [yaxis]="chartOptions.yaxis!"
+          [fill]="chartOptions.fill!"
+          [stroke]="chartOptions.stroke!"
+          [grid]="chartOptions.grid!"
+          [dataLabels]="chartOptions.dataLabels!"
+          [markers]="chartOptions.markers!"
+          [legend]="chartOptions.legend!"
+          [noData]="chartOptions.noData!"
+          [tooltip]="chartOptions.tooltip!">
+        </apx-chart>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════════════
+           RÉPARTITION PAR CATÉGORIE
+      ══════════════════════════════════════════════════════════════════ -->
+      @if (categories.length > 0) {
+        <div class="section">
+          <p class="section-title">
+            <span class="section-bar"></span>
+            Répartition par catégorie
+          </p>
+          <div class="categories-list">
+            @for (cat of categories; track cat.name) {
+              <div class="cat-row">
+                <div class="cat-left">
+                  <div class="cat-dot" [style.background]="cat.color"></div>
+                  <span class="cat-name">{{ cat.name }}</span>
+                </div>
+                <div class="cat-right">
+                  <div class="cat-bar-track">
+                    <div class="cat-bar-fill"
+                      [style.width.%]="cat.percent"
+                      [style.background]="cat.color">
+                    </div>
+                  </div>
+                  <div class="cat-meta">
+                    <span class="cat-amount">{{ cat.total.toFixed(2) }} {{ prefs.currency }}</span>
+                    <span class="cat-pct" [style.color]="cat.color">{{ cat.percent }}%</span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- ══════════════════════════════════════════════════════════════════
+           INSIGHTS & RECOMMANDATIONS
+      ══════════════════════════════════════════════════════════════════ -->
+      @if (insights.length > 0) {
+        <div class="section">
+          <p class="section-title">
+            <span class="section-bar"></span>
+            Insights & Recommandations
+          </p>
+          <div class="insights-list">
+            @for (tip of insights; track tip.text) {
+              <div class="insight-card insight-card--{{ tip.type }}">
+                <span class="insight-emoji">{{ tip.icon }}</span>
+                <div class="insight-body">
+                  <span class="insight-text">{{ tip.text }}</span>
+                  @if (tip.sub) {
+                    <span class="insight-sub">{{ tip.sub }}</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- ══════════════════════════════════════════════════════════════════
+           PRÉLÈVEMENTS CE MOIS
+      ══════════════════════════════════════════════════════════════════ -->
+      <div class="section">
+        <p class="section-title">
+          <span class="section-bar"></span>
+          Prélèvements ce mois
+        </p>
+
+        @if (activeSubs.length === 0) {
+          <div class="empty-state">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>Aucun prélèvement ce mois</span>
+          </div>
+        } @else {
+          @for (sub of visibleSubs; track sub.id) {
+            <div class="sub-row">
+              <div class="sub-logo" [attr.data-initial]="sub.companyName.charAt(0).toUpperCase()">
+                <img
+                  [src]="getLogoUrl(sub)"
+                  alt=""
+                  referrerpolicy="no-referrer"
+                  (error)="onLogoError($event)"
+                />
+              </div>
+              <div class="sub-texts">
+                <span class="sub-name">{{ sub.companyName }}</span>
+                <span class="sub-cat">{{ sub.category }}</span>
+              </div>
+              <div class="sub-amount-wrap">
+                <span class="sub-amount">{{ getSubAmount(sub).toFixed(2) }}</span>
+                <span class="sub-curr">{{ prefs.currency }}</span>
+              </div>
+            </div>
+          }
+
+          @if (hasMoreSubs && !showAllSubs) {
+            <button class="voir-tous-btn" (click)="showAllSubs = true">
+              Voir tous les prélèvements ({{ activeSubs.length }})
+            </button>
+          }
+        }
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════════════
+           BOUTON EXPORT
+      ══════════════════════════════════════════════════════════════════ -->
+      <ion-button
+        expand="block"
+        fill="outline"
+        class="export-btn"
+        (click)="onExport()">
+        <ion-icon name="download-outline" slot="start"></ion-icon>
+        Exporter ce rapport
+      </ion-button>
+
+    }
+  </div>
+</ion-content>
