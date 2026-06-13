@@ -119,7 +119,7 @@ export class NotificationsComponent implements OnInit {
 
   async onSave(): Promise<void> {
     await this.notifService.savePrefs(this.prefs);
-    await this.notifService.scheduleAll(this.prefs, this.subscriptions);
+    await this.notifService.scheduleAll(this.prefs, this.subscriptions, this.prefs_.currency);
   }
 
   async requestPermission(): Promise<void> {
@@ -160,21 +160,10 @@ export class NotificationsComponent implements OnInit {
     return d === 1 ? '1er de chaque mois' : `${d}ème de chaque mois`;
   }
 
-  private computeMonthlyTotal(): number {
-    return this.subscriptions.reduce((sum, sub) => {
-      const r = (sub.renewal ?? '').toLowerCase();
-      if (r.includes('annuel'))      return sum + sub.amount / 12;
-      if (r.includes('trimestr'))    return sum + sub.amount / 3;
-      if (r.includes('hebdo') || r.includes('semaine')) return sum + sub.amount * 4.33;
-      return sum + sub.amount; // mensuel par défaut
-    }, 0);
-  }
-
   async sendTestReport(): Promise<void> {
     this.testingReport = true;
     const success = await this.notifService.sendTestReport(
-      this.subscriptions.length,
-      this.computeMonthlyTotal(),
+      this.subscriptions,
       this.prefs_.currency,
     );
     this.testingReport = false;

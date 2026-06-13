@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { Preferences } from '@capacitor/preferences';
 import { Subscription } from 'src/interfaces/interface';
+import { ReportsService } from '../reports/reports.service';
 
 export interface NotificationPrefs {
   enabled: boolean;
@@ -36,13 +37,24 @@ export const DEFAULT_PREFS: NotificationPrefs = {
   dndEnd: 8,
 };
 
-const PREFS_KEY = 'notification_prefs';
+const PREFS_KEY         = 'notification_prefs';
 const MONTHLY_REPORT_ID = 200000;
-const TEST_NOTIF_ID    = 200001;
-const TEST_REPORT_ID   = 200002;
+const TEST_NOTIF_ID     = 200001;
+const TEST_REPORT_ID    = 200002;
+const PRICE_ALERT_ID    = 300001;
+const UNUSED_SUBS_ID    = 300002;
+const OPTIM_TIPS_ID     = 300003;
+
+interface NotifContent {
+  title: string;
+  body: string;
+  largeBody?: string; // Android BigTextStyle — texte complet déplié
+}
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
+
+  private readonly reports = inject(ReportsService);
 
   async getPrefs(): Promise<NotificationPrefs> {
     const { value } = await Preferences.get({ key: PREFS_KEY });
@@ -64,12 +76,17 @@ export class NotificationService {
   }
 
   async createChannels(): Promise<void> {
+    // Supprimer les anciens canaux : Android ne met jamais à jour l'importance
+    // d'un canal existant depuis le code — il faut supprimer puis recréer.
+    try { await LocalNotifications.deleteChannel({ id: 'renewals' }); } catch {}
+    try { await LocalNotifications.deleteChannel({ id: 'reports' });  } catch {}
+
     try {
       await LocalNotifications.createChannel({
         id: 'renewals',
         name: 'Rappels de renouvellement',
         description: 'Rappels avant chaque prélèvement',
-        importance: 4,
+        importance: 5,
         sound: 'default',
         vibration: true,
       });
@@ -77,66 +94,96 @@ export class NotificationService {
         id: 'reports',
         name: 'Rapports mensuels',
         description: 'Résumé mensuel des dépenses',
-        importance: 3,
+        importance: 5,
+        vibration: true,
       });
-    } catch {
-      // Les canaux existent peut-être déjà
-    }
+    } catch {}
   }
 
-  async scheduleAll(prefs: NotificationPrefs, subscriptions: Subscription[]): Promise<void> {
+  async scheduleAll(prefs: NotificationPrefs, subscriptions: Subscription[], currency: string): Promise<void> {
     await this.cancelAll();
     if (!prefs.enabled || !(await this.hasPermission())) return;
 
     const now = new Date();
     const notifyHour = prefs.dndEnabled ? prefs.dndEnd : 9;
-    const allNotifications: any[] = [];
+    const all: any[] = [];
 
-    // Rappels de renouvellement
+    // ── Rappels de renouvellement ───────────────────────────────────────────────
     if (prefs.renewalReminders) {
-      subscriptions.forEach((sub, subIndex) => {
+      subscriptions.forEach((sub, si) => {
         if (!sub.nextPaymentDate) return;
-        const payDate = new Date(sub.nextPaymentDate);
+        const payDate = new Date(sub.nextPaymentDate as any);
 
-        prefs.daysBefore.forEach((days, dayIndex) => {
+        prefs.daysBefore.forEach((days, di) => {
           const notifDate = new Date(payDate);
           notifDate.setDate(notifDate.getDate() - days);
           notifDate.setHours(notifyHour, 0, 0, 0);
 
           if (notifDate > now) {
-            allNotifications.push({
-              id: subIndex * 10 + dayIndex + 1,
-              title: `💳 ${sub.companyName}`,
-              body: days === 1
-                ? `Renouvellement demain — ${sub.amount} CHF`
-                : `Renouvellement dans ${days} jours — ${sub.amount} CHF`,
-              schedule: { at: notifDate },
-              channelId: 'renewals',
-            });
+            const { title, body, largeBody } = this.renewalContent(sub.companyName, sub.amount, currency, days);
+            all.push({ id: si * 10 + di + 1, title, body, ...(largeBody ? { largeBody } : {}), schedule: { at: notifDate }, channelId: 'renewals' });
           }
         });
       });
     }
 
-    // Rapport mensuel
+    // ── Rapport mensuel ─────────────────────────────────────────────────────────
     if (prefs.monthlyReport) {
       const nextReport = new Date();
       nextReport.setDate(prefs.reportDay);
       nextReport.setHours(9, 0, 0, 0);
-      if (nextReport <= now) {
-        nextReport.setMonth(nextReport.getMonth() + 1);
-      }
-      allNotifications.push({
-        id: MONTHLY_REPORT_ID,
-        title: '📊 Rapport mensuel SubTrack',
-        body: 'Votre résumé des dépenses du mois est prêt.',
-        schedule: { at: nextReport },
-        channelId: 'reports',
+      if (nextReport <= now) nextReport.setMonth(nextReport.getMonth() + 1);
+
+      const { title, body, largeBody } = this.monthlyReportContent(subscriptions, now.getFullYear(), now.getMonth(), currency);
+      all.push({ id: MONTHLY_REPORT_ID, title, body, largeBody, schedule: { at: nextReport }, channelId: 'reports' });
+    }
+
+    // ── Alertes de prix ─────────────────────────────────────────────────────────
+    if (prefs.priceAlerts && subscriptions.length > 0) {
+      const alertDate = new Date();
+      alertDate.setDate(alertDate.getDate() + 14);
+      alertDate.setHours(notifyHour, 0, 0, 0);
+
+      const top = [...subscriptions].sort((a, b) => b.amount - a.amount)[0];
+      all.push({
+        id: PRICE_ALERT_ID,
+        title: '🚨 Vérifiez vos tarifs',
+        body: `${top.companyName} — ${top.amount} ${currency}/mois`,
+        largeBody: `${top.companyName} — ${top.amount} ${currency}/mois\nLe tarif a-t-il changé récemment ?\nTouchez pour vérifier`,
+        schedule: { at: alertDate },
+        channelId: 'renewals',
       });
     }
 
-    if (allNotifications.length > 0) {
-      await LocalNotifications.schedule({ notifications: allNotifications });
+    // ── Abonnements inutilisés ──────────────────────────────────────────────────
+    if (prefs.unusedSubs && subscriptions.length > 0) {
+      const unusedDate = new Date();
+      unusedDate.setDate(unusedDate.getDate() + 30);
+      unusedDate.setHours(notifyHour, 0, 0, 0);
+
+      const count = subscriptions.length;
+      all.push({
+        id: UNUSED_SUBS_ID,
+        title: '♻️ Abonnements à vérifier',
+        body: `${count} abonnement${count !== 1 ? 's' : ''} actifs — certains inutilisés ?`,
+        largeBody: `Tu as ${count} abonnement${count !== 1 ? 's' : ''} actifs\nCertains sont peut-être devenus inutiles\nTouchez pour les passer en revue`,
+        schedule: { at: unusedDate },
+        channelId: 'renewals',
+      });
+    }
+
+    // ── Conseils d'optimisation ─────────────────────────────────────────────────
+    if (prefs.optimizationTips && subscriptions.length > 0) {
+      const tipDate = new Date();
+      tipDate.setDate(tipDate.getDate() + 21);
+      tipDate.setHours(notifyHour, 0, 0, 0);
+
+      const { title, body, largeBody } = this.optimizationContent(subscriptions, now.getFullYear(), now.getMonth(), currency);
+      all.push({ id: OPTIM_TIPS_ID, title, body, largeBody, schedule: { at: tipDate }, channelId: 'reports' });
+    }
+
+    if (all.length > 0) {
+      await LocalNotifications.schedule({ notifications: all });
     }
   }
 
@@ -147,22 +194,21 @@ export class NotificationService {
     }
   }
 
-  async sendTestReport(subCount: number, monthlyTotal: number, currency: string): Promise<boolean> {
+  async sendTestReport(subscriptions: Subscription[], currency: string): Promise<boolean> {
     const granted = await this.requestPermission();
     if (!granted) return false;
 
     await LocalNotifications.cancel({ notifications: [{ id: TEST_REPORT_ID }] });
 
     const now = new Date();
-    const monthName = now.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-    const label = monthName.charAt(0).toUpperCase() + monthName.slice(1);
-    const totalStr = monthlyTotal.toFixed(2).replace('.', '.');
+    const { title, body, largeBody } = this.monthlyReportContent(subscriptions, now.getFullYear(), now.getMonth(), currency);
 
     await LocalNotifications.schedule({
       notifications: [{
         id: TEST_REPORT_ID,
-        title: '📊 Rapport mensuel SubTrack',
-        body: `${label} — ${subCount} abonnement${subCount > 1 ? 's' : ''} · ${totalStr} ${currency}/mois`,
+        title,
+        body,
+        largeBody,
         schedule: { at: new Date(Date.now() + 3000) },
         channelId: 'reports',
       }],
@@ -176,16 +222,84 @@ export class NotificationService {
 
     await LocalNotifications.cancel({ notifications: [{ id: TEST_NOTIF_ID }] });
 
-    const at = new Date(Date.now() + 5000);
     await LocalNotifications.schedule({
       notifications: [{
         id: TEST_NOTIF_ID,
-        title: '🔔 SubTrack — Test',
-        body: 'Les notifications fonctionnent correctement !',
-        schedule: { at },
+        title: '✅ SubTrack',
+        body: 'Notifications activées avec succès !',
+        schedule: { at: new Date(Date.now() + 5000) },
         channelId: 'renewals',
       }],
     });
     return true;
+  }
+
+  // ── Contenu des notifications ─────────────────────────────────────────────────
+
+  private renewalContent(name: string, amount: number, currency: string, days: number): NotifContent {
+    if (days === 1) {
+      return {
+        title: `⚠️ ${name}`,
+        body:  `Renouvellement demain — ${amount} ${currency}`,
+        largeBody: `Renouvellement demain — ${amount} ${currency}\nTouchez pour voir le détail`,
+      };
+    }
+    return {
+      title: `🔔 ${name}`,
+      body:  `Se renouvelle dans ${days} jours — ${amount} ${currency}`,
+    };
+  }
+
+  private monthlyReportContent(subs: Subscription[], year: number, month: number, currency: string): NotifContent {
+    const currentTotal = this.reports.getMonthlyTotal(subs, year, month);
+    const prevMonth    = month === 0 ? 11 : month - 1;
+    const prevYear     = month === 0 ? year - 1 : year;
+    const prevTotal    = this.reports.getMonthlyTotal(subs, prevYear, prevMonth);
+
+    const monthLabel = this.capitalizedMonthYear(new Date(year, month, 1));
+    const totalStr   = Math.round(currentTotal).toString();
+    const count      = subs.length;
+    const subLabel   = `${count} abonnement${count !== 1 ? 's' : ''}`;
+
+    let evolutionShort = '';
+    let evolutionFull  = '';
+
+    if (prevTotal > 0) {
+      const pct  = Math.round(((currentTotal - prevTotal) / prevTotal) * 100);
+      const sign = pct >= 0 ? '+' : '';
+      evolutionShort = ` · ${sign}${pct}% vs le mois dernier`;
+      evolutionFull  = `\n${sign}${pct}% vs le mois dernier`;
+    }
+
+    return {
+      title: `📊 Rapport ${monthLabel} prêt`,
+      body:  `${totalStr} ${currency} • ${subLabel}${evolutionShort}`,
+      largeBody: `${totalStr} ${currency} • ${subLabel}${evolutionFull}\nTouchez pour voir les détails`,
+    };
+  }
+
+  private optimizationContent(subs: Subscription[], year: number, month: number, currency: string): NotifContent {
+    const breakdown = this.reports.getCategoryBreakdown(subs, year, month);
+
+    if (breakdown.length > 0) {
+      const top = breakdown[0];
+      return {
+        title: '💡 Astuce économies',
+        body:  `${top.name} : ${Math.round(top.total)} ${currency}/mois (${top.percent}%)`,
+        largeBody: `${top.name} représente ${Math.round(top.total)} ${currency}/mois (${top.percent}%)\nVoulez-vous optimiser vos abonnements ?`,
+      };
+    }
+
+    const total = subs.reduce((s, sub) => s + sub.amount, 0);
+    return {
+      title: '💡 Astuce économies',
+      body:  `${Math.round(total)} ${currency}/mois en abonnements`,
+      largeBody: `${Math.round(total)} ${currency}/mois en abonnements\nOuvrez SubTrack pour optimiser vos dépenses`,
+    };
+  }
+
+  private capitalizedMonthYear(date: Date): string {
+    const s = date.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    return s.charAt(0).toUpperCase() + s.slice(1);
   }
 }
