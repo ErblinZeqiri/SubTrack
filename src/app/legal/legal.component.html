@@ -1,0 +1,61 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/account"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ doc.title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="legal-wrapper">
+
+    <!-- ── En-tête du document ── -->
+    <div class="doc-header">
+      <div class="doc-icon-wrap">
+        <ion-icon [name]="doc.icon"></ion-icon>
+      </div>
+      <h1 class="doc-title">{{ doc.title }}</h1>
+      <p class="doc-updated">Dernière mise à jour : {{ doc.updated }}</p>
+    </div>
+
+    <!-- ── Introduction ── -->
+    @if (doc.intro) {
+      <p class="intro-text">{{ doc.intro }}</p>
+    }
+
+    <!-- ── Sections ── -->
+    @for (section of doc.sections; track section.title; let i = $index) {
+      <div class="legal-section">
+        <h2 class="section-title">
+          <span class="section-num">{{ i + 1 }}</span>
+          {{ section.title }}
+        </h2>
+
+        @if (section.text) {
+          <p class="section-text">{{ section.text }}</p>
+        }
+
+        @if (section.items) {
+          <ul class="section-list">
+            @for (item of section.items; track item) {
+              <li>{{ item }}</li>
+            }
+          </ul>
+        }
+      </div>
+    }
+
+    <!-- ── Infos app ── -->
+    <div class="info-footer">
+      <p class="app-name">SubTrack</p>
+      <div class="email-row" (click)="copyEmail()">
+        <ion-icon name="mail-outline"></ion-icon>
+        <span>subbtrack&#64;gmail.com</span>
+        <ion-icon name="copy-outline" class="copy-icon"></ion-icon>
+      </div>
+      <p class="version">Version {{ appVersion }}</p>
+    </div>
+
+  </div>
+</ion-content>

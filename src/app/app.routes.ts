@@ -12,6 +12,8 @@ import { UpdateSubComponent } from './update-sub/update-sub.component'
 import { Page404Component } from './page404/page404.component'
 import { ReportsComponent } from './reports/reports.component'
 import { ExportComponent } from './export/export.component'
+import { LegalComponent } from './legal/legal.component'
+import { ContactComponent } from './contact/contact.component'
 
 export const routes: Routes = [
   {
@@ -71,6 +73,15 @@ export const routes: Routes = [
   {
     path: 'update/:id',
     component: UpdateSubComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'legal/:type',
+    component: LegalComponent,
+  },
+  {
+    path: 'contact',
+    component: ContactComponent,
     canActivate: [authGuard],
   },
   {

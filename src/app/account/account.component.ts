@@ -33,6 +33,7 @@ import {
   notificationsOutline, cashOutline, languageOutline, moonOutline,
   createOutline, timeOutline, checkmarkOutline,
   imagesOutline, cameraOutline, closeOutline,
+  documentTextOutline, shieldCheckmarkOutline, helpCircleOutline,
 } from 'ionicons/icons';
 
 @Component({
@@ -80,6 +81,7 @@ export class AccountComponent implements OnInit {
       notificationsOutline, cashOutline, languageOutline, moonOutline,
       createOutline, timeOutline, checkmarkOutline,
       imagesOutline, cameraOutline, closeOutline,
+      documentTextOutline, shieldCheckmarkOutline, helpCircleOutline,
     });
   }
 
@@ -275,6 +277,14 @@ export class AccountComponent implements OnInit {
 
   goToNotifications(): void {
     this.navCtrl.navigateForward('/notifications');
+  }
+
+  goToLegal(type: 'cgu' | 'privacy'): void {
+    this.navCtrl.navigateForward(`/legal/${type}`);
+  }
+
+  goToContact(): void {
+    this.navCtrl.navigateForward('/contact');
   }
 
   async showComingSoon(): Promise<void> {

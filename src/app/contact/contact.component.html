@@ -1,0 +1,115 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/account"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Contact & Support</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="contact-wrapper">
+
+    <!-- ── Hero ── -->
+    <div class="hero-card">
+      <div class="hero-emoji">📧</div>
+      <h2>Besoin d'aide ?</h2>
+      <p>Nous répondons généralement sous 24–48h.</p>
+    </div>
+
+    <!-- ── Formulaire ── -->
+    <p class="section-label">Nous contacter</p>
+    <div class="form-card">
+      <ion-item class="select-item">
+        <ion-select
+          [(ngModel)]="subject"
+          label="Sujet"
+          label-placement="stacked"
+          interface="action-sheet">
+          @for (opt of subjectOptions; track opt.value) {
+            <ion-select-option [value]="opt.value">{{ opt.label }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+
+      <div class="form-divider"></div>
+
+      <div class="form-field textarea-field">
+        <span class="field-label">Message</span>
+        <ion-textarea
+          [(ngModel)]="message"
+          placeholder="Décrivez votre question ou problème…"
+          [rows]="5"
+          [autoGrow]="true"
+          class="msg-area">
+        </ion-textarea>
+      </div>
+
+      <ion-button expand="block" class="send-btn" (click)="send()">
+        <ion-icon name="send-outline" slot="start"></ion-icon>
+        Envoyer un message
+      </ion-button>
+      <p class="send-hint">Nous vous répondrons sous 24–48h</p>
+    </div>
+
+    <!-- ── Accès rapide ── -->
+    <p class="section-label">Accès rapide</p>
+    <div class="options-list">
+      <div class="option-row" (click)="openQuick('Bug')">
+        <div class="option-left">
+          <div class="option-icon-wrap bug">
+            <ion-icon name="bug-outline"></ion-icon>
+          </div>
+          <div class="option-texts">
+            <span class="option-title">Signaler un bug</span>
+            <span class="option-sub">Quelque chose ne fonctionne pas ?</span>
+          </div>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+      </div>
+      <div class="option-row no-border" (click)="openQuick('Suggestion')">
+        <div class="option-left">
+          <div class="option-icon-wrap feature">
+            <ion-icon name="sparkles-outline"></ion-icon>
+          </div>
+          <div class="option-texts">
+            <span class="option-title">Proposer une fonctionnalité</span>
+            <span class="option-sub">Une idée pour améliorer SubTrack ?</span>
+          </div>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+      </div>
+    </div>
+
+    <!-- ── FAQ ── -->
+    <p class="section-label">Questions fréquentes</p>
+    <div class="faq-list">
+      @for (item of faq; track item.q; let i = $index) {
+        <div class="faq-item" [class.open]="openFaqIndex === i" (click)="toggleFaq(i)">
+          <div class="faq-question">
+            <span>{{ item.q }}</span>
+            <ion-icon
+              [name]="openFaqIndex === i ? 'chevron-up-outline' : 'chevron-down-outline'"
+              class="faq-chevron">
+            </ion-icon>
+          </div>
+          @if (openFaqIndex === i) {
+            <p class="faq-answer">{{ item.a }}</p>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- ── Infos app ── -->
+    <div class="info-footer">
+      <p class="app-name">SubTrack</p>
+      <div class="email-row" (click)="copyEmail()">
+        <ion-icon name="mail-outline"></ion-icon>
+        <span>subbtrack&#64;gmail.com</span>
+        <ion-icon name="copy-outline" class="copy-icon"></ion-icon>
+      </div>
+      <p class="version">Version {{ appVersion }}</p>
+    </div>
+
+  </div>
+</ion-content>
