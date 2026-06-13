@@ -1,0 +1,97 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Passer Premium</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="upgrade-wrapper">
+
+    <!-- ── Hero ── -->
+    <div class="hero">
+      <div class="hero-badge">
+        <ion-icon name="sparkles-outline"></ion-icon>
+        <span>SubTrack Premium</span>
+      </div>
+      <h1>Débloquez tout<br>le potentiel de SubTrack</h1>
+      <p class="hero-sub">Suivi illimité, exports sans limite, insights complets.</p>
+    </div>
+
+    <!-- ── Tableau comparatif ── -->
+    <div class="features-table">
+      <div class="features-header">
+        <span class="col-feature"></span>
+        <span class="col-plan">Gratuit</span>
+        <span class="col-plan premium-col">Premium ✨</span>
+      </div>
+      @for (f of features; track f.label) {
+        <div class="feature-row">
+          <span class="feature-label">{{ f.label }}</span>
+          <span class="feature-val free">
+            @if (f.free === true) { <ion-icon name="checkmark-circle-outline" class="icon-yes"></ion-icon> }
+            @else if (f.free === false) { <ion-icon name="close-circle-outline" class="icon-no"></ion-icon> }
+            @else { {{ f.free }} }
+          </span>
+          <span class="feature-val prem">
+            @if (f.premium === true) { <ion-icon name="checkmark-circle-outline" class="icon-yes prem"></ion-icon> }
+            @else { {{ f.premium }} }
+          </span>
+        </div>
+      }
+    </div>
+
+    <!-- ── Sélection du plan ── -->
+    @if (!loading) {
+      <p class="section-label">Choisir un plan</p>
+      <div class="plans-row">
+        @for (pkg of packages; track pkg.id) {
+          <div
+            class="plan-card"
+            [class.selected]="selectedId === pkg.id"
+            (click)="select(pkg.id)">
+            @if (pkg.badge) {
+              <span class="plan-badge">{{ pkg.badge }}</span>
+            }
+            <span class="plan-name">{{ pkg.label }}</span>
+            <span class="plan-price">{{ pkg.price }}</span>
+            <span class="plan-per-month">{{ pkg.pricePerMonth }} / mois</span>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="loading-plans">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+    }
+
+    <!-- ── CTA ── -->
+    <ion-button
+      expand="block"
+      class="cta-btn"
+      [disabled]="purchasing || loading || packages.length === 0"
+      (click)="purchase()">
+      @if (purchasing) {
+        <ion-spinner name="crescent" slot="start"></ion-spinner>
+        Traitement en cours…
+      } @else {
+        <ion-icon name="sparkles-outline" slot="start"></ion-icon>
+        Passer Premium
+      }
+    </ion-button>
+
+    <p class="restore-link" (click)="restore()">
+      @if (restoring) { Restauration… }
+      @else { Restaurer mes achats }
+    </p>
+
+    <p class="legal-hint">
+      L'abonnement se renouvelle automatiquement. Résiliable à tout moment depuis les paramètres Google Play.
+    </p>
+
+  </div>
+</ion-content>

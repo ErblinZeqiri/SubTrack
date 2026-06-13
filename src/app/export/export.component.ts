@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, inject } from '@angular/core';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent,
   IonButtons, IonIcon, IonToggle, IonButton, IonSpinner,
-  ToastController, NavController,
+  ToastController, NavController, ModalController,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -22,6 +22,8 @@ import { ReportsService } from '../services/reports/reports.service';
 import {
   ExportService, ExportScope, ExportFormat, ExportPeriod,
 } from '../services/export/export.service';
+import { PlanService, FREE_EXPORT_LIMIT } from '../services/plan/plan.service';
+import { UpgradeComponent } from '../upgrade/upgrade.component';
 import { Subscription } from 'src/interfaces/interface';
 import { of, switchMap, firstValueFrom } from 'rxjs';
 
@@ -64,6 +66,11 @@ export class ExportComponent implements OnInit {
   private readonly reports     = inject(ReportsService);
   private readonly exportSvc   = inject(ExportService);
   private readonly toastCtrl   = inject(ToastController);
+  private readonly planService = inject(PlanService);
+  private readonly modalCtrl   = inject(ModalController);
+
+  readonly freeExportLimit = FREE_EXPORT_LIMIT;
+  exportUsed = 0;
 
   constructor() {
     addIcons({
@@ -86,6 +93,7 @@ export class ExportComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.lastExport = await this.exportSvc.getLastExport();
+    this.exportUsed = await this.planService.getExportCount();
 
     this.auth.getCurrentUser().pipe(
       switchMap(user => user ? this.dataService.loadSubData(user.uid) : of([])),
@@ -125,6 +133,21 @@ export class ExportComponent implements OnInit {
 
   async onExport(): Promise<void> {
     if (this.exporting) return;
+
+    const { allowed, used, limit } = await this.planService.canExport();
+    if (!allowed) {
+      const modal = await this.modalCtrl.create({
+        component: UpgradeComponent,
+        breakpoints: [0, 1],
+        initialBreakpoint: 1,
+        cssClass: 'upgrade-modal',
+      });
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+      if (data?.upgraded) this.exportUsed = await this.planService.getExportCount();
+      return;
+    }
+
     this.exporting = true;
 
     try {
@@ -138,6 +161,8 @@ export class ExportComponent implements OnInit {
         includeLogos: this.includeLogos,
       });
 
+      await this.planService.recordExport();
+      this.exportUsed = await this.planService.getExportCount();
       this.exportSuccess = true;
       this.lastExport = await this.exportSvc.getLastExport();
       setTimeout(() => { this.exportSuccess = false; }, 3000);

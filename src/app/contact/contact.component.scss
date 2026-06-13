@@ -82,13 +82,21 @@ ion-content {
   margin-bottom: 6px;
 }
 
+.select-wrapper {
+  padding: 12px 18px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .select-item {
   --background: transparent;
   --border-color: transparent;
+  --highlight-background: transparent;
   --color: var(--app-text);
-  --min-height: 52px;
-  --inner-padding-end: 10px;
-  --padding-start: 18px;
+  --min-height: 40px;
+  --inner-padding-end: 8px;
+  --padding-start: 0;
   margin: 0;
 
   ion-select {

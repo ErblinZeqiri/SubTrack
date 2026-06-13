@@ -76,6 +76,30 @@
       </div>
     </div>
 
+    <!-- ── Plan ──────────────────────────────────────────── -->
+    <div class="section">
+      <p class="section-title">Mon plan</p>
+      @if ((planService.plan$ | async) === 'premium') {
+        <div class="plan-card premium-card">
+          <div class="plan-card-left">
+            <span class="plan-badge-prem">✨ Premium</span>
+            <p class="plan-desc">Accès illimité à toutes les fonctionnalités</p>
+          </div>
+          <ion-icon name="checkmark-circle-outline" class="plan-check"></ion-icon>
+        </div>
+      } @else {
+        <div class="plan-card free-card">
+          <div class="plan-card-left">
+            <span class="plan-badge-free">Gratuit</span>
+            <p class="plan-desc">8 abonnements · 2 exports/mois</p>
+          </div>
+          <ion-button class="upgrade-btn" size="small" (click)="openUpgrade()">
+            Passer Premium
+          </ion-button>
+        </div>
+      }
+    </div>
+
     <!-- ── Paramètres ─────────────────────────────────────── -->
     <div class="section">
       <p class="section-title">Paramètres</p>

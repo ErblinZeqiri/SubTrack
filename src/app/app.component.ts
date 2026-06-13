@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { IonApp } from '@ionic/angular/standalone';
 import { HomePage } from './home/home.page';
 import { StatusBar, Style } from '@capacitor/status-bar';
@@ -7,6 +7,8 @@ import { NavigationBar } from '@capgo/capacitor-navigation-bar';  // Assure-toi 
 import { App } from '@capacitor/app';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { AuthService } from './services/auth/auth.service';
+import { PlanService } from './services/plan/plan.service';
 
 @Component({
   selector: 'app-root',
@@ -15,9 +17,19 @@ import { Location } from '@angular/common';
   imports: [IonApp, HomePage],
 })
 export class AppComponent {
+  private readonly auth = inject(AuthService);
+  private readonly plan = inject(PlanService);
+
   constructor(private router: Router, private location: Location) {
     this.configurerBarresSysteme();
     this.configurerBoutonRetour();
+    this.initPlan();
+  }
+
+  private initPlan(): void {
+    this.auth.getCurrentUser().subscribe(user => {
+      if (user) this.plan.init(user.uid);
+    });
   }
 
   private async configurerBarresSysteme() {

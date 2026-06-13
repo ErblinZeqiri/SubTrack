@@ -38,6 +38,9 @@
         </provider>
     </application>
 
+    <!-- Google Play Billing (RevenueCat) -->
+    <uses-permission android:name="com.android.vending.BILLING" />
+
     <!-- Permissions réseau -->
     <uses-permission android:name="android.permission.INTERNET" />
 

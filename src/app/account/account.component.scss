@@ -227,6 +227,67 @@ ion-toggle {
   --handle-background: #ffffff;
 }
 
+/* ── Plan card ───────────────────────────────────────────── */
+.plan-card {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.premium-card {
+  border-color: rgba(167, 139, 250, 0.4);
+  background: rgba(124, 58, 237, 0.06);
+}
+
+.plan-card-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.plan-badge-prem {
+  font-size: 14px;
+  font-weight: 700;
+  color: #a78bfa;
+  letter-spacing: 0.2px;
+}
+
+.plan-badge-free {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--app-text);
+}
+
+.plan-desc {
+  font-size: 12px;
+  color: var(--app-text-muted);
+  margin: 0;
+}
+
+.plan-check {
+  font-size: 24px;
+  color: #a78bfa;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.upgrade-btn {
+  --border-radius: 12px;
+  --background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  --color: #fff;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: none;
+  flex-shrink: 0;
+}
+
 /* ── Zone dangereuse ─────────────────────────────────────── */
 .danger-actions {
   display: flex;

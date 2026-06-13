@@ -53,6 +53,9 @@ import localeFrCh from '@angular/common/locales/fr-CH';
 import { AuthService } from '../services/auth/auth.service';
 import { DataService } from '../services/data/data.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PlanService } from '../services/plan/plan.service';
+import { UpgradeComponent } from '../upgrade/upgrade.component';
+import { ModalController } from '@ionic/angular/standalone';
 
 registerLocaleData(localeFrCh, 'fr-CH');
 
@@ -91,7 +94,9 @@ export class AddSubComponent {
   domain = '';
   filteredOptions$!: Observable<Company[]>;
   toggleDropdown: boolean = false;
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly destroyRef  = inject(DestroyRef);
+  private readonly planService = inject(PlanService);
+  private readonly modalCtrl   = inject(ModalController);
 
   readonly quickSuggestions = ['Netflix', 'Spotify', 'Disney+', 'Apple', 'Amazon', 'YouTube', 'Adobe'];
 
@@ -238,6 +243,18 @@ export class AddSubComponent {
     const currentUser = await firstValueFrom(this._auth.getCurrentUser());
     if (!currentUser || !currentUser.uid) {
       throw new Error('User ID not found');
+    }
+
+    const currentSubs = await firstValueFrom(this._dataService.userSubData$);
+    if (!this.planService.canAddSubscription(currentSubs.length)) {
+      const modal = await this.modalCtrl.create({
+        component: UpgradeComponent,
+        breakpoints: [0, 1],
+        initialBreakpoint: 1,
+        cssClass: 'upgrade-modal',
+      });
+      await modal.present();
+      return;
     }
     if (this.selectedDeadline.value === this.subsciptionDeadline[0]) {
       this.addSubscribtionForm.value.deadline = null;

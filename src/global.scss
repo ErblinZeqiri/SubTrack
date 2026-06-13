@@ -488,6 +488,21 @@ ion-popover {
   }
 }
 
+// Select items dans les formulaires (contact, notifications…)
+ion-item.select-item {
+  --border-color: transparent !important;
+  --inner-border-width: 0 !important;
+  --highlight-color-focused: transparent !important;
+  --highlight-color-valid: transparent !important;
+  --highlight-height: 0px !important;
+  --color: var(--app-text) !important;
+
+  ion-select {
+    --color: var(--app-text) !important;
+    --placeholder-color: var(--app-text-muted) !important;
+  }
+}
+
 // Action Sheet dark mode
 ion-action-sheet {
   --background: var(--app-surface);

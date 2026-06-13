@@ -15,6 +15,7 @@ import {
   IonIcon,
   IonToggle,
   IonSpinner,
+  IonButton,
 } from '@ionic/angular/standalone';
 import { Observable, map, BehaviorSubject, switchMap } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -24,6 +25,8 @@ import { ExepensesService } from '../services/expenses/exepenses.service';
 import { UserPreferencesService } from '../services/preferences/user-preferences.service';
 import { CurrencyPickerComponent } from '../currency-picker/currency-picker.component';
 import { SmartAmountPipe } from '../pipes/smart-amount.pipe';
+import { PlanService } from '../services/plan/plan.service';
+import { UpgradeComponent } from '../upgrade/upgrade.component';
 import { User } from '@angular/fire/auth';
 import { Subscription } from '../../interfaces/interface';
 import { addIcons } from 'ionicons';
@@ -40,7 +43,7 @@ import {
   selector: 'app-account',
   standalone: true,
   imports: [
-    IonIcon, IonToggle, IonSpinner, IonContent, IonTitle, IonToolbar, IonHeader,
+    IonIcon, IonToggle, IonSpinner, IonButton, IonContent, IonTitle, IonToolbar, IonHeader,
     CommonModule, FormsModule, SmartAmountPipe,
   ],
   templateUrl: './account.component.html',
@@ -69,6 +72,7 @@ export class AccountComponent implements OnInit {
   private readonly dataService        = inject(DataService);
   private readonly expensesService    = inject(ExepensesService);
   readonly prefs                      = inject(UserPreferencesService);
+  readonly planService                = inject(PlanService);
 
   constructor() {
     // Chaque fois que refreshUser$ émet, on relit l'utilisateur courant
@@ -285,6 +289,17 @@ export class AccountComponent implements OnInit {
 
   goToContact(): void {
     this.navCtrl.navigateForward('/contact');
+  }
+
+  async openUpgrade(): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: UpgradeComponent,
+      breakpoints: [0, 1],
+      initialBreakpoint: 1,
+      cssClass: 'upgrade-modal',
+    });
+    await modal.present();
+    await modal.onWillDismiss();
   }
 
   async showComingSoon(): Promise<void> {
