@@ -1,0 +1,143 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Exporter mes données</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="export-wrapper">
+
+    <!-- ── Que voulez-vous exporter ? ── -->
+    <p class="section-label">Que voulez-vous exporter ?</p>
+
+    <div class="scope-cards">
+
+      <div class="scope-card" [class.selected]="selectedScope === 'all'" (click)="selectScope('all')">
+        <div class="scope-icon-wrap violet">
+          <ion-icon name="grid-outline"></ion-icon>
+        </div>
+        <div class="scope-texts">
+          <span class="scope-title">Toutes mes données</span>
+          <span class="scope-sub">Abonnements actifs, montants, catégories</span>
+        </div>
+        @if (selectedScope === 'all') {
+          <ion-icon name="checkmark-circle-outline" class="scope-check"></ion-icon>
+        }
+      </div>
+
+      <div class="scope-card" [class.selected]="selectedScope === 'monthly'" (click)="selectScope('monthly')">
+        <div class="scope-icon-wrap blue">
+          <ion-icon name="calendar-outline"></ion-icon>
+        </div>
+        <div class="scope-texts">
+          <span class="scope-title">Rapport du mois sélectionné</span>
+          <span class="scope-sub">
+            {{ monthlyLabel }} — {{ monthlyTotal.toFixed(2) }} {{ prefs.currency }}
+          </span>
+        </div>
+        @if (selectedScope === 'monthly') {
+          <ion-icon name="checkmark-circle-outline" class="scope-check"></ion-icon>
+        }
+      </div>
+
+      <div class="scope-card" [class.selected]="selectedScope === 'payments'" (click)="selectScope('payments')">
+        <div class="scope-icon-wrap green">
+          <ion-icon name="time-outline"></ion-icon>
+        </div>
+        <div class="scope-texts">
+          <span class="scope-title">Historique des paiements</span>
+          <span class="scope-sub">Prélèvements reconstruits mois par mois</span>
+        </div>
+        @if (selectedScope === 'payments') {
+          <ion-icon name="checkmark-circle-outline" class="scope-check"></ion-icon>
+        }
+      </div>
+
+    </div>
+
+    <!-- ── Période (masquée pour "mensuel") ── -->
+    @if (showPeriodPicker) {
+      <p class="section-label">Période</p>
+      <div class="period-chips">
+        <div class="period-chip" [class.active]="selectedPeriod === '6months'" (click)="selectPeriod('6months')">6 mois</div>
+        <div class="period-chip" [class.active]="selectedPeriod === '12months'" (click)="selectPeriod('12months')">12 mois</div>
+        <div class="period-chip" [class.active]="selectedPeriod === 'all'" (click)="selectPeriod('all')">Tout (24 mois)</div>
+      </div>
+    }
+
+    <!-- ── Format d'export ── -->
+    <p class="section-label">Format d'export</p>
+    <div class="format-row">
+
+      <div class="format-card" [class.selected]="selectedFormat === 'pdf'" (click)="selectFormat('pdf')">
+        <ion-icon name="document-text-outline"></ion-icon>
+        <span class="format-name">PDF</span>
+        <span class="format-sub">Rapport visuel</span>
+      </div>
+
+      <div class="format-card" [class.selected]="selectedFormat === 'csv'" (click)="selectFormat('csv')">
+        <ion-icon name="grid-sharp"></ion-icon>
+        <span class="format-name">CSV</span>
+        <span class="format-sub">Excel / Sheets</span>
+      </div>
+
+      <div class="format-card" [class.selected]="selectedFormat === 'json'" (click)="selectFormat('json')">
+        <ion-icon name="code-slash-outline"></ion-icon>
+        <span class="format-name">JSON</span>
+        <span class="format-sub">Données brutes</span>
+      </div>
+
+    </div>
+
+    <!-- ── Options (CSV/JSON uniquement) ── -->
+    @if (selectedFormat !== 'pdf') {
+      <p class="section-label">Options</p>
+      <div class="options-section">
+        <div class="option-row">
+          <div class="option-left">
+            <ion-icon name="images-outline" class="option-icon"></ion-icon>
+            <div class="option-texts">
+              <span class="option-title">Inclure les logos</span>
+              <span class="option-sub">Ajoute les URLs des logos (CSV/JSON)</span>
+            </div>
+          </div>
+          <ion-toggle [(ngModel)]="includeLogos" color="primary"></ion-toggle>
+        </div>
+      </div>
+    }
+
+    <!-- ── Dernier export ── -->
+    @if (lastExport) {
+      <div class="last-export-info">
+        <ion-icon name="time-outline"></ion-icon>
+        <span>Dernier export : {{ lastExport.date }} — {{ lastExport.scope }} ({{ lastExport.format }})</span>
+      </div>
+    }
+
+    <!-- ── Bouton export ── -->
+    <ion-button
+      expand="block"
+      class="export-btn"
+      [disabled]="exporting || !exportReady"
+      (click)="onExport()">
+      @if (exporting) {
+        <ion-spinner name="crescent" slot="start"></ion-spinner>
+        Génération en cours...
+      } @else if (exportSuccess) {
+        <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+        Exporté avec succès !
+      } @else {
+        <ion-icon name="download-outline" slot="start"></ion-icon>
+        Exporter mes données
+      }
+    </ion-button>
+
+    <p class="export-hint">Le fichier sera enregistré dans l'emplacement de votre choix</p>
+
+  </div>
+</ion-content>

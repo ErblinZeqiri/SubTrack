@@ -1,0 +1,307 @@
+:host {
+  display: block;
+  animation: exportPageEnter 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+:host.leaving {
+  animation: exportPageLeave 0.27s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+
+@keyframes exportPageEnter {
+  from { opacity: 0; transform: translateX(48px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+
+@keyframes exportPageLeave {
+  from { opacity: 1; transform: translateX(0);    }
+  to   { opacity: 0; transform: translateX(48px); }
+}
+
+ion-header ion-toolbar {
+  --background: var(--app-surface);
+  --color: var(--app-text);
+  --border-color: var(--app-border);
+}
+
+ion-content {
+  --background: var(--app-bg);
+}
+
+.export-wrapper {
+  padding: 20px 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+}
+
+// ── Labels de section ─────────────────────────────────────────────────────────
+
+.section-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--app-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  margin: 0 0 10px 2px;
+}
+
+// ── Cartes de scope ───────────────────────────────────────────────────────────
+
+.scope-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.scope-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--app-surface);
+  border: 1.5px solid var(--app-border);
+  border-radius: 18px;
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+
+  &:active { opacity: 0.85; }
+
+  &.selected {
+    border-color: rgba(124, 58, 237, 0.6);
+    background: rgba(124, 58, 237, 0.07);
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.18);
+  }
+}
+
+.scope-icon-wrap {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon { font-size: 22px; }
+
+  &.violet {
+    background: rgba(124, 58, 237, 0.18);
+    ion-icon { color: #a78bfa; }
+  }
+  &.blue {
+    background: rgba(59, 130, 246, 0.18);
+    ion-icon { color: #60a5fa; }
+  }
+  &.green {
+    background: rgba(34, 197, 94, 0.18);
+    ion-icon { color: #4ade80; }
+  }
+}
+
+.scope-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.scope-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--app-text);
+}
+
+.scope-sub {
+  font-size: 12px;
+  color: var(--app-text-muted);
+  line-height: 1.4;
+}
+
+.scope-check {
+  font-size: 22px;
+  color: #a78bfa;
+  flex-shrink: 0;
+}
+
+// ── Chips période ─────────────────────────────────────────────────────────────
+
+.period-chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.period-chip {
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1.5px solid var(--app-border);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--app-text-muted);
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.18s ease;
+
+  &.active {
+    border-color: transparent;
+    background: #7c3aed;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.22), 0 4px 14px rgba(124, 58, 237, 0.3);
+  }
+}
+
+// ── Cartes format ─────────────────────────────────────────────────────────────
+
+.format-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.format-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: var(--app-surface);
+  border: 1.5px solid var(--app-border);
+  border-radius: 16px;
+  padding: 16px 8px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+
+  ion-icon {
+    font-size: 24px;
+    color: var(--app-text-muted);
+    transition: color 0.18s;
+  }
+
+  &:active { opacity: 0.8; }
+
+  &.selected {
+    border-color: rgba(124, 58, 237, 0.6);
+    background: rgba(124, 58, 237, 0.09);
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.18);
+
+    ion-icon { color: #a78bfa; }
+
+    .format-name { color: #a78bfa; }
+  }
+}
+
+.format-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--app-text);
+  transition: color 0.18s;
+}
+
+.format-sub {
+  font-size: 10.5px;
+  color: var(--app-text-muted);
+  text-align: center;
+}
+
+// ── Options toggles ───────────────────────────────────────────────────────────
+
+.options-section {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-top: 1px solid var(--app-border);
+
+  &:first-child { border-top: none; }
+}
+
+.option-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.option-icon {
+  font-size: 20px;
+  color: #a78bfa;
+  flex-shrink: 0;
+}
+
+.option-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.option-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--app-text);
+}
+
+.option-sub {
+  font-size: 11.5px;
+  color: var(--app-text-muted);
+}
+
+// ── Dernier export ────────────────────────────────────────────────────────────
+
+.last-export-info {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--app-text-muted);
+  background: rgba(124, 58, 237, 0.06);
+  border: 1px solid rgba(124, 58, 237, 0.18);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+
+  ion-icon {
+    font-size: 15px;
+    color: #a78bfa;
+    flex-shrink: 0;
+  }
+
+  span { line-height: 1.4; }
+}
+
+// ── Bouton export ─────────────────────────────────────────────────────────────
+
+.export-btn {
+  --border-radius: 18px;
+  --background: #7c3aed;
+  --background-activated: #6d28d9;
+  --color: #fff;
+  height: 58px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.2px;
+  margin-bottom: 10px;
+}
+
+.export-btn::part(native) {
+  box-shadow: 0 6px 28px rgba(124, 58, 237, 0.4);
+}
+
+.export-hint {
+  text-align: center;
+  font-size: 12px;
+  color: var(--app-text-muted);
+  margin: 0;
+}

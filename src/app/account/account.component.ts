@@ -31,7 +31,7 @@ import {
   personOutline, mailOutline, calendarOutline, logOutOutline,
   trashOutline, cardOutline, statsChartOutline, chevronForwardOutline,
   notificationsOutline, cashOutline, languageOutline, moonOutline,
-  downloadOutline, createOutline, timeOutline, checkmarkOutline,
+  createOutline, timeOutline, checkmarkOutline,
   imagesOutline, cameraOutline, closeOutline,
 } from 'ionicons/icons';
 
@@ -78,7 +78,7 @@ export class AccountComponent implements OnInit {
       personOutline, mailOutline, calendarOutline, logOutOutline,
       trashOutline, cardOutline, statsChartOutline, chevronForwardOutline,
       notificationsOutline, cashOutline, languageOutline, moonOutline,
-      downloadOutline, createOutline, timeOutline, checkmarkOutline,
+      createOutline, timeOutline, checkmarkOutline,
       imagesOutline, cameraOutline, closeOutline,
     });
   }

@@ -11,6 +11,7 @@ import { SigninComponent } from './signin/signin.component'
 import { UpdateSubComponent } from './update-sub/update-sub.component'
 import { Page404Component } from './page404/page404.component'
 import { ReportsComponent } from './reports/reports.component'
+import { ExportComponent } from './export/export.component'
 
 export const routes: Routes = [
   {
@@ -50,6 +51,11 @@ export const routes: Routes = [
   {
     path: 'reports',
     component: ReportsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'export',
+    component: ExportComponent,
     canActivate: [authGuard],
   },
   {

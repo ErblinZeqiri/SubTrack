@@ -1,7 +1,7 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton,
-  ToastController,
+  NavController,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
@@ -75,7 +75,7 @@ export class ReportsComponent implements OnInit {
   private readonly dataService = inject(DataService);
   readonly prefs               = inject(UserPreferencesService);
   private readonly reports     = inject(ReportsService);
-  private readonly toastCtrl   = inject(ToastController);
+  private readonly navCtrl      = inject(NavController);
 
   constructor() {
     addIcons({
@@ -285,13 +285,9 @@ export class ReportsComponent implements OnInit {
     (event.target as HTMLImageElement).style.display = 'none';
   }
 
-  async onExport(): Promise<void> {
-    const toast = await this.toastCtrl.create({
-      message: '📄 Export PDF — bientôt disponible',
-      duration: 2500,
-      position: 'bottom',
-      color: 'dark',
+  onExport(): void {
+    this.navCtrl.navigateForward('/export', {
+      state: { year: this.displayYear, month: this.displayMonth },
     });
-    await toast.present();
   }
 }
