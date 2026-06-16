@@ -31,7 +31,7 @@ const CGU: LegalDoc = {
   icon: 'document-text-outline',
   title: "Conditions Générales d'Utilisation",
   updated: '13 juin 2026',
-  intro: "Les présentes Conditions Générales d'Utilisation régissent l'utilisation de l'application SubTrack (ci-après « l'Application »), une application mobile permettant aux utilisateurs de suivre, gérer et optimiser leurs abonnements.",
+  intro: "Les présentes Conditions Générales d'Utilisation régissent l'utilisation de l'application Abopti (ci-après « l'Application »), une application mobile permettant aux utilisateurs de suivre, gérer et optimiser leurs abonnements.",
   sections: [
     {
       title: 'Définitions',
@@ -76,15 +76,15 @@ const CGU: LegalDoc = {
     },
     {
       title: 'Limitation de responsabilité',
-      text: "L'Application est fournie « en l'état ». SubTrack ne peut être tenu responsable des erreurs, omissions, interruptions de service ou pertes financières résultant de l'utilisation de l'Application.",
+      text: "L'Application est fournie « en l'état ». Abopti ne peut être tenu responsable des erreurs, omissions, interruptions de service ou pertes financières résultant de l'utilisation de l'Application.",
     },
     {
       title: 'Résiliation',
-      text: "L'Utilisateur peut supprimer son compte à tout moment depuis les paramètres de l'Application. SubTrack se réserve le droit de suspendre ou supprimer un compte en cas de violation des présentes CGU.",
+      text: "L'Utilisateur peut supprimer son compte à tout moment depuis les paramètres de l'Application. Abopti se réserve le droit de suspendre ou supprimer un compte en cas de violation des présentes CGU.",
     },
     {
       title: 'Modifications des CGU',
-      text: "SubTrack se réserve le droit de modifier les présentes CGU à tout moment. Les utilisateurs seront informés des modifications importantes via l'Application.",
+      text: "Abopti se réserve le droit de modifier les présentes CGU à tout moment. Les utilisateurs seront informés des modifications importantes via l'Application.",
     },
     {
       title: 'Droit applicable',
@@ -97,7 +97,7 @@ const PRIVACY: LegalDoc = {
   icon: 'shield-checkmark-outline',
   title: 'Politique de Confidentialité',
   updated: '13 juin 2026',
-  intro: 'SubTrack respecte votre vie privée et s\'engage à protéger vos données personnelles conformément au RGPD (Règlement Général sur la Protection des Données).',
+  intro: 'Abopti respecte votre vie privée et s\'engage à protéger vos données personnelles conformément au RGPD (Règlement Général sur la Protection des Données).',
   sections: [
     {
       title: 'Données collectées',

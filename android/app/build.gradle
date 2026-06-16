@@ -10,11 +10,11 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.subtrack.app"
+    namespace "com.abopti.app"
     compileSdk rootProject.ext.compileSdkVersion
     buildToolsVersion "35.0.0"
     defaultConfig {
-        applicationId "com.subtrack.app"
+        applicationId "com.abopti.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

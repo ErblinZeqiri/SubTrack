@@ -1,4 +1,4 @@
-package com.subtrack.app;
+package com.abopti.app;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.subtrack.app',
-  appName: 'SubTrack',
+  appId: 'com.abopti.app',
+  appName: 'Abopti',
   webDir: 'www',
   plugins: {
     FirebaseAuthentication: {

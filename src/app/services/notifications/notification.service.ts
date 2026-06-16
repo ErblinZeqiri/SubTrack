@@ -225,7 +225,7 @@ export class NotificationService {
     await LocalNotifications.schedule({
       notifications: [{
         id: TEST_NOTIF_ID,
-        title: '✅ SubTrack',
+        title: '✅ Abopti',
         body: 'Notifications activées avec succès !',
         schedule: { at: new Date(Date.now() + 5000) },
         channelId: 'renewals',
@@ -294,7 +294,7 @@ export class NotificationService {
     return {
       title: '💡 Astuce économies',
       body:  `${Math.round(total)} ${currency}/mois en abonnements`,
-      largeBody: `${Math.round(total)} ${currency}/mois en abonnements\nOuvrez SubTrack pour optimiser vos dépenses`,
+      largeBody: `${Math.round(total)} ${currency}/mois en abonnements\nOuvrez Abopti pour optimiser vos dépenses`,
     };
   }
 

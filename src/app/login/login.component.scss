@@ -34,31 +34,24 @@ ion-content::part(scroll) {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding-top: clamp(20px, 5vh, 48px);
 }
 
 .logo-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-bottom: clamp(8px, 2vh, 20px);
+}
 
-  .logo-glow {
-    position: relative;
-    display: inline-flex;
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: -12px;
-      border-radius: 50%;
-      background: radial-gradient(ellipse at center, rgba(124, 58, 237, 0.18) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    ion-img {
-      width: clamp(140px, 40vw, 200px);
-      height: auto;
-      position: relative;
-      z-index: 1;
-    }
-  }
+.app-logotype {
+  width: clamp(260px, 85vw, 380px);
+  height: auto;
+  display: block;
+  filter:
+    drop-shadow(0 0 12px rgba(124, 58, 237, 0.9))
+    drop-shadow(0 0 32px rgba(124, 58, 237, 0.6))
+    drop-shadow(0 0 60px rgba(124, 58, 237, 0.35));
 }
 
 .title-section {

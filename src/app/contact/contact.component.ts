@@ -64,7 +64,7 @@ export class ContactComponent implements OnInit {
     },
     {
       q: "Les notifications ne s'affichent pas sur mon téléphone.",
-      a: "Vérifiez que les notifications sont autorisées dans Paramètres Android → Applications → SubTrack → Notifications. Ensuite, ouvrez l'app et allez dans Compte → Notifications pour réactiver.",
+      a: "Vérifiez que les notifications sont autorisées dans Paramètres Android → Applications → Abopti → Notifications. Ensuite, ouvrez l'app et allez dans Compte → Notifications pour réactiver.",
     },
     {
       q: 'Comment exporter mes données en PDF ?',
@@ -79,7 +79,7 @@ export class ContactComponent implements OnInit {
       a: "Oui. Vos données sont stockées de manière sécurisée sur Firebase (Google) et protégées par votre compte. Nous ne vendons ni ne partageons vos données personnelles. Consultez notre Politique de confidentialité pour plus de détails.",
     },
     {
-      q: 'Peut-on utiliser SubTrack sur plusieurs appareils ?',
+      q: 'Peut-on utiliser Abopti sur plusieurs appareils ?',
       a: "Oui. Connectez-vous avec le même compte sur n'importe quel appareil Android. Vos abonnements sont synchronisés automatiquement via votre compte.",
     },
   ];
@@ -116,7 +116,7 @@ export class ContactComponent implements OnInit {
       return;
     }
 
-    const sub  = encodeURIComponent(`[${this.subject}] SubTrack`);
+    const sub  = encodeURIComponent(`[${this.subject}] Abopti`);
     const body = encodeURIComponent(
       `${this.message}\n\n---\nEmail : ${this.userEmail}\nVersion : ${this.appVersion}`,
     );
@@ -124,7 +124,7 @@ export class ContactComponent implements OnInit {
   }
 
   openQuick(type: string): void {
-    const sub = encodeURIComponent(`[${type}] SubTrack`);
+    const sub = encodeURIComponent(`[${type}] Abopti`);
     window.open(`mailto:${SUPPORT_EMAIL}?subject=${sub}`, '_system');
   }
 

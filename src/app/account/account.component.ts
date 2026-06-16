@@ -164,7 +164,7 @@ export class AccountComponent implements OnInit {
 
       if (permStatus.camera === 'denied') {
         const toast = await this.toastCtrl.create({
-          message: 'Autorisation caméra refusée. Activez-la dans Paramètres → Applications → SubTrack.',
+          message: 'Autorisation caméra refusée. Activez-la dans Paramètres → Applications → Abopti.',
           duration: 4000,
           position: 'bottom',
           color: 'warning',

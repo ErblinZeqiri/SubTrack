@@ -121,7 +121,7 @@ export class UpgradeComponent implements OnInit {
     try {
       const success = await this.planService.purchasePackage(pkg.rcPackage);
       if (success) {
-        await this.showToast('🎉 Bienvenue dans SubTrack Premium !', 'success');
+        await this.showToast('🎉 Bienvenue dans Abopti Premium !', 'success');
         await this.dismiss(true);
       }
     } catch (e: any) {

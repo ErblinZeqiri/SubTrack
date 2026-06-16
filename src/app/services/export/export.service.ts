@@ -94,7 +94,7 @@ export class ExportService {
     const now = new Date().toLocaleDateString('fr-FR');
 
     if (opts.scope === 'all') {
-      rows.push(this.csvRow([`# SubTrack — Tous les abonnements — ${now}`]));
+      rows.push(this.csvRow([`# Abopti — Tous les abonnements — ${now}`]));
       rows.push(this.csvRow([]));
       const headers = ['Service', 'Catégorie', `Montant (${opts.currency})`, 'Renouvellement', 'Prochain paiement'];
       if (opts.includeLogos) headers.push('Logo URL');
@@ -114,7 +114,7 @@ export class ExportService {
         .sort((a, b) => this.reports.getMonthPaymentAmount(b, y, m) - this.reports.getMonthPaymentAmount(a, y, m));
       const cats = this.reports.getCategoryBreakdown(subs, y, m);
 
-      rows.push(this.csvRow([`# SubTrack — Rapport mensuel — ${label}`]));
+      rows.push(this.csvRow([`# Abopti — Rapport mensuel — ${label}`]));
       rows.push(this.csvRow([`# Exporté le ${now}`]));
       rows.push(this.csvRow([]));
       rows.push(this.csvRow(['Total du mois', `${total.toFixed(2)} ${opts.currency}`, '', 'Abonnements actifs', `${active.length}`]));
@@ -135,7 +135,7 @@ export class ExportService {
       }
 
     } else {
-      rows.push(this.csvRow([`# SubTrack — Historique des paiements — ${now}`]));
+      rows.push(this.csvRow([`# Abopti — Historique des paiements — ${now}`]));
       rows.push(this.csvRow([]));
       rows.push(this.csvRow(['Mois', 'Service', 'Catégorie', `Montant (${opts.currency})`, 'Renouvellement']));
       for (const row of this.buildPaymentRows(subs, opts)) {
@@ -429,7 +429,7 @@ export class ExportService {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(20);
     doc.setTextColor(...C_WHITE);
-    doc.text('SubTrack', 14, 20);
+    doc.text('Abopti', 14, 20);
 
     // Tagline
     doc.setFont('helvetica', 'normal');
@@ -563,7 +563,7 @@ export class ExportService {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7.5);
       doc.setTextColor(...C_MUTED);
-      doc.text(`Généré par SubTrack · ${exportDate}`, 14, 290);
+      doc.text(`Généré par Abopti · ${exportDate}`, 14, 290);
       doc.text(`Page ${i} / ${pageCount}`, pageW - 14, 290, { align: 'right' });
     }
   }
@@ -672,7 +672,7 @@ export class ExportService {
     const ext    = filename.split('.').pop()!;
     const handle = await (window as any).showSaveFilePicker({
       suggestedName: filename,
-      types: [{ description: 'Fichier SubTrack', accept: { [blob.type]: [`.${ext}`] } }],
+      types: [{ description: 'Fichier Abopti', accept: { [blob.type]: [`.${ext}`] } }],
     });
     const writable = await handle.createWritable();
     await writable.write(blob);
@@ -721,7 +721,7 @@ export class ExportService {
     const scope = opts.scope === 'all'      ? 'Abonnements'
                 : opts.scope === 'monthly'  ? `Rapport-${this.monthFull(opts.year, opts.month).replace(/\s/g, '-')}`
                 : 'Paiements';
-    return `SubTrack_${scope}.${opts.format}`;
+    return `Abopti_${scope}.${opts.format}`;
   }
 
   private async saveLastExport(opts: ExportOptions): Promise<void> {
