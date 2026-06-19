@@ -7,7 +7,7 @@ import { Capacitor } from '@capacitor/core';
 // ─────────────────────────────────────────────────────────────────────────────
 // À remplir avec tes clés RevenueCat (Settings → API Keys dans le dashboard)
 // ─────────────────────────────────────────────────────────────────────────────
-export const RC_ANDROID_API_KEY = 'REVENUECAT_ANDROID_PUBLIC_KEY'; // à remplacer
+export const RC_ANDROID_API_KEY = 'test_MdUQFWHoxqWNLHHmkmOZOYWWSLq';
 export const RC_ENTITLEMENT     = 'premium';
 
 // Limites du plan gratuit
@@ -21,6 +21,7 @@ export class PlanService {
 
   private readonly _plan$   = new BehaviorSubject<Plan>('free');
   private initialized       = false;
+  private currentUserId: string | null = null;
 
   readonly plan$: Observable<Plan>    = this._plan$.asObservable();
   get isPremium(): boolean            { return this._plan$.value === 'premium'; }
@@ -33,21 +34,34 @@ export class PlanService {
       // Sur web/dev : toujours gratuit, pas d'appel SDK
       return;
     }
-    if (this.initialized) {
-      await this.refresh();
-      return;
-    }
 
     try {
-      await Purchases.setLogLevel({ level: LOG_LEVEL.ERROR });
-      await Purchases.configure({
-        apiKey: RC_ANDROID_API_KEY,
-        appUserID: userId,
-      });
-      this.initialized = true;
+      if (!this.initialized) {
+        await Purchases.setLogLevel({ level: LOG_LEVEL.ERROR });
+        await Purchases.configure({
+          apiKey: RC_ANDROID_API_KEY,
+          appUserID: userId,
+        });
+        this.initialized = true;
+        this.currentUserId = userId;
+      } else if (this.currentUserId !== userId) {
+        await Purchases.logIn({ appUserID: userId });
+        this.currentUserId = userId;
+      }
       await this.refresh();
     } catch (e) {
       console.error('[PlanService] init error', e);
+    }
+  }
+
+  async logOut(): Promise<void> {
+    this._plan$.next('free');
+    this.currentUserId = null;
+    if (!Capacitor.isNativePlatform() || !this.initialized) return;
+    try {
+      await Purchases.logOut();
+    } catch (e) {
+      console.error('[PlanService] logOut error', e);
     }
   }
 

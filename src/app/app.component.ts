@@ -29,6 +29,7 @@ export class AppComponent {
   private initPlan(): void {
     this.auth.getCurrentUser().subscribe(user => {
       if (user) this.plan.init(user.uid);
+      else this.plan.logOut();
     });
   }
 
