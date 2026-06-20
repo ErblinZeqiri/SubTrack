@@ -7,7 +7,7 @@ import { Capacitor } from '@capacitor/core';
 // ─────────────────────────────────────────────────────────────────────────────
 // À remplir avec tes clés RevenueCat (Settings → API Keys dans le dashboard)
 // ─────────────────────────────────────────────────────────────────────────────
-export const RC_ANDROID_API_KEY = 'test_MdUQFWHoxqWNLHHmkmOZOYWWSLq';
+export const RC_ANDROID_API_KEY = 'goog_knYNlHsuOiPpsWcjTdOPUUDYGGd';
 export const RC_ENTITLEMENT     = 'premium';
 
 // Limites du plan gratuit
@@ -22,6 +22,7 @@ export class PlanService {
   private readonly _plan$   = new BehaviorSubject<Plan>('free');
   private initialized       = false;
   private currentUserId: string | null = null;
+  private opQueue: Promise<void> = Promise.resolve();
 
   readonly plan$: Observable<Plan>    = this._plan$.asObservable();
   get isPremium(): boolean            { return this._plan$.value === 'premium'; }
@@ -30,6 +31,11 @@ export class PlanService {
   // ── Initialisation ──────────────────────────────────────────────────────────
 
   async init(userId: string): Promise<void> {
+    this.opQueue = this.opQueue.then(() => this.doInit(userId));
+    return this.opQueue;
+  }
+
+  private async doInit(userId: string): Promise<void> {
     if (!Capacitor.isNativePlatform()) {
       // Sur web/dev : toujours gratuit, pas d'appel SDK
       return;
@@ -45,8 +51,11 @@ export class PlanService {
         this.initialized = true;
         this.currentUserId = userId;
       } else if (this.currentUserId !== userId) {
-        await Purchases.logIn({ appUserID: userId });
+        const { customerInfo } = await Purchases.logIn({ appUserID: userId });
         this.currentUserId = userId;
+        const active = customerInfo.entitlements.active[RC_ENTITLEMENT] !== undefined;
+        this._plan$.next(active ? 'premium' : 'free');
+        return;
       }
       await this.refresh();
     } catch (e) {
@@ -55,6 +64,11 @@ export class PlanService {
   }
 
   async logOut(): Promise<void> {
+    this.opQueue = this.opQueue.then(() => this.doLogOut());
+    return this.opQueue;
+  }
+
+  private async doLogOut(): Promise<void> {
     this._plan$.next('free');
     this.currentUserId = null;
     if (!Capacitor.isNativePlatform() || !this.initialized) return;
