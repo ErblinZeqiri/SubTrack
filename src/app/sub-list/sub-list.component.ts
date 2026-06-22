@@ -33,7 +33,10 @@ import {
 } from '@ionic/angular/standalone';
 import { DonutChartComponent } from '../donut-chart/donut-chart.component';
 import { addIcons } from 'ionicons';
-import { funnelOutline, calendarOutline, close, createOutline, trashOutline } from 'ionicons/icons';
+import {
+  funnelOutline, calendarOutline, close, createOutline, trashOutline, addCircleOutline,
+  notificationsOutline, statsChartOutline, trendingDownOutline,
+} from 'ionicons/icons';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../environments/environment';
 
@@ -113,7 +116,10 @@ export class SubListComponent implements OnInit, OnDestroy {
     private readonly alertCtrl: AlertController,
     private readonly _expensesService: ExepensesService
   ) {
-    addIcons({ funnelOutline, calendarOutline, close, createOutline, trashOutline });
+    addIcons({
+      funnelOutline, calendarOutline, close, createOutline, trashOutline, addCircleOutline,
+      notificationsOutline, statsChartOutline, trendingDownOutline,
+    });
   }
 
   onFilterTouchStart(event: TouchEvent) {
@@ -317,6 +323,13 @@ export class SubListComponent implements OnInit, OnDestroy {
       )
       .subscribe((subs) => {
         this.userSubData$ = subs;
+        this.userSubData$
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((list) => {
+            if (!this.hasActiveFilters) {
+              this.noSub = list.length === 0;
+            }
+          });
         this.totalAmount$ = this.userSubData$.pipe(
           map((items) => this.calculateTotal(items))
         );

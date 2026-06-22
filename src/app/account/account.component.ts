@@ -328,12 +328,83 @@ export class AccountComponent implements OnInit {
     await alert.present();
   }
 
+  private deleteRetried = false;
+
   private async deleteAccount(): Promise<void> {
     const loading = await this.loadingCtrl.create({ message: 'Suppression du compte...' });
     await loading.present();
-    try { await this.authService.deleteAccount(); }
-    catch (e) { console.error(e); }
-    finally { await loading.dismiss(); }
+    try {
+      await this.authService.deleteAccount();
+      await loading.dismiss();
+      this.deleteRetried = false;
+    } catch (e: any) {
+      await loading.dismiss();
+      if (e?.code === 'auth/requires-recent-login' && !this.deleteRetried) {
+        this.deleteRetried = true;
+        await this.reauthenticateAndRetryDelete();
+        return;
+      }
+      this.deleteRetried = false;
+      console.error(e);
+      const toast = await this.toastCtrl.create({
+        message: `La suppression a échoué (${e?.code ?? e?.message ?? 'erreur inconnue'}).`,
+        duration: 3500,
+        position: 'bottom',
+        color: 'danger',
+      });
+      await toast.present();
+    }
+  }
+
+  private async reauthenticateAndRetryDelete(): Promise<void> {
+    if (this.authService.isGoogleAccount()) {
+      try {
+        await this.authService.serviceLoginWithGoogle();
+      } catch (e: any) {
+        console.error(e);
+        const toast = await this.toastCtrl.create({
+          message: `La reconnexion Google a échoué (${e?.code ?? e?.message ?? 'erreur inconnue'}).`,
+          duration: 3500,
+          position: 'bottom',
+          color: 'danger',
+        });
+        await toast.present();
+        return;
+      }
+      await this.deleteAccount();
+      return;
+    }
+
+    const alert = await this.alertCtrl.create({
+      header: 'Confirmer votre identité',
+      message: 'Pour des raisons de sécurité, entrez votre mot de passe pour confirmer la suppression du compte.',
+      inputs: [{ name: 'password', type: 'password', placeholder: 'Mot de passe' }],
+      buttons: [
+        { text: 'Annuler', role: 'cancel' },
+        {
+          text: 'Confirmer',
+          handler: async (data) => {
+            if (!data.password) return false;
+            try {
+              await this.authService.reauthenticateWithPassword(data.password);
+            } catch (e) {
+              console.error(e);
+              const toast = await this.toastCtrl.create({
+                message: 'Mot de passe incorrect.',
+                duration: 2200,
+                position: 'bottom',
+                color: 'danger',
+              });
+              await toast.present();
+              return false;
+            }
+            await this.deleteAccount();
+            return true;
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   private async logout(): Promise<void> {

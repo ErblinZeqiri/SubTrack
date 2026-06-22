@@ -80,33 +80,49 @@
           }
         </ion-list>
     } @else {
-      <div class="filter-container" #filterContainer
-        (touchstart)="isUserScrolling = true"
-        (touchend)="isUserScrolling = false">
-        <button type="button" class="filter-pill" [class.active]="selectedCategories.length > 0"
-          (touchstart)="onFilterTouchStart($event)" (touchend)="openCategoryFilter($event)" (click)="openCategoryFilter($event)">
-          <ion-icon name="funnel-outline"></ion-icon>
-          <span class="filter-label">Catégorie</span>
-          @if (categoryFilterCount > 0) {
-            <span class="filter-badge">{{ categoryFilterCount }}</span>
-          }
-        </button>
-        <button type="button" class="filter-pill" [class.active]="selectedRenewals.length > 0"
-          (touchstart)="onFilterTouchStart($event)" (touchend)="openRenewalFilter($event)" (click)="openRenewalFilter($event)">
-          <ion-icon name="calendar-outline"></ion-icon>
-          <span class="filter-label">Renouvellement</span>
-          @if (renewalFilterCount > 0) {
-            <span class="filter-badge">{{ renewalFilterCount }}</span>
-          }
-        </button>
-        @if (hasActiveFilters) {
+      @if (hasActiveFilters) {
+        <div class="filter-container" #filterContainer
+          (touchstart)="isUserScrolling = true"
+          (touchend)="isUserScrolling = false">
+          <button type="button" class="filter-pill" [class.active]="selectedCategories.length > 0"
+            (touchstart)="onFilterTouchStart($event)" (touchend)="openCategoryFilter($event)" (click)="openCategoryFilter($event)">
+            <ion-icon name="funnel-outline"></ion-icon>
+            <span class="filter-label">Catégorie</span>
+            @if (categoryFilterCount > 0) {
+              <span class="filter-badge">{{ categoryFilterCount }}</span>
+            }
+          </button>
+          <button type="button" class="filter-pill" [class.active]="selectedRenewals.length > 0"
+            (touchstart)="onFilterTouchStart($event)" (touchend)="openRenewalFilter($event)" (click)="openRenewalFilter($event)">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span class="filter-label">Renouvellement</span>
+            @if (renewalFilterCount > 0) {
+              <span class="filter-badge">{{ renewalFilterCount }}</span>
+            }
+          </button>
           <button type="button" class="reset-filters-button" (click)="resetFilters()">× Réinitialiser</button>
-        }
-      </div>
-      <ion-text class="ion-text-center ion-align-items-center">
-        <h1 class="flex">Aucun abonnement pour le moment</h1>
-        <ion-button class="empty-cta" routerLink="/add">+ Ajouter mon premier abonnement</ion-button>
-      </ion-text>
+        </div>
+        <ion-text class="ion-text-center ion-align-items-center">
+          <h1 class="flex">Aucun résultat pour ces filtres</h1>
+          <ion-button class="empty-cta" (click)="resetFilters()">Réinitialiser les filtres</ion-button>
+        </ion-text>
+      } @else {
+        <div class="onboarding-empty">
+          <div class="onboarding-icon">
+            <ion-icon name="add-circle-outline"></ion-icon>
+          </div>
+          <h1 class="onboarding-title">Bienvenue sur Abopti !</h1>
+          <p class="onboarding-subtitle">
+            Commencez par ajouter votre premier abonnement pour suivre et optimiser vos dépenses.
+          </p>
+          <ion-button class="empty-cta" routerLink="/add">+ Ajouter un abonnement</ion-button>
+          <ul class="onboarding-tips">
+            <li><ion-icon name="notifications-outline"></ion-icon> Recevez des rappels intelligents</li>
+            <li><ion-icon name="stats-chart-outline"></ion-icon> Visualisez vos dépenses clairement</li>
+            <li><ion-icon name="trending-down-outline"></ion-icon> Optimisez et économisez facilement</li>
+          </ul>
+        </div>
+      }
     }
   </div>
 </ion-content>

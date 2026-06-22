@@ -13,6 +13,8 @@ import {
   onAuthStateChanged,
   updateProfile,
   deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 } from '@angular/fire/auth';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { Storage, ref, uploadString, getDownloadURL } from '@angular/fire/storage';
@@ -263,6 +265,19 @@ export class AuthService {
    * 3. Supprime le compte Firebase Auth
    * 4. Nettoie le cache et redirige
    */
+  async reauthenticateWithPassword(password: string): Promise<void> {
+    const currentUser = this._auth.currentUser;
+    if (!currentUser?.email) throw new Error('Utilisateur introuvable');
+    const cred = EmailAuthProvider.credential(currentUser.email, password);
+    await reauthenticateWithCredential(currentUser, cred);
+  }
+
+  isGoogleAccount(): boolean {
+    return !!this._auth.currentUser?.providerData.some(
+      (p) => p.providerId === 'google.com',
+    );
+  }
+
   async deleteAccount(): Promise<void> {
     const currentUser = this._auth.currentUser;
     if (!currentUser) return;

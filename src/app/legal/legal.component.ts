@@ -170,7 +170,44 @@ const PRIVACY: LegalDoc = {
   ],
 };
 
-const DOCS: Record<string, LegalDoc> = { cgu: CGU, privacy: PRIVACY };
+const DELETE_ACCOUNT: LegalDoc = {
+  icon: 'document-text-outline',
+  title: 'Suppression de compte',
+  updated: '20 juin 2026',
+  intro: 'Vous pouvez supprimer votre compte Abopti et toutes les données associées directement depuis l\'application, sans avoir besoin de contacter le support.',
+  sections: [
+    {
+      title: 'Comment supprimer votre compte',
+      items: [
+        "Ouvrez l'application Abopti et connectez-vous à votre compte",
+        'Allez dans l\'onglet « Compte »',
+        'Faites défiler jusqu\'à la section « Paramètres » puis appuyez sur « Supprimer le compte »',
+        'Confirmez la suppression dans la fenêtre qui apparaît',
+      ],
+    },
+    {
+      title: 'Données supprimées',
+      text: 'La suppression de votre compte est définitive et irréversible. Elle entraîne la suppression de :',
+      items: [
+        'Votre adresse email et informations de compte',
+        'Tous vos abonnements enregistrés (services, montants, dates de renouvellement)',
+        'Vos préférences et paramètres de notification',
+        'Votre statut Premium éventuel (à résilier séparément depuis Google Play si un abonnement payant est actif)',
+      ],
+    },
+    {
+      title: 'Délai de suppression',
+      text: 'Vos données personnelles et celles liées à vos abonnements sont supprimées de nos serveurs (Firebase) dans un délai de 30 jours suivant la suppression du compte.',
+    },
+    {
+      title: 'Besoin d\'aide',
+      text: 'Si vous ne pouvez pas accéder à l\'application pour supprimer votre compte, contactez-nous directement :',
+      items: ['Email : subbtrack@gmail.com'],
+    },
+  ],
+};
+
+const DOCS: Record<string, LegalDoc> = { cgu: CGU, privacy: PRIVACY, 'delete-account': DELETE_ACCOUNT };
 const SUPPORT_EMAIL = 'subbtrack@gmail.com';
 
 @Component({

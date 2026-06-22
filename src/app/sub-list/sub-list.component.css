@@ -129,3 +129,103 @@ ion-item.no-border::part(native) {
 .item-options-ios.item-options-end {
   border-bottom-width: 0;
 }
+
+/* ── Empty state / onboarding ──────────────────────────────────── */
+@keyframes onboarding-fade-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes onboarding-pulse {
+  0%, 100% { filter: drop-shadow(0 4px 16px rgba(124, 58, 237, 0.3)); }
+  50%      { filter: drop-shadow(0 4px 26px rgba(124, 58, 237, 0.55)); }
+}
+
+.onboarding-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 56px 24px 24px;
+  animation: onboarding-fade-in 0.45s ease-out both;
+}
+
+.onboarding-icon {
+  width: 96px;
+  height: 96px;
+  border-radius: 28px;
+  background: rgba(124, 58, 237, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  animation: onboarding-fade-in 0.45s ease-out both;
+  animation-delay: 0.05s;
+}
+
+.onboarding-icon ion-icon {
+  font-size: 48px;
+  color: #7c3aed;
+}
+
+.onboarding-title {
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--app-text);
+  margin: 0 0 8px;
+  animation: onboarding-fade-in 0.45s ease-out both;
+  animation-delay: 0.1s;
+}
+
+.onboarding-subtitle {
+  font-size: 14px;
+  color: var(--app-text-muted);
+  line-height: 1.5;
+  margin: 0 0 24px;
+  max-width: 280px;
+  animation: onboarding-fade-in 0.45s ease-out both;
+  animation-delay: 0.15s;
+}
+
+.empty-cta {
+  --background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  --border-radius: 14px;
+  font-weight: 600;
+  height: 50px;
+  width: 100%;
+  max-width: 280px;
+  animation: onboarding-fade-in 0.45s ease-out both, onboarding-pulse 2.4s ease-in-out infinite;
+  animation-delay: 0.2s, 0.6s;
+}
+
+.onboarding-tips {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 300px;
+  animation: onboarding-fade-in 0.45s ease-out both;
+  animation-delay: 0.25s;
+}
+
+.onboarding-tips li {
+  font-size: 13px;
+  color: var(--app-text-muted);
+  padding: 10px 14px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 12px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.onboarding-tips li ion-icon {
+  font-size: 18px;
+  color: #7c3aed;
+  flex-shrink: 0;
+}
