@@ -7,7 +7,7 @@
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <div class="main-content">
+  <div class="main-content page-fade-in">
     @if(!noSub) {
         @if(userSubData$ | async; as subData) {
           @if(subData.length > 0) {
