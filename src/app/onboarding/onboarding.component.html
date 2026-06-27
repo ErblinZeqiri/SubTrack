@@ -1,0 +1,39 @@
+<div class="onboarding-modal">
+  <div class="onboarding-content" [class.visible]="ready">
+    <button type="button" class="skip-btn" (click)="dismiss()">Passer</button>
+
+    <div
+      class="slides-viewport"
+      (touchstart)="onTouchStart($event)"
+      (touchmove)="onTouchMove($event)"
+      (touchend)="onTouchEnd()"
+    >
+      <div class="slides-track" [class.no-transition]="touchDeltaX !== 0" [style.transform]="trackTransform">
+        @for (slide of slides; track slide.title) {
+          <div class="slide">
+            <div class="slide-icon">
+              <ion-icon [name]="slide.icon"></ion-icon>
+            </div>
+            <h2 class="slide-title">{{ slide.title }}</h2>
+            <p class="slide-text">{{ slide.text }}</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="dots">
+      @for (slide of slides; track slide.title; let i = $index) {
+        <span class="dot" [class.active]="i === activeIndex" (click)="goToSlide(i)"></span>
+      }
+    </div>
+
+    <label class="dont-show-again">
+      <ion-checkbox [(ngModel)]="dontShowAgain"></ion-checkbox>
+      <span>Ne plus afficher ces écrans</span>
+    </label>
+
+    <ion-button class="next-btn" expand="block" (click)="next()">
+      {{ activeIndex === slides.length - 1 ? 'Commencer gratuitement' : 'Suivant' }}
+    </ion-button>
+  </div>
+</div>

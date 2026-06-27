@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { IonApp } from '@ionic/angular/standalone';
+import { IonApp, ModalController } from '@ionic/angular/standalone';
 import { HomePage } from './home/home.page';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AuthService } from './services/auth/auth.service';
 import { PlanService } from './services/plan/plan.service';
+import { OnboardingComponent, ONBOARDING_DISMISSED_KEY } from './onboarding/onboarding.component';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +20,7 @@ import { PlanService } from './services/plan/plan.service';
 export class AppComponent {
   private readonly auth = inject(AuthService);
   private readonly plan = inject(PlanService);
+  private readonly modalCtrl = inject(ModalController);
 
   constructor(private router: Router, private location: Location) {
     this.configurerBarresSysteme();
@@ -28,9 +30,27 @@ export class AppComponent {
 
   private initPlan(): void {
     this.auth.getCurrentUser().subscribe(user => {
-      if (user) this.plan.init(user.uid);
-      else this.plan.logOut();
+      if (user) {
+        this.plan.init(user.uid);
+        this.showOnboarding();
+      } else {
+        this.plan.logOut();
+      }
     });
+  }
+
+  // Affiché à chaque démarrage à froid (session persistée) et à chaque
+  // connexion explicite — pas à la reprise depuis l'arrière-plan, puisque
+  // l'observable d'auth n'émet pas de nouvelle valeur dans ce cas.
+  private async showOnboarding(): Promise<void> {
+    if (localStorage.getItem(ONBOARDING_DISMISSED_KEY) === 'true') return;
+
+    const modal = await this.modalCtrl.create({
+      component: OnboardingComponent,
+      cssClass: 'onboarding-modal-wrapper',
+      showBackdrop: false,
+    });
+    await modal.present();
   }
 
   private async configurerBarresSysteme() {
